@@ -45,8 +45,20 @@ dnf install \
 
 ### Launching our containers with docker-compose
 
+OpenCHAMI services are all built and delivered as containers.  We publish them automatically to ghcr.io and provide SLSA attestations and signatures for everything.  For more details on our secure supply chain, see our dedicated guide on verification.  While you're free to run each container independently, we provide a set of docker-compose files and supporting configuration files to make it easy.
 
-
+```shell
+# Download our latest release tarball
+curl -sL "https://api.github.com/repos/OpenCHAMI/deployment-recipes/releases/latest" | grep "browser_download_url.*tar.gz" | cut -d : -f 2,3 | tr -d \" | xargs curl -LO
+# Unpack the tarball
+tar -zxvvf release*.tar.gz
+# Move into the docker-compose directory
+cd docker-compose
+# Generate the secrets you'll need for passwords and other credentials
+./generate-creds.sh
+# Launch the docker-compose files
+docker compose -f ochami-services.yml -f ochami-krakend-ce.yml -f hydra.yml up
+```
 
 ## A tour of our containers
 
