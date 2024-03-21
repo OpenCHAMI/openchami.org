@@ -1,20 +1,23 @@
 ---
 title: 'Authenticated Service to Service Communication with client credentials'
-url: "/blog/auth-comms/"
 date: 2024-03-01T10:00:00-04:00
+description: "In this post, David describes how we authenticate every request within OpenCHAMI without a service mesh."
+summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT." 
 draft: false
-categories: ['Development', 'LANL']
+weight: 50
+categories: ["Development", "LANL"]
 tags: []
+contributors: ["David J. Allen (LANL)"]
 pinned: false
 homepage: false
-summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT." 
-contributors: ["David J. Allen (LANL)"]
 seo:
   title: "" # custom title (optional)
   description: "" # custom description (recommended)
   canonical: "" # custom canonical URL (optional)
   noindex: false # false (default) or true
 ---
+
+## Authentication and Authorization in OpenCHAMI
 
 OpenCHAMI is a loose collection of microservices that all obey the same rules for interoperability.  One important rule is that every request must be positively authenticated.  We have chosen bearer token authentication for each request as our preferred authentication method.  As covered in our [roadmap issue #11](https://github.com/OpenCHAMI/roadmap/issues/11), we have selected JSON Web Tokens(JWTs) as our token of choice.  It is a signed token that the caller can send in an HTTP header contains enough information to authenticate the user and describe how the token can be used.  Users follow a standard Oauth2 authorization flow to obtain their token.  Each microservice can then read the token to make decisions about what is permitted in the context of the request.  It is common for one microservice to get some information from another microservice in order to fulfil a request.  In that case, the user's original JWT can be forwarded along for other services to work with.  Following this pattern, it doesn't matter how many microservices are involved, the user's token can be reused in every context without changes.
 
