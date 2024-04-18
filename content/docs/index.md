@@ -22,7 +22,7 @@ HPC System Administration Guides are famously verbose.  OpenCHAMI documentation 
 
 ## Guides
 
-For those interested in building a cluster with OpenCHAMI as quickly as possible, we recommend the [Getting Started Guide](/docs/guides/get-started/).  It is the first in our collection of [Administration Guides](/docs/guides/).
+For those interested in building a cluster with OpenCHAMI as quickly as possible, we recommend the [Getting Started Guide](/docs/guides/get-started/).  It is the first in our collection of [Administration Guides](/guides/).
 
 ## References
 

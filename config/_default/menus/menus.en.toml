@@ -36,7 +36,7 @@
 
 [[main]]
   name = "Guides"
-  url = "/docs/guides/"
+  url = "/guides/"
   weight = 30 
 
 [[main]]
