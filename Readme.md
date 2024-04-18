@@ -3,8 +3,9 @@
 ## To develop locally
 
 1. Clone this repository
-2. Run the development webserver with `npm run dev`
-3. visit http://localhost:1313 to see your progress
+2. Install npm dependencies with `npm install`
+3. Run the development webserver with `npm run dev`
+4. visit http://localhost:1313 to see your progress
 
 _NB:_ To avoid branch conflicts, please use username/description-in-kebab-case for naming branches. 
 
