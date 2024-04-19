@@ -42,7 +42,7 @@ If you have Docker installed, you're done!
 
 ### Virtual Machine
 
-1. Create a new directory and download the development [Vagrantfile](https://gist.github.com/alexlovelltroy/1aa6d07119ef59fd966417c97baa2ff5) into it.
+1. Create a new directory and download the development [Vagrantfile](https://gist.github.com/alexlovelltroy/1aa6d07119ef59fd966417c97baa2ff5) into it.  (FIXME: this file needs to come from a project repository, not a random person's gist)
     ```
     mkdir vagrant-ochami-dev
     cd vagrant-ochami-dev
