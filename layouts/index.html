@@ -19,13 +19,13 @@
     <div class="bg-dots"></div>
   </div>
   {{ end -}}
-  {{ if eq $.Site.Language.LanguageName "English" }}
+  
   <section class="section section-md section-features">
     <div class="container">
       <div class="row justify-content-center text-center">
         <div class="col-lg-5">
-          <h2 class="h4">Community</h2>
-          <p>OpenCHAMI is supported by an international community of some of the largest HPC sites in the world as well as some of the smallest.</p>
+          <h2 class="h4">Security</h2>
+          <p>HPC jobs run in the context of a POSIX filesystem.  Cloud APIs depend on access tokens that are limited in both scope and time.  OpenCHAMI ships everything you need to bridge the two worlds.</p>
         </div>
         <div class="col-lg-5">
           <h2 class="h4">Simplicity</h2>
@@ -35,25 +35,21 @@
           <h2 class="h4">Modularity</h2>
           <p>Each of the components that comprise and OpenCHAMI system is designed to work in a standalone mode and can be fully replaced.</p>
         </div>
-        <div class="col-lg-5">
-          <h2 class="h4">Security</h2>
-          <p>HPC jobs run in the context of a POSIX filesystem.  Cloud APIs depend on access tokens that are limited in both scope and time.  OpenCHAMI ships everything you need to bridge the two worlds.</p>
-        </div>
       </div>
     </div>
   </section>
-  {{ end }}
+
 {{ end }}
 
 {{ define "sidebar-footer" }}
-{{ if site.Params.doks.sectionFooter -}}
+
 <section class="section section-md container-fluid bg-light">
   <div class="row justify-content-center text-center">
     <div class="col-lg-7">
-      <h2 class="mt-2">Start building with Doks today</h2>
-      <a class="btn btn-primary rounded-pill px-4 my-2" href="/docs/{{ if site.Params.doks.docsVersioning }}{{ site.Params.doks.docsVersion }}/{{ end }}prologue/introduction/" role="button">{{ i18n "get-started" }}</a>
+      <h2 class="mt-2">Learn more about using OpenCHAMI</h2>
+      <a class="btn btn-primary rounded-pill px-4 my-2" href="/docs/introduction-to-openchami/" role="button">Learn More</a>
     </div>
   </div>
 </section>
-{{ end -}}
+
 {{ end }}

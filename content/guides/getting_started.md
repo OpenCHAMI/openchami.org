@@ -14,7 +14,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-OpenCHAMI has everything you need to go from bare hardware to a running cluster in a matter of minutes.  In the guide below, we'll show you how to install and run the OpenCHAMI services in a VM with all the containers you need to generate an inventory of your compute nodes and boot them.  
+OpenCHAMI has everything you need to go from bare hardware to a running cluster in a matter of minutes.  In the guide below, we'll show you how to install and run the OpenCHAMI services with all the containers you need to generate an inventory of your compute nodes and boot them.  
 
 Happy HPC!
 
@@ -23,49 +23,63 @@ Happy HPC!
 
 ## Start OpenCHAMI Services
 
-All the OpenCHAMI services come pre-configured to work together using docker-compose.  Using the directions below, you can clone the repos and run the containers in about five minutes without any external dependencies.  Read on for customization options and deployment instructions that don't use docker compose. 
+All the OpenCHAMI services come pre-configured to work together using docker-compose.  Using the directions below, you can clone the repos and run the containers in about five minutes without any external dependencies.  See [What's Next](#whats-next) for customization options and running jobs.
 
-```bash
+{{< callout context="note" title="Quickstart" icon="rocket" >}}
+The quickstart is meant to be used on a dedicated node or VM running an RPM-based Linux system with an x86 processor.
+
+The minimum tested configuration is 4 vCPUs and 8 Gigabytes of memory
+
+```bash {title="Download, Configure, and Run the Quickstart…"}
 # Clone the repository
 git clone https://github.com/OpenCHAMI/deployment-recipes.git
 # Enter the quickstart directory
-cd deployment-recipes
-git checkout alovelltroy/quickstart-guide
-cd quickstart/
-# Create the secrets.  Do not share them with anyone
-./generate-configs.sh
+cd deployment-recipes/quickstart/
+# Create the secrets in the .env file.  Do not share them with anyone. 
+# This also sets the system name for your certificates.  In our case, we'll call our system "foobar".  The full url will be https://foobar.openchami.cluster which you can set in /etc/hosts to make life easier for you later
+./generate-configs.sh foobar
 # Start the services
-docker compose -f autocert.yml -f postgres.yml -f jwt-security.yml -f api-gateway.yml -f openchami-svcs.yml up -d
+docker compose -f base.yml -f postgres.yml -f jwt-security.yml -f haproxy-api-gateway.yml -f openchami-svcs.yml -f autocert.yml up -d
+# This shouldn't take too long.  A minute or two depending on how long pulling containers takes.
+# Once you get the prompt back, you can download the public certificate from your ca.
+docker exec -it step-ca step ca root > cacert.pem
+# Use curl to confirm that everything is working
+ curl --cacert cacert.pem https://foobar.openchami.cluster/login
 ```
+{{< /callout >}}
 
-### OPTIONAL Run the OpenCHAMI Development Vagrantbox
+### Dependencies and Assumptions
 
-Containers are great for deploying software without relying on shared libraries and other host-level dependencies.  However, if you aren't comfortable with docker compose, or you're not running an operating system that makes installation easy, it helps to test against a known-good system configuration.  OpenCHAMI developers rely on a consistent virtual machine for development and testing.  You can use the same [Vagrantfile](https://gist.github.com/alexlovelltroy/1aa6d07119ef59fd966417c97baa2ff5) we use by following these directions.
+The OpenCHAMI services themselves are all containerized and tested running under `docker compose`.  It should be possible to run OpenCHAMI services on any system with docker installed.
 
-1. Install Vagrant by following the [instructions from Hashicorp](https://developer.hashicorp.com/vagrant/docs/installation)
-2. Create a new directory with only the [Vagrantfile](https://gist.github.com/alexlovelltroy/1aa6d07119ef59fd966417c97baa2ff5) in it.
-3. Run `vagrant up` to download and launch the virtual machine
-4. Run `vagrant reload` restart the virtual machine and apply any kernel-related fixes.
-5. Run `vagrant ssh` to connect to the virtual machine
+This quickstart makes a few assumptions about the target operating system and is only tested on Rocky Linux 9.3 running on x86 processors.  Feel free to file bugs about other configurations, but we will prioritize support for systems that we can directly test at LANL.
 
+#### Assumptions
 
-That's it!  From there you should be able to move on to installing and running the OpenCHAMI services using the instructions above.
-
-### Services tour
-
-* autocert.yml - several 3rd party open source tools to automate creation and renewal of certificates including a per-installation certificate authority
-* postgres.yml - a single instance of postgres that handles all the database needs of OpenCHAMI
-* jwt-security.yml - our lightweight authentication infrastructure based on 3rd party open source tooling
-* api-gateway.yml - KrakenD is our 3rd party open source API gateway of choice
-* openchami-svcs.yml - OpenCHAMI microservices
+* Linux - The quickstart automation makes several assumptions about the behavior Unix tools and their operation under bash from Rocky Linux 9.3
+* x86_64 - Some of the containers involved are built and tested for alternative operating systems and architectures, but the solution as a whole is only tested with x86 containers
+* Dedicated System - The docker compose setup assumes that it can take control of several TCP ports and interact with the host network for DHCP and TFTP.  It is tested on a dedicated virtual machine
+* Local Name Registration - The quickstart bootstraps a Certificate Authority and issues an SSL certificate with a predictable name.  For access, you will need to add that name/IP to /etc/hosts on all clients or make it resolvable through your site DNS
 
 ## What's next
 
 Now that you've got a set of containers up and running that provide OpenCHAMI services, it's time to use them.  We've got a set of administration guides and user guides for you to choose from.
 
-* Using Magellan to discover your hardware
-* Launching a compute image using OpenHPC
-* Installing and using slurm to run a job
+{{< card-grid >}}
+{{< link-card
+  title="Run a job"
+  description="Deploy slurm and run a simple job"
+  href="/guides/install_slurm/"
+  target="_blank"
+>}}
+{{< link-card
+  title="Deploy an OS"
+  description="Deploy Alma Linux with OpenHPC"
+  href="/guides/deploy_openhpc/"
+  target="_blank"
+>}}
+{{< /card-grid >}}
+
 
 ## Helpful docker compose cheatsheet
 

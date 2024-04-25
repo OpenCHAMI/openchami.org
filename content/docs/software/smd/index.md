@@ -7,12 +7,8 @@ lastmod: 2024-03-21T00:00:00+00:00
 draft: false
 weight: 800
 toc: true
-url: "/docs/software/smd/"
-seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
 ---
 
 # State Management Daemon
+
+The OpenCHAMI inventory database is a customized version of the State Management Database (SMD) from the Cray System Manager. It manages inventory information about the compute nodes and makes it accessible through an HTTP API that other microservices reference in the course of their work. While it generally serves data from memory, it uses Postgres for persistent storage.

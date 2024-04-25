@@ -1,17 +1,17 @@
 ---
 title: "Software"
-description: ""
-summary: ""
 date: 2024-03-07T16:12:03+02:00
 lastmod: 2024-03-07T16:12:03+02:00
 draft: false
-weight: 999
-toc: true
-seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
+weight: 50
+toc: false
+pinned: false
+homepage: false
 ---
 
-# OpenCHAMI Documentation
+{{< callout context="tip" title="Did you know?" icon="rocket" >}}
+The [OpenCHAMI quickstart](https://github.com/openchami/deployment-recipes/) has been used to boot over 600 compute nodes in about five minutes, including POST!.
+{{< /callout >}}
+
+
+

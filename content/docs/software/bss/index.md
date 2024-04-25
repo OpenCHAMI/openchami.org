@@ -8,11 +8,9 @@ draft: false
 weight: 800
 url: "/docs/software/bss/"
 toc: true
-seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
+
 ---
 
-# Boot Script Service  
+# Customized Boot Parameters for each Compute Node
+
+Managing the distribution and configuration of operating systems in a heterogenous HPC environment requires matching specific system image(s) and boot configurations with the compute nodes that need them.  BSS leverages OpenCHAMI's detailed inventory system to ensure each node recieves the kernel, initrd, and flags necessary to efficiently bring up the whole system.  Changes in the inventory are reflected in real time through the boot service.
