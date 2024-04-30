@@ -22,7 +22,8 @@
     "preinfo": "npm version",
     "info": "npm list",
     "postinfo": "exec-bin node_modules/.bin/hugo/hugo version",
-    "postinstall": "hugo-installer --version otherDependencies.hugo --extended --destination node_modules/.bin/hugo"
+    "postinstall": "hugo-installer --version otherDependencies.hugo --extended --destination node_modules/.bin/hugo",
+    "deploy": "npm run build && exec-bin node_modules/.bin/hugo/hugo deploy --maxDeletes -1"
   },
   "dependencies": {
     "@hyas/doks-core": "^1.4.1",

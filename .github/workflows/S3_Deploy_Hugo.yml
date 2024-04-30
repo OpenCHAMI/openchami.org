@@ -1,0 +1,21 @@
+name: Hugo Deploy To S3
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@master
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.2
+      - name: NPM Install
+        run: npm install
+      - name: Build Hugo
+        run: npm run build
+      - name: Deploy to S3
+        run: npm run deploy
+

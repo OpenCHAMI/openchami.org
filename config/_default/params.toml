@@ -17,7 +17,7 @@ mainSections = ["docs", "events"]
 
   # Navbar
   navbarSticky = true # true (default) or false
-  containerBreakpoint = "fluid" # "", "sm", "md", "lg" (default), "xl", "xxl", or "fluid"
+  containerBreakpoint = "xl" # "", "sm", "md", "lg" (default), "xl", "xxl", or "fluid"
 
   ## Button
   navBarButton = false # false (default) or true
@@ -74,7 +74,7 @@ mainSections = ["docs", "events"]
   editPage = true # false (default) or true
   lastMod = false # false (default) or true
   repoHost = "GitHub" # GitHub (default), Gitea, GitLab, Bitbucket, or BitbucketServer
-  docsRepo = "https://github.com/OpenCHAMI/openchami.org-test"
+  docsRepo = "https://github.com/OpenCHAMI/openchami.org"
   docsRepoBranch = "main" # main (default), master, or <branch name>
   docsRepoSubPath = "" # "" (none, default) or <sub path>
 

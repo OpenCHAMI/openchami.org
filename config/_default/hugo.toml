@@ -80,3 +80,14 @@ copyRight = "Copyright (c) 2023-2024 OpenCHAMI"
   hint = "photo"
   quality = 85
   resampleFilter = "Lanczos"
+
+[deployment]
+
+[[deployment.targets]]
+
+name = "aws-deployment"
+
+# S3; see https://gocloud.dev/howto/blob/#s3
+# For S3-compatible endpoints, see https://gocloud.dev/howto/blob/#s3-compatible
+URL = "s3://ochami-web?region=us-west-1"
+cloudFrontDistributionID = "E291GL86ZMAEXB"
