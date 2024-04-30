@@ -46,6 +46,8 @@ docker exec -it step-ca step ca root > cacert.pem
 # Use curl to confirm that everything is working
  curl --cacert cacert.pem https://foobar.openchami.cluster/login
 ```
+
+Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/lanl/).
 {{< /callout >}}
 
 ### Dependencies and Assumptions
@@ -66,6 +68,11 @@ This quickstart makes a few assumptions about the target operating system and is
 Now that you've got a set of containers up and running that provide OpenCHAMI services, it's time to use them.  We've got a set of administration guides and user guides for you to choose from.
 
 {{< card-grid >}}
+{{< link-card
+  title="Docker Compose Tour"
+  description="Learn just enough docker compose to explore our quickstart files"
+  href="/guides/docker_tour/"
+>}}
 {{< link-card
   title="Run a job"
   description="Deploy slurm and run a simple job"
