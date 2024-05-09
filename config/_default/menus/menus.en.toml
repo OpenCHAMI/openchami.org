@@ -65,9 +65,10 @@
   weight = 30
 
 [[footer]]
-  name = "Privacy Policy"
-  url = "/privacy/"
+  name = "Join us on Slack"
+  url = "/slack"
   weight = 10
+
 
 # [[footer]]
 #   name = "Terms of Service"

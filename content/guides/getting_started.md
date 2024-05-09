@@ -14,7 +14,9 @@ seo:
   noindex: false # false (default) or true
 ---
 
-OpenCHAMI has everything you need to go from bare hardware to a running cluster in a matter of minutes.  In the guide below, we'll show you how to install and run the OpenCHAMI services with all the containers you need to generate an inventory of your compute nodes and boot them.  
+  In the guide below, we'll show you how to install and run the OpenCHAMI services with all the containers you need to generate an inventory of your compute nodes and boot them.
+
+  Things move quickly, so the official guide on github may have updated information. See the [quickstart README on Github](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart#readme) for the most current documentation.
 
 Happy HPC!
 
@@ -39,12 +41,30 @@ cd deployment-recipes/quickstart/
 # This also sets the system name for your certificates.  In our case, we'll call our system "foobar".  The full url will be https://foobar.openchami.cluster which you can set in /etc/hosts to make life easier for you later
 ./generate-configs.sh foobar
 # Start the services
-docker compose -f base.yml -f postgres.yml -f jwt-security.yml -f haproxy-api-gateway.yml -f openchami-svcs.yml -f autocert.yml up -d
+docker compose -f base.yml -f postgres.yml -f jwt-security.yml -f haproxy-api-gateway.yml -f  openchami-svcs.yml -f autocert.yml up -d
 # This shouldn't take too long.  A minute or two depending on how long pulling containers takes.
-# Once you get the prompt back, you can download the public certificate from your ca.
-docker exec -it step-ca step ca root > cacert.pem
+```
+
+Once you get the prompt back, you can download the public certificate from your ca and generate your access token.
+```bash {title="Obtain your rootca and tokens"}
+# Assuming you're using bash as your shell, you can use the included functions to simplify interactions with your new OpenCHAMI system.
+source bash_functions.sh
+# Download the root ca so you can validate the ssl certificates included with your system
+get_ca_cert > cacert.pem
+# Create a jwt access token for use with the apis.
+ACCESS_TOKEN=$(gen_access_token)
+# If you're curious about that token, you can safely copy and paste it into https://jwt.io to learn more.
 # Use curl to confirm that everything is working
- curl --cacert cacert.pem https://foobar.openchami.cluster/login
+curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar.openchami.cluster/hsm/v2/State/Components
+# This should respond with an empty set of Components: {"Components":[]}
+```
+
+Create a separate token that a script can use to update dnsmasq
+
+```bash {title="Generate a dedicated token and use it with dnsmasq"}
+ echo "DNSMASQ_ACCESS_TOKEN=$(gen_access_token)" >> .env
+ docker compose -f base.yml -f postgres.yml -f jwt-security.yml -f haproxy-api-gateway.yml -f openchami-svcs.yml -f autocert.yml -f dnsmasq.yml up -d
+
 ```
 
 Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/lanl/).

@@ -8,6 +8,7 @@ mainSections = ["docs", "events"]
 
 [social]
   github = "openchami"
+  
 
 # Doks (@hyas/doks-core)
 [doks]
