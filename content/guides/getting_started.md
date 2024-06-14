@@ -57,7 +57,7 @@ ACCESS_TOKEN=$(gen_access_token)
 # Add an entry to /etc/hosts for the cluster
 echo '127.0.0.1  foobar.openchami.cluster' | sudo tee -a /etc/hosts
 # Use curl to confirm that everything is working
-curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar.openchami.cluster/hsm/v2/State/Components
+curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar.openchami.cluster:8443/hsm/v2/State/Components
 # This should respond with an empty set of Components: {"Components":[]}
 ```
 
