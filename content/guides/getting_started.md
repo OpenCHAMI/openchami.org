@@ -54,6 +54,8 @@ get_ca_cert > cacert.pem
 # Create a jwt access token for use with the apis.
 ACCESS_TOKEN=$(gen_access_token)
 # If you're curious about that token, you can safely copy and paste it into https://jwt.io to learn more.
+# Add an entry to /etc/hosts for the cluster
+echo '127.0.0.1  foobar.openchami.cluster' | sudo tee -a /etc/hosts
 # Use curl to confirm that everything is working
 curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar.openchami.cluster/hsm/v2/State/Components
 # This should respond with an empty set of Components: {"Components":[]}
