@@ -1,7 +1,7 @@
 ---
 title: 'Bristol Developer Summit'
 date: 2024-07-14T10:00:00-05:00
-description: "OpenCHAMI Developer Summit September 17th - 19th, hosted by the University of Bristol."
+description: "Join the OpenCHAMI community for the Developer Summit from September 17th - 19th, hosted by the University of Bristol."
 summary: "OpenCHAMI Developer Summit September 17th - 19th, hosted by the University of Bristol."
 draft: false
 weight: 50
@@ -11,27 +11,29 @@ contributors: ["Alex Lovell-Troy"]
 pinned: false
 homepage: false
 seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
+  title: "OpenCHAMI Developer Summit 2024 at the University of Bristol"
+  description: "Join the OpenCHAMI Developer Summit for discussions on the technical future of OpenCHAMI, with industry experts and partners."
+  canonical: ""
+  noindex: false
 ---
 
-Join us for two and a half days of developer-focused discussion on the campus of the University of Bristol, home of Isambard AI.
+We are excited to announce the upcoming OpenCHAMI Developer Summit, a gathering of key contributors and partners dedicated to the future of the OpenCHAMI software stack. Hosted by the University of Bristol, this event offers a unique opportunity for collaboration and innovation in the HPC community.
 
-* __Dates__: September 17th-19th
-* __Registration__: [Registration Form](https://forms.office.com/g/gzp6zcEGKf) Open until September 28th
-* __Location__: University of Bristol ([map](https://maps.app.goo.gl/FHhzrTifxotGE9aK7))
-* __Attendee Profile__: Current OpenCHAMI Partners, Prospective Partners, Vendors, Experts
-* __Slack Channel__: [#2024-september-dev-summit](https://openchami.slack.com/archives/C07AKTJ14LT) 
+**Dates:** September 17th-19th  
+**Registration:** [Register Here](https://forms.office.com/g/gzp6zcEGKf) (Open until September 2nd)  
+**Location:** University of Bristol ([View Map](https://maps.app.goo.gl/FHhzrTifxotGE9aK7))  
+**Attendee Profile:** Current OpenCHAMI Partners, Prospective Partners, Vendors, Experts  
+**Slack Channel:** [#2024-september-dev-summit](https://openchami.slack.com/archives/C07AKTJ14LT) 
 
 ### Program Outline
 
-Over the course of two and a half days, attendees will engage with each other to discuss the current and future technical future of the OpenCHAMI software.  We will open the first day with a project overview to establish a baseline for further discussions and we will open the second day with an introduction to the Isambard AI supercomputer.  Through the rest of the program we will:
+Over the course of two and a half days, attendees will engage in discussions focused on the technical evolution of OpenCHAMI. The summit will kick off with a project overview to establish a foundation for deeper discussions. On the second day, we will introduce the Isambard AI supercomputer. Throughout the event, participants will:
 
-* Review current and future development milestones
-* Share objectives for current and future operational systems
-* Explore architectural questions from the [Github RFDs](https://github.com/OpenCHAMI/roadmap/issues?q=is%3Aissue+is%3Aopen+label%3Arfd)
-* Present to each other on topics of interest to the partners
-* Get vendor perspectives on relevant innovations
-* Discuss Points: Multitenancy, Deployment Models, Operations, Zero Trust for HPC, and more...
+* Review current and upcoming development milestones.
+* Share objectives for existing and future operational systems.
+* Explore architectural questions from the [GitHub RFDs](https://github.com/OpenCHAMI/roadmap/issues?q=is%3Aissue+is%3Aopen+label%3Arfd).
+* Present on topics of interest to the OpenCHAMI community.
+* Gain insights from vendors on relevant technological innovations.
+* Discuss key topics, including multitenancy, deployment models, operations, and Zero Trust for HPC.
+
+We look forward to your participation in shaping the future of OpenCHAMI.
