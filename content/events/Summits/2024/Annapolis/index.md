@@ -1,5 +1,5 @@
 ---
-title: 'April 2024 Developers Summit'
+title: 'Annapolis Developer Summit'
 date: 2024-02-24T10:00:00-05:00
 description: "Join us for the innagural developer summit April 9th and 10th in Annapolis MD."
 summary: "Join us for the innagural developer summit April 9th and 10th in Annapolis MD."
@@ -16,8 +16,6 @@ seo:
   canonical: "" # custom canonical URL (optional)
   noindex: false # false (default) or true
 ---
-
-## OpenCHAMI Spring Developer Summit
 
 OpenCHAMI developers will gather in Annapolis MD at The Westin on April 9th and 10th for our first in-person gathering specifically for developers.  Accommodations will be made to involve remote participation as well.  Over two days, we'll set aside time to review where our software stands today and host workshops dedicated to User Interfaces, Developer Experience, Software Quality Standards, and Testing Requirements.  We encourage anyone with an interest in these subjects to [fill out our free registration form](https://forms.office.com/g/3zPmc3WUTr) to receive further logistical and agenda updates.  OpenCHAMI is not charging any registration or attendance fee.
 

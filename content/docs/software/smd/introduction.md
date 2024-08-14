@@ -7,6 +7,7 @@ lastmod: 2024-03-07T16:13:18+02:00
 draft: false
 weight: 910
 toc: true
+contributors: ["Alex Lovell-Troy"]
 seo:
   title: "" # custom title (optional)
   description: "" # custom description (recommended)

@@ -2,7 +2,7 @@
 title = 'Experimental Refactoring with SMD'
 date = 2024-01-24T10:24:44-05:00
 draft = false
-categories = ['LANL', 'Development']
+categories = ['LANL', 'Development', 'sc23']
 contributors = ["David J. Allen (LANL)"]
 +++
 
