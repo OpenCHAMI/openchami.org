@@ -53,7 +53,8 @@ copyRight = "Copyright (c) 2023-2024 OpenCHAMI"
   tag = "tags"
 
 [permalinks]
-  blog = "/blog/:slug/"
+  blog = "/blog/:year/:month/:slug/"
+  events = "/events/:year/:slug/"
   docs = "/docs/:sections[1:]/:slug/"
 # docs = "/docs/1.0/:sections[1:]/:slug/"
 
