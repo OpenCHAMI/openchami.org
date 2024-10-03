@@ -85,6 +85,28 @@ This quickstart makes a few assumptions about the target operating system and is
 * Dedicated System - The docker compose setup assumes that it can take control of several TCP ports and interact with the host network for DHCP and TFTP.  It is tested on a dedicated virtual machine
 * Local Name Registration - The quickstart bootstraps a Certificate Authority and issues an SSL certificate with a predictable name.  For access, you will need to add that name/IP to /etc/hosts on all clients or make it resolvable through your site DNS
 
+#### Dependencies
+
+* Docker - This quickstart assume that the target operating system is Rocky Linux 9.3, which by default does not come pre-installed with docker. Rocky also does not by default have access to docker's repositories, and will install an alternaitve that's incompatible with OpenCHAMI, Podman, when a user attempts to install `docker` from yum. We've provided steps from [Docker's installation guide](https://docs.docker.com/engine/install/rhel/) to make sure you can get your containers up and running with ease:
+
+Install yum-utils and point your machine at Docker's repo:
+```bash {title="Install yum-utils"}
+sudo yum install -y yum-utils
+```
+```bash {title="Add Docker's repository to your machine"}
+sudo yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+```
+Install Docker and start Docker's service:
+```bash {title="Install Docker and related utilities"}
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+```bash {title="Start the Docker daemon"}
+sudo systemctl start docker
+```
+Additional verification and troubleshooting steps available at the page linked above if needed.
+
+
+
 ## What's next
 
 Now that you've got a set of containers up and running that provide OpenCHAMI services, it's time to use them.  We've got a set of administration guides and user guides for you to choose from.
