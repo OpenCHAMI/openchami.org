@@ -87,7 +87,7 @@ This quickstart makes a few assumptions about the target operating system and is
 
 #### Dependencies
 
-* Docker - This quickstart assume that the target operating system is Rocky Linux 9.3, which by default does not come pre-installed with docker. Rocky also does not by default have access to docker's repositories, and will install an alternaitve that's incompatible with OpenCHAMI, Podman, when a user attempts to install `docker` from yum. We've provided steps from [Docker's installation guide](https://docs.docker.com/engine/install/rhel/) to make sure you can get your containers up and running with ease:
+* Docker - This quickstart assumes that the target operating system is Rocky Linux 9.3, which by default does not come pre-installed with docker. Rocky also does not by default have access to docker's repositories, and will install an alternaitve that's incompatible with OpenCHAMI, Podman, when a user attempts to install `docker` from yum. We've provided steps from [Docker's installation guide](https://docs.docker.com/engine/install/rhel/) to make sure you can get your containers up and running with ease:
 
 Install yum-utils and point your machine at Docker's repo:
 ```bash {title="Install yum-utils"}
