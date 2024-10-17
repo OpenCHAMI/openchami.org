@@ -2,14 +2,14 @@
 
 In previous posts about booting 640 Nodes in five minutes, we've described our 640 node system and how we came to be able to use it for testing.  We've covered the OpenCHAMI software we used and how we deployed it to meet our goals as well as the standards of Los Alamos.  We've covered the CLI interactions we needed to configure OpenCHAMI to support the boot.  If you feel like you're jumping in to the middle here, it is worth going back and reading those posts first.
 
-Like many other HPC systems, our nodes in Badger have no local disks.  The boot process for these nodes relies on a remote filesystem image that can be loaded into memory on each node with any modifications saved to an overlayfs layer on top of the system image.  OpenCHAMI itself doesn't include tooling to build, store, and serve system images.  In keeping with our core principle of modularity, LANL has a solution for these things, but other sites may choose other options.
+Like many other HPC systems, our nodes in Badger have no local disks.  The boot process for these nodes relies on a remote filesystem image that can be loaded into memory on each node. Any filesystem modifications are then saved to an overlayfs layer that also runs in memory.  Nothing is persisted across a reboot.  Every single boot operates as a brand new install.  Any node-specific information, including secrets and keys must be delivered to the node as part of the boot process.
+
+OpenCHAMI itself doesn't include tooling to build, store, and serve system images.  In keeping with our core principle of modularity, each site has their own preferred OS and image build pipeline.  And, since OpenCHAMI doesn't have custom softare that must be installed in the system image, any Linux Operating System should work.  OpenCHAMI references existing kernels, ramdisks, and system image through urls in boot parameters.
+
+However, it is worth describing how we built the images for our Badger boot.  Our process involves using [Buildah](https://buildah.io/) and containers to create images.  In our case, we use gitlab runners to automatically rebuild our images when any of our image definitions change.
 
 ### Cluster Node Images
-OpenCHAMI doesn't provide a way to build cluster images for the nodes to boot. These images must come from something externally. There are a lot of ways to build bootable images and at LANL we have a custom Gitlab pipeline that does this for us. 
 
-A tl;dr version: we use [Buildah](https://buildah.io/) to leverage containers to build and manage our cluster images.
-
-A very, very simple example:
 
 Create a blank container
 ```bash
