@@ -1,10 +1,26 @@
-Deploying OpenCHAMI
+---
+title: "Booting 640 HPC Nodes in 5 Minutes: Part 2 - Deploying OpenCHAMI "
+date: 2024-10-17
+draft: false
+categories: ["HPC", "OpenCHAMI", "Booting"]
+contributors: ["Alex Lovell-Troy"]
+---
 
-OpenCHAMI is a very adaptable set of containerized software.  Adaptability is one of our core principles.  Different sites must be able to put the containers together in whatever way works best for them.  We recommend that most folks start with our quickstart which utilizes docker-compose to bring up the software and associated infrastructure.  However, it's not the only way to deploy OpenCHAMI.  For Badger, we chose [Podman Quadlets](https://docs.podman.io/en/stable/markdown/podman-systemd.unit.5.html) instead.  For those unfamiliar with quadlets, it is helpful to understand them as systemd unit files for containers.  Since they work with the rest of systemd, they also get some of the benefits of docker-compose.  Through the syntax in the unit files, admins can specify shared resources like files, volumes, and networks.  An additional benefit for our sysadmin team was the Ansible [module](https://docs.ansible.com/ansible/latest/collections/containers/podman/podman_container_module.html) which allowed quadlets to fit seamlessly in to our existing deployment and security pipelines.
+## Deploying OpenCHAMI: Flexibility and Adaptability in Cluster Management
 
+One of the key strengths of OpenCHAMI is its flexibility. The software is fully containerized and can be deployed using a variety of methods. Our goal was to ensure sysadmins have the freedom to deploy it in a way that best fits their infrastructure, whether that’s through Docker, Podman, or another container management system.
 
-In the following unit file, we describe the postgres container which runs the core of data persistence for OpenCHAMI.  In it, we can see that our data will be stored in a named volume and that we've got some initialization information in a second volume.  We've also got several environment variables and secrets that customize the behavior of the container.  Two networks are attached to the container. (Networking works a little differently with quadlets.  See Below.)
-```bash
+### Docker Compose Quickstart
+
+For those looking to get started quickly, we recommend using our [quickstart](https://openchami.org/guides/getting_started/) which leverages `docker-compose` to spin up the services and infrastructure needed for OpenCHAMI.  The
+
+### Podman Quadlets for Badger
+
+On the Badger cluster, however, we took a different approach. Our sysadmins already have a set of procedures for installing and managing systems with Ansible and systemd services.  Rather than asking them to learn our development technology, we approached deployment of the microservices by integrating with what they were already used to. We used [Podman Quadlets](https://docs.podman.io/en/stable/markdown/podman-systemd.unit.5.html), which integrate with systemd. Quadlets allow you to manage containers as systemd unit files, providing an easy way to orchestrate services while keeping system-level control.
+
+The following unit file describes the postgres container that holds all the state for OpenCHAMI.  Many of the directives should be familiar from the corresponding docker-compose file in the quickstart.
+
+```ini
 [Unit]
 Description=The postgres container
 
@@ -35,38 +51,14 @@ Network=ochami-jwt-internal.network
 Restart=always
 ```
 
-Quadlet support for secrets, volumes, and environment variables all work similarly to docker-compose.  Once you understand the mappings, you can easily translate an existing docker-compose file to a set of quadlet files.  Where things get a bit complicated is networks.  By default quadlets don't support multiple segregated networks the way docker-compose does.
+This approach allowed us to take advantage of systemd's service management while still using containers. Sysadmins can control and monitor the containers as they would any other systemd service, simplifying operations and improving reliability.
 
-## Networks
-The default CNI podman network didn't work for us with OpenCHAMI because we require multiple networks to be connected to each container. In order to work around the defaults, we needed to change the network backend to `netavark`.
+## Quadlets with Ansible
 
-```bash 
-# /etc/containers/containers.conf
-[network]
-network_backend="netavark"
-```
-Based on our investigation during development, we believe netavark will soon be the default for quadlets.  Until then, it is a simple change.
-
-On badger, we ended up with a pair of unit files that define the networks
-
-```bash
-[Unit]
-Description=ochami-internal Network
-
-[Network]
-NetworkName=ochami-internal
-Internal=True
-```
-
-## Deployment with Ansible
-
-At LANL, we leverage Ansible for a lot of our sysadmin tasks.  In order for our sysadmins to deploy OpenCHAMI without developer support, we needed to meet them where they are, not force them to learn a new technology like Kubernetes or even docker-compose.  We built on our work with quadlets and created a set of ansible roles that set up each of the microservices in the right order using a simple ansible command to create and start the unit files.
+At LANL, we leverage Ansible for a lot of our sysadmin tasks.  In order for our sysadmins to deploy OpenCHAMI without developer support, we needed to meet them where they were, not force them to learn a new technology.  We built on our work with quadlets and created a set of ansible roles using the [podman container module](https://docs.ansible.com/ansible/latest/collections/containers/podman/podman_container_module.html)that set up each of the microservices in the right order using a simple ansible command to create and start the unit files.
 
 > [Our Ansible Repository](https://github.com/OpenCHAMI/deployment-recipes/tree/trcotton/podman-quadlets/lanl/podman-quadlets)
 
-Once created and started, the Units behave like any others on the system.  Our admins can troubleshoot them with tools they understand and even trace dependencies as they would any other system in the datacenter.
+Once created and started, the Units behave like any others on the system.  Our admins could troubleshoot them with tools they understand and even trace dependencies as they would any other system in the datacenter.
 
-For our previous tests of OpenCHAMI, we deployed a Virtual Machine using libvirt on our dedicated head node for each cluster.  The speed of iteration on these development systems was more important than anything else.  With Badger, we wanted to reduce the troubleshooting burden.  While VMs are fast for iteration, they add complexity to the network stack, especially when we're dealing with protocols like DHCP.  We decided instead to install our systemd unit files directly on the head node for badger.
-
-Read on for Part 3 in which we interact with a running OpenCHAMI system to boot Badger.
-
+In the next post, we’ll explore how to interact with OpenCHAMI via the CLI and API to manage large clusters efficiently.

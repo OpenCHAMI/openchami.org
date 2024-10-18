@@ -1,34 +1,24 @@
-# Interacting with OpenCHAMI on Badger
+---
+title: "Booting 640 HPC Nodes in 5 Minutes: Part 3 - Interacting with OpenCHAMI"
+date: 2024-10-17
+draft: false
+categories: ["HPC", "OpenCHAMI", "Booting"]
+contributors: ["Alex Lovell-Troy"]
+---
 
-OpenCHAMI is designed to operate more like a cloud api than a standard Linux application.  No command can succeed just based on POSIX user/group details.  The API server may be running on the same head node, but it also could be running on a different node, or even somewhere on the cloud.  Interacting with these APIs without adding significant management burden or dependencies has been a goal of OpenCHAMI from the beginning.  We've chosen JWTs as our standard for API authentication and authorization.  Once a JWT is issued, it can be reused until it expires with no need to contact any central authentication server.
+## Interacting with OpenCHAMI
 
-Since most of our development effort in the past year has focused on the server side processing of the JWTs, we didn't have a ready-made client for making changes to a system in support of Badger.  Our testing involved a lot of pre-built curl commands as bash aliases.  That wouldn't work for Badger.  At the same time, we also didn't feel ready to build an actual CLI for the sysadmins without taking the time to really understand how it would be used.
+OpenCHAMI operates more like a cloud API than a traditional HPC management tool. This means that commands don’t rely on POSIX user/group details for success. Instead, all interactions with the system are API-driven, whether you’re on the head node, a different node, or managing remotely from the cloud.
 
-Like many sysadmins before us, we decided to split the difference and create a stopgap solution in Python.  While we're very pleased with it for use with Badger, we'll also be fairly disappointed if we find it still in use a year from now.
+### Authentication with JWTs
 
+Authentication and authorization in OpenCHAMI are handled via JSON Web Tokens (JWTs). Once a JWT is issued, it can be reused until it expires, significantly reducing the need for constant authentication with a central server.  Our client has built-in tooling for requesting and managing a jwt for use with the microservices.
 
-## ochami-cli
+### Building a Client for Badger
 
-Our stopgap python script is called [ochami-cli](https://github.com/OpenCHAMI/ochami-cmdline) which narrowly covers the things we need to run badger.  It makes plenty of assumptions about our environment, but we are learning a lot about sysadmin tooling as we work through the use cases.
+During our deployment on Badger, we recognized the need for a dedicated client to interact with the OpenCHAMI API efficiently. Initially, we relied on `curl` commands wrapped in bash scripts, but this wasn’t sustainable and fairly frustrating for sysadmins.
 
-The tool requires specific environment settings, which should be configured in `/etc/profile.d/ochami.sh`.
-
-### Environment Variables
-Set the following environment variables:
-```bash
-SMD_URL=https://badger.openchami.cluster:8443/hsm/v2
-BSS_URL=https://badger.openchami.cluster:8443/boot/v1
-CLOUD_INIT_URL=https://badger.openchami.cluster:8443/cloud-init
-CLOUD_INIT_SECURE_URL=https://badger.openchami.cluster:8443/cloud-init-secure
-```
-
-Additionally, the profile script should create bash functions to obtain an access token and generate a CA certificate:
-```bash
-export ACCESS_TOKEN=$(gen_access_token)
-get_ca_cert > /tmp/ochami.pem
-export CACERT=/tmp/ochami.pem
-```
-
+We developed a CLI tool that wraps API interactions, making it easier for sysadmins to manage nodes, deploy images, and monitor the system. You can find it on Github at [Github.com/OpenCHAMI/ochami-cmdline](https://github.com/OpenCHAMI/ochami-cmdline)
 
 ## Populating our Inventory System
 
@@ -94,4 +84,6 @@ And to view the new data:
 ochami-cli bss --get-bootparams
 ```
 
-See more about the images we booted on Badger and how cloud-init helps us configure everything in Part 4
+In the next post, we’ll explore how OpenCHAMI manages images and deployment workflows at scale, bringing everything together to help sysadmins efficiently manage large HPC environments.
+
+Stay tuned for Part 4!
