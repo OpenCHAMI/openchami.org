@@ -15,6 +15,14 @@ summarylength = 20 # 70 (default)
 
 copyRight = "Copyright (c) 2023-2024 OpenCHAMI"
 
+
+
+[services]
+  [services.googleAnalytics]
+    ID = 'G-TNWYTBZRML'
+
+
+
 [build.buildStats]
   enable = true
 
