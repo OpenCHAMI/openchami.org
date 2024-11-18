@@ -15,3 +15,5 @@ seo:
 ### Open Composable Heterogeneous Adaptable Management Infrastructure
 
 The OpenCHAMI consortium represents some of the largest HPC operators in the world.  Our goal is to build a community of sysadmins and operators around modular system management for all scales of systems, leveraging the best ideas from the evolution of cloud.
+
+{{< youtube UbBdbhzXjbA >}}
