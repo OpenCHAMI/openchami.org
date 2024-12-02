@@ -1,3 +1,11 @@
++++
+title = 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 2)'
+date = 2024-12-01T03:43:00-05:00
+draft = true
+categories = ['LANL', 'Development']
+contributors = ["David J. Allen (LANL)"]
++++
+
 # Bridging the Gap between Identity Provider and Authorization Server (Part 2)
 
 This post is going to cover in more detail about addressing the issues mentioned in the last post by discussing the initial solution for issuing access token JSON web tokens (JWT) used in OpenCHAMI, [OPAAL](https://github.com/OpenCHAMI/opaal). It will also cover some of the other things that were considered before coming to this solution as well and why OPAAL was necessary for what we were trying to accomplish at the time. Hopefully this post will shed some like on what OPAAL was meant to do and how it was used.
