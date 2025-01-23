@@ -69,7 +69,7 @@ Create a separate token that a script can use to update dnsmasq
 
 ```
 
-Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/lanl/).
+Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/quickstart/).
 {{< /callout >}}
 
 ### Dependencies and Assumptions
