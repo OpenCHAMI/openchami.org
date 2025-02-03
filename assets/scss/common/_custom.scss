@@ -1,1 +1,37 @@
 // Put your custom SCSS code here
+
+// Adjust main content area width and alignment
+.content-area {
+    max-width: 95%;
+    margin: 0 auto;
+    text-align: left; // Prevent forced centering
+}
+
+// Allow full-width sections when needed
+.section {
+    width: 100%;
+    padding: 2rem 5%;
+}
+
+// Widen the main content section
+.container-fluid {
+    max-width: 95%;
+}
+
+// Adjust sidebar text alignment for readability
+.section-features .row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section-features .col-lg-4 {
+    padding: 15px;
+}
+
+.section-features h2 {
+    text-align: center;
+}
+
+.section-features p {
+    text-align: left; // Improve readability
+}

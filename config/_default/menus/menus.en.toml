@@ -36,8 +36,8 @@
   weight = 30
 
 [[main]]
-  name = "Events"
-  url = "/events/"
+  name = "Architecture"
+  url = "/architecture/"
   weight = 35
 
 [[main]]

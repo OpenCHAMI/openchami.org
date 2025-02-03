@@ -3,7 +3,7 @@ title: "Design Philosophy"
 date: 2024-04-07T16:12:03+02:00
 lastmod: 2024-04-07T16:12:03+02:00
 draft: false
-weight: 50
+weight: 40
 toc: true
 pinned: false
 homepage: false
@@ -48,4 +48,3 @@ To use a concrete
 * TLS
 * JWT
 * json/yaml
-
