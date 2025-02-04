@@ -2,6 +2,7 @@
 title = 'Turnkey OpenCHAMI for the Supercomputer Institute'
 date = 2024-01-24T10:24:44-05:00
 draft = false
+weight = 10
 contributors = ["Alex Lovell-Troy"]
 +++
 

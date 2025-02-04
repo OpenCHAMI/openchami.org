@@ -18,10 +18,12 @@ seo:
 
 ### **Key Features**
 
-🛡 **Security-First Architecture** – Implements **zero-trust authentication**, fine-grained **access control**, and **OIDC-based authorization** to safeguard HPC environments.  
-🧩 **Composable & Scalable** – Modular, cloud-native design supports **heterogeneous compute infrastructures** across on-prem and cloud environments.  
-🔧 **Microservices-Based** – Built on **lightweight, containerized services**, making deployment and scaling more efficient.  
-🌐  **Community-Driven & Open** – Developed **in collaboration with leading HPC sites** under the **Linux Foundation HPC initiative**, ensuring transparency and innovation.  
+- 🛡 **Security-First Architecture** – Implements **zero-trust authentication**, fine-grained **access control**, and **OIDC-based authorization** to safeguard HPC environments.
+- 🧩 **Composable & Scalable** – Modular, cloud-native design supports **heterogeneous compute infrastructures** across on-prem and cloud environments.
+- 🔧 **Microservices-Based** – Built on **lightweight, containerized services**, making deployment and scaling more efficient.
+- 🌐 **Community-Driven & Open** – Developed **in collaboration with leading HPC sites** under the **Linux Foundation HPC initiative**, ensuring transparency and innovation.
+- 🚀 **Fast Boot** - Faster and more secure boot times with cloud-init.  POST + 40 seconds!
+
 
 ### **Why OpenCHAMI?**
 

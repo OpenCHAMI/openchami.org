@@ -2,6 +2,7 @@
 title = 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 1)'
 date = 2024-06-03T03:43:00-05:00
 draft = false
+weight = 12
 categories = ['LANL', 'Development']
 contributors = ["David J. Allen (LANL)"]
 +++

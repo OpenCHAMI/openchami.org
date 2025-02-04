@@ -4,6 +4,7 @@ description: "OpenCHAMI replaces traditional SSH-based authentication with WireG
 date: 2025-02-03T00:00:00+00:00
 lastmod: 2025-02-03T00:00:00+00:00
 draft: false
+weight: 10
 categories: ["Security", "HPC", "Cloud-Init", "WireGuard"]
 tags: ["SSH", "WireGuard", "TPM", "HPC Security"]
 contributors: ["Alex Lovell-Troy"]

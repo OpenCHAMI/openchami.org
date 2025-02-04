@@ -21,7 +21,7 @@ OpenCHAMI is a modular system management framework designed to support **High Pe
 
 ## 🔄 How Components Interact
 
-OpenCHAMI follows a **microservices-based** approach where each service operates independently but communicates through a secure API. Below is a high-level **Mermaid.js diagram** illustrating these interactions:
+OpenCHAMI follows a **microservices-based** approach where each service operates independently but communicates through a secure API. Below is a high-level diagram illustrating these interactions:
 
 ```mermaid
 graph TD;
