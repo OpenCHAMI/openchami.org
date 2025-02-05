@@ -1,5 +1,5 @@
 ---
-title: "OPAAL: OIDC Provider for Authenticaion/Authorization Login"
+title: "OPAAL: OIDC Provider for Authentication/Authorization Login"
 description: ""
 summary: ""
 date: 2024-03-21T00:00:00+00:00
