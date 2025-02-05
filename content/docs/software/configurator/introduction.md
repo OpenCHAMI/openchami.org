@@ -3,7 +3,7 @@ title: "Configurator deals with messy files"
 description: "Configurator pulls data from APIs and generates necessary configuration files"
 summary: ""
 date: 2024-03-07T16:13:18+02:00
-lastmod: 2024-03-07T16:13:18+02:00
+lastmod: 2025-02-03T00:00:00+00:00
 draft: false
 weight: 910
 toc: true

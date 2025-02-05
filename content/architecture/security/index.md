@@ -88,7 +88,7 @@ Admins can integrate **multi-factor authentication (MFA)** for an additional lay
 ---
 
 ## 📌 Next Steps
-- Learn how OpenCHAMI secures **node authentication** → **[Secure Bootstrapping with WireGuard & Cloud-Init](/docs/security/bootstrapping/)**.  
+- Learn how OpenCHAMI secures **node authentication** → **[Secure Bootstrapping with WireGuard & Cloud-Init](/blog/2025/02/a-new-approach-to-security-how-openchami-eliminates-hardcoded-ssh-keys/)**.  
 - Explore OpenCHAMI’s **API security model**.  
 - Join the OpenCHAMI community for **authentication best practices**.  
 
