@@ -1,0 +1,326 @@
+target is a directory, href lacks trailing slash --- index.html --> /docs/software
+empty hash --- index.html --> #
+target does not exist --- index.html --> /slack
+target is a directory, href lacks trailing slash --- privacy/index.html --> /docs/software
+empty hash --- privacy/index.html --> #
+target does not exist --- privacy/index.html --> /slack
+target is a directory, href lacks trailing slash --- 404.html --> /docs/software
+empty hash --- 404.html --> #
+target does not exist --- 404.html --> /slack
+target is a directory, href lacks trailing slash --- docs/index.html --> /docs/software
+empty hash --- docs/index.html --> #
+target does not exist --- docs/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/introduction-to-openchami/index.html --> /docs/software
+empty hash --- docs/introduction-to-openchami/index.html --> #
+target does not exist --- docs/introduction-to-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/index.html --> /docs/software
+empty hash --- docs/software/index.html --> #
+target does not exist --- docs/software/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/magellan/magellan-discovers/index.html --> /docs/software
+empty hash --- docs/software/magellan/magellan-discovers/index.html --> #
+target does not exist --- docs/software/magellan/magellan-discovers/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/magellan/index.html --> /docs/software
+empty hash --- docs/software/magellan/index.html --> #
+target does not exist --- docs/software/magellan/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/magellan/magellan-automated-bmc-discovery-with-openchami/index.html --> /docs/software
+empty hash --- docs/software/magellan/magellan-automated-bmc-discovery-with-openchami/index.html --> #
+target does not exist --- docs/software/magellan/magellan-automated-bmc-discovery-with-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/smd-the-state-management-daemon/index.html --> /docs/software
+empty hash --- docs/software/smd-the-state-management-daemon/index.html --> #
+target does not exist --- docs/software/smd-the-state-management-daemon/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/configurator-deals-with-messy-files/index.html --> /docs/software
+empty hash --- docs/software/configurator-deals-with-messy-files/index.html --> #
+target does not exist --- docs/software/configurator-deals-with-messy-files/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/cloud-init/index.html --> /docs/software
+empty hash --- docs/software/cloud-init/index.html --> #
+target does not exist --- docs/software/cloud-init/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/cloud-init/dynamic-cloud-init-configuration-in-openchami/index.html --> /docs/software
+empty hash --- docs/software/cloud-init/dynamic-cloud-init-configuration-in-openchami/index.html --> #
+target does not exist --- docs/software/cloud-init/dynamic-cloud-init-configuration-in-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/cloud-init/cloud-init-makes-it-personal/index.html --> /docs/software
+empty hash --- docs/software/cloud-init/cloud-init-makes-it-personal/index.html --> #
+target does not exist --- docs/software/cloud-init/cloud-init-makes-it-personal/index.html --> /docs/security/bootstrapping/
+target does not exist --- docs/software/cloud-init/cloud-init-makes-it-personal/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/opaal/index.html --> /docs/software
+empty hash --- docs/software/opaal/index.html --> #
+target does not exist --- docs/software/opaal/index.html --> /slack
+target is a directory, href lacks trailing slash --- docs/software/bss/index.html --> /docs/software
+empty hash --- docs/software/bss/index.html --> #
+target does not exist --- docs/software/bss/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2025/02/a-new-approach-to-security-how-openchami-eliminates-hardcoded-ssh-keys/index.html --> /docs/software
+empty hash --- blog/2025/02/a-new-approach-to-security-how-openchami-eliminates-hardcoded-ssh-keys/index.html --> #
+target does not exist --- blog/2025/02/a-new-approach-to-security-how-openchami-eliminates-hardcoded-ssh-keys/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/page/2/index.html --> /docs/software
+empty hash --- blog/page/2/index.html --> #
+target does not exist --- blog/page/2/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/03/authenticated-service-to-service-communication-with-client-credentials/index.html --> /docs/software
+empty hash --- blog/2024/03/authenticated-service-to-service-communication-with-client-credentials/index.html --> #
+Non-OK status: 404 --- blog/2024/03/authenticated-service-to-service-communication-with-client-credentials/index.html --> https://ochami.org/posts/smd-jwtauth/
+Non-OK status: 404 --- blog/2024/03/authenticated-service-to-service-communication-with-client-credentials/index.html --> https://openchami.org/contact/
+target does not exist --- blog/2024/03/authenticated-service-to-service-communication-with-client-credentials/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/11/openchami-mini-bootcamp/index.html --> /docs/software
+empty hash --- blog/2024/11/openchami-mini-bootcamp/index.html --> #
+target does not exist --- blog/2024/11/openchami-mini-bootcamp/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-2-deploying-openchami/index.html --> /docs/software
+empty hash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-2-deploying-openchami/index.html --> #
+Non-OK status: 404 --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-2-deploying-openchami/index.html --> https://github.com/OpenCHAMI/deployment-recipes/tree/trcotton/podman-quadlets/lanl/podman-quadlets
+target does not exist --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-2-deploying-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-4-booting-nodes/index.html --> /docs/software
+empty hash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-4-booting-nodes/index.html --> #
+target does not exist --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-4-booting-nodes/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-1-an-introduction-to-openchami/index.html --> /docs/software
+empty hash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-1-an-introduction-to-openchami/index.html --> #
+target does not exist --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-1-an-introduction-to-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/10/re-introducing-openchami/index.html --> /docs/software
+empty hash --- blog/2024/10/re-introducing-openchami/index.html --> #
+target does not exist --- blog/2024/10/re-introducing-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-3-interacting-with-openchami/index.html --> /docs/software
+empty hash --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-3-interacting-with-openchami/index.html --> #
+target does not exist --- blog/2024/10/booting-640-hpc-nodes-in-5-minutes-part-3-interacting-with-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/07/code-deep-dive-dynamic-data-persistence-for-our-control-plane/index.html --> /docs/software
+empty hash --- blog/2024/07/code-deep-dive-dynamic-data-persistence-for-our-control-plane/index.html --> #
+target does not exist --- blog/2024/07/code-deep-dive-dynamic-data-persistence-for-our-control-plane/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/01/experimental-refactoring-with-smd/index.html --> /docs/software
+empty hash --- blog/2024/01/experimental-refactoring-with-smd/index.html --> #
+target does not exist --- blog/2024/01/experimental-refactoring-with-smd/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/01/exploring-multi-tenacy-capabilities-in-smd-with-groups-and-partitions/index.html --> /docs/software
+empty hash --- blog/2024/01/exploring-multi-tenacy-capabilities-in-smd-with-groups-and-partitions/index.html --> #
+href blank --- blog/2024/01/exploring-multi-tenacy-capabilities-in-smd-with-groups-and-partitions/index.html --> 
+target does not exist --- blog/2024/01/exploring-multi-tenacy-capabilities-in-smd-with-groups-and-partitions/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/01/implementing-authn/authz-in-openchami-microservices/index.html --> /docs/software
+empty hash --- blog/2024/01/implementing-authn/authz-in-openchami-microservices/index.html --> #
+target does not exist --- blog/2024/01/implementing-authn/authz-in-openchami-microservices/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/01/turnkey-openchami-for-the-supercomputer-institute/index.html --> /docs/software
+empty hash --- blog/2024/01/turnkey-openchami-for-the-supercomputer-institute/index.html --> #
+target does not exist --- blog/2024/01/turnkey-openchami-for-the-supercomputer-institute/index.html --> /contact/
+target does not exist --- blog/2024/01/turnkey-openchami-for-the-supercomputer-institute/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2024/06/bridging-the-gap-between-external-identity-provider-and-self-hosted-authorization-server-part-1/index.html --> /docs/software
+empty hash --- blog/2024/06/bridging-the-gap-between-external-identity-provider-and-self-hosted-authorization-server-part-1/index.html --> #
+target does not exist --- blog/2024/06/bridging-the-gap-between-external-identity-provider-and-self-hosted-authorization-server-part-1/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2023/10/magellan-alternative-redfish-discovery-for-openchami/csm/index.html --> /docs/software
+empty hash --- blog/2023/10/magellan-alternative-redfish-discovery-for-openchami/csm/index.html --> #
+target does not exist --- blog/2023/10/magellan-alternative-redfish-discovery-for-openchami/csm/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2023/10/exploring-csm-microservices-for-openchami/index.html --> /docs/software
+empty hash --- blog/2023/10/exploring-csm-microservices-for-openchami/index.html --> #
+target does not exist --- blog/2023/10/exploring-csm-microservices-for-openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/2023/10/boot-script-service-switching-from-etcd-to-postgresql-for-a-smaller-storage-backend/index.html --> /docs/software
+empty hash --- blog/2023/10/boot-script-service-switching-from-etcd-to-postgresql-for-a-smaller-storage-backend/index.html --> #
+target does not exist --- blog/2023/10/boot-script-service-switching-from-etcd-to-postgresql-for-a-smaller-storage-backend/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/index.html --> /docs/software
+empty hash --- blog/index.html --> #
+target does not exist --- blog/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/booting-badger/index.html --> /docs/software
+empty hash --- blog/booting-badger/index.html --> #
+target does not exist --- blog/booting-badger/index.html --> /slack
+target is a directory, href lacks trailing slash --- blog/openchami-summit-bristol/index.html --> /docs/software
+empty hash --- blog/openchami-summit-bristol/index.html --> #
+Non-OK status: 404 --- blog/openchami-summit-bristol/index.html --> https://www.youtube.com/playlist?list=PLmZbEhW6J2M628wj6V2jz92A4_iBsVXr8
+target does not exist --- blog/openchami-summit-bristol/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/jwt/index.html --> /docs/software
+empty hash --- tags/jwt/index.html --> #
+target does not exist --- tags/jwt/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/rbac/index.html --> /docs/software
+empty hash --- tags/rbac/index.html --> #
+target does not exist --- tags/rbac/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/page/2/index.html --> /docs/software
+empty hash --- tags/page/2/index.html --> #
+target does not exist --- tags/page/2/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/index.html --> /docs/software
+empty hash --- tags/index.html --> #
+target does not exist --- tags/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/open-source/index.html --> /docs/software
+empty hash --- tags/open-source/index.html --> #
+target does not exist --- tags/open-source/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/security/index.html --> /docs/software
+empty hash --- tags/security/index.html --> #
+target does not exist --- tags/security/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/redfish/index.html --> /docs/software
+empty hash --- tags/redfish/index.html --> #
+target does not exist --- tags/redfish/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/hpc-security/index.html --> /docs/software
+empty hash --- tags/hpc-security/index.html --> #
+target does not exist --- tags/hpc-security/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/tpm/index.html --> /docs/software
+empty hash --- tags/tpm/index.html --> #
+target does not exist --- tags/tpm/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/provisioning/index.html --> /docs/software
+empty hash --- tags/provisioning/index.html --> #
+target does not exist --- tags/provisioning/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/rest-apis/index.html --> /docs/software
+empty hash --- tags/rest-apis/index.html --> #
+target does not exist --- tags/rest-apis/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/oidc/index.html --> /docs/software
+empty hash --- tags/oidc/index.html --> #
+target does not exist --- tags/oidc/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/ssh/index.html --> /docs/software
+empty hash --- tags/ssh/index.html --> #
+target does not exist --- tags/ssh/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/hardware-discovery/index.html --> /docs/software
+empty hash --- tags/hardware-discovery/index.html --> #
+target does not exist --- tags/hardware-discovery/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/system-design/index.html --> /docs/software
+empty hash --- tags/system-design/index.html --> #
+target does not exist --- tags/system-design/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/bmc/index.html --> /docs/software
+empty hash --- tags/bmc/index.html --> #
+target does not exist --- tags/bmc/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/cloud-init/index.html --> /docs/software
+empty hash --- tags/cloud-init/index.html --> #
+target does not exist --- tags/cloud-init/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/wireguard/index.html --> /docs/software
+empty hash --- tags/wireguard/index.html --> #
+target does not exist --- tags/wireguard/index.html --> /slack
+target is a directory, href lacks trailing slash --- tags/openchami/index.html --> /docs/software
+empty hash --- tags/openchami/index.html --> #
+target does not exist --- tags/openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/index.html --> /docs/software
+empty hash --- contributors/index.html --> #
+target does not exist --- contributors/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/devon-t.-bautista-lanl/index.html --> /docs/software
+empty hash --- contributors/devon-t.-bautista-lanl/index.html --> #
+target does not exist --- contributors/devon-t.-bautista-lanl/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/david-j.-allen-lanl/index.html --> /docs/software
+empty hash --- contributors/david-j.-allen-lanl/index.html --> #
+Non-OK status: 404 --- contributors/david-j.-allen-lanl/index.html --> https://github.com/davidallenj
+target does not exist --- contributors/david-j.-allen-lanl/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/alex-lovell-troy/page/3/index.html --> /docs/software
+empty hash --- contributors/alex-lovell-troy/page/3/index.html --> #
+target does not exist --- contributors/alex-lovell-troy/page/3/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/alex-lovell-troy/page/2/index.html --> /docs/software
+empty hash --- contributors/alex-lovell-troy/page/2/index.html --> #
+target does not exist --- contributors/alex-lovell-troy/page/2/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/alex-lovell-troy/index.html --> /docs/software
+empty hash --- contributors/alex-lovell-troy/index.html --> #
+target does not exist --- contributors/alex-lovell-troy/index.html --> /slack
+target is a directory, href lacks trailing slash --- contributors/travis-cotton/index.html --> /docs/software
+empty hash --- contributors/travis-cotton/index.html --> #
+target does not exist --- contributors/travis-cotton/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/index.html --> /docs/software
+empty hash --- architecture/index.html --> #
+target does not exist --- architecture/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/security/index.html --> /docs/software
+empty hash --- architecture/security/index.html --> #
+target does not exist --- architecture/security/index.html --> /docs/security/bootstrapping/
+target does not exist --- architecture/security/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/design_decisions/index.html --> /docs/software
+empty hash --- architecture/design_decisions/index.html --> #
+target does not exist --- architecture/design_decisions/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/engineering-principles/index.html --> /docs/software
+empty hash --- architecture/engineering-principles/index.html --> #
+target does not exist --- architecture/engineering-principles/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/third_party_services/index.html --> /docs/software
+empty hash --- architecture/third_party_services/index.html --> #
+target does not exist --- architecture/third_party_services/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/philosophy/index.html --> /docs/software
+empty hash --- architecture/philosophy/index.html --> #
+target does not exist --- architecture/philosophy/index.html --> /slack
+target is a directory, href lacks trailing slash --- architecture/overview/index.html --> /docs/software
+empty hash --- architecture/overview/index.html --> #
+target does not exist --- architecture/overview/index.html --> /docs/software/architecture/early-design-decisions/
+target does not exist --- architecture/overview/index.html --> /docs/software/security/
+target does not exist --- architecture/overview/index.html --> /slack
+target is a directory, href lacks trailing slash --- guides/index.html --> /docs/software
+empty hash --- guides/index.html --> #
+target does not exist --- guides/index.html --> /slack
+target is a directory, href lacks trailing slash --- guides/deploy_openhpc/index.html --> /docs/software
+empty hash --- guides/deploy_openhpc/index.html --> #
+target does not exist --- guides/deploy_openhpc/index.html --> /slack
+target is a directory, href lacks trailing slash --- guides/add_nodes/index.html --> /docs/software
+empty hash --- guides/add_nodes/index.html --> #
+target is a directory, href lacks trailing slash --- guides/add_nodes/index.html --> /docs/software/magellan
+target does not exist --- guides/add_nodes/index.html --> /slack
+target is a directory, href lacks trailing slash --- guides/install_slurm/index.html --> /docs/software
+empty hash --- guides/install_slurm/index.html --> #
+target does not exist --- guides/install_slurm/index.html --> /slack
+target is a directory, href lacks trailing slash --- guides/docker_tour/index.html --> /docs/software
+empty hash --- guides/docker_tour/index.html --> #
+target does not exist --- guides/docker_tour/index.html --> /slack
+target is a directory, href lacks trailing slash --- guides/getting_started/index.html --> /docs/software
+empty hash --- guides/getting_started/index.html --> #
+target does not exist --- guides/getting_started/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/2024/energyhpc-24/index.html --> /docs/software
+empty hash --- events/2024/energyhpc-24/index.html --> #
+target does not exist --- events/2024/energyhpc-24/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/2024/annapolis-developer-summit/index.html --> /docs/software
+empty hash --- events/2024/annapolis-developer-summit/index.html --> #
+bad reference: "parse \"%28https://forms.office.com/g/3zPmc3WUTr%29\": first path segment in URL cannot contain colon" --- events/2024/annapolis-developer-summit/index.html --> <nil>
+target does not exist --- events/2024/annapolis-developer-summit/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/2024/international-supercomputing-24/index.html --> /docs/software
+empty hash --- events/2024/international-supercomputing-24/index.html --> #
+target does not exist --- events/2024/international-supercomputing-24/index.html --> blog/2024/01/turnkey-openchami-for-the-supercomputer-institute/
+target does not exist --- events/2024/international-supercomputing-24/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/2024/bristol-developer-summit/index.html --> /docs/software
+empty hash --- events/2024/bristol-developer-summit/index.html --> #
+target does not exist --- events/2024/bristol-developer-summit/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/2023/supercomputing-23/index.html --> /docs/software
+empty hash --- events/2023/supercomputing-23/index.html --> #
+target does not exist --- events/2023/supercomputing-23/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/index.html --> /docs/software
+empty hash --- events/index.html --> #
+target does not exist --- events/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/summits/2024/index.html --> /docs/software
+empty hash --- events/summits/2024/index.html --> #
+target does not exist --- events/summits/2024/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/summits/index.html --> /docs/software
+empty hash --- events/summits/index.html --> #
+target does not exist --- events/summits/index.html --> /slack
+target is a directory, href lacks trailing slash --- events/conferences/index.html --> /docs/software
+empty hash --- events/conferences/index.html --> #
+target does not exist --- events/conferences/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/lanl/page/2/index.html --> /docs/software
+empty hash --- categories/lanl/page/2/index.html --> #
+target does not exist --- categories/lanl/page/2/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/lanl/index.html --> /docs/software
+empty hash --- categories/lanl/index.html --> #
+target does not exist --- categories/lanl/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/page/2/index.html --> /docs/software
+empty hash --- categories/page/2/index.html --> #
+target does not exist --- categories/page/2/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/index.html --> /docs/software
+empty hash --- categories/index.html --> #
+target does not exist --- categories/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/magellan/index.html --> /docs/software
+empty hash --- categories/magellan/index.html --> #
+target does not exist --- categories/magellan/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/sc23/index.html --> /docs/software
+empty hash --- categories/sc23/index.html --> #
+target does not exist --- categories/sc23/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/security/index.html --> /docs/software
+empty hash --- categories/security/index.html --> #
+target does not exist --- categories/security/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/development/page/2/index.html --> /docs/software
+empty hash --- categories/development/page/2/index.html --> #
+target does not exist --- categories/development/page/2/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/development/index.html --> /docs/software
+empty hash --- categories/development/index.html --> #
+target does not exist --- categories/development/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/hpc/index.html --> /docs/software
+empty hash --- categories/hpc/index.html --> #
+target does not exist --- categories/hpc/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/booting/index.html --> /docs/software
+empty hash --- categories/booting/index.html --> #
+target does not exist --- categories/booting/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/automation/index.html --> /docs/software
+empty hash --- categories/automation/index.html --> #
+target does not exist --- categories/automation/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/bmc/index.html --> /docs/software
+empty hash --- categories/bmc/index.html --> #
+target does not exist --- categories/bmc/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/cloud-init/index.html --> /docs/software
+empty hash --- categories/cloud-init/index.html --> #
+target does not exist --- categories/cloud-init/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/infrastructure/index.html --> /docs/software
+empty hash --- categories/infrastructure/index.html --> #
+target does not exist --- categories/infrastructure/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/wireguard/index.html --> /docs/software
+empty hash --- categories/wireguard/index.html --> #
+target does not exist --- categories/wireguard/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/openchami/index.html --> /docs/software
+empty hash --- categories/openchami/index.html --> #
+target does not exist --- categories/openchami/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/authentication/index.html --> /docs/software
+empty hash --- categories/authentication/index.html --> #
+target does not exist --- categories/authentication/index.html --> /slack
+target is a directory, href lacks trailing slash --- categories/engineering/index.html --> /docs/software
+empty hash --- categories/engineering/index.html --> #
+target does not exist --- categories/engineering/index.html --> /slack
