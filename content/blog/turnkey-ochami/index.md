@@ -49,4 +49,4 @@ By incorporating these components into our docker-compose files, we ensure that 
 The Turnkey OpenCHAMI project for the Supercomputer Institute marks a significant advance in HPC education and collaborative development. By addressing essential feedback and focusing on user-centric improvements, we're not only enhancing OpenCHAMI but also enriching the educational journey for future HPC professionals. As we progress, we look forward to the innovative contributions this initiative will spark, furthering our mission to democratize high-performance computing.
 
 ## Join Us!
-Engage with us on [GitHub](https://www.github.com/openchami), [Slack](https://openchami.slack.com), or through our [Contact Page](/contact/) to be part of this exciting journey.
+Engage with us on [GitHub](https://www.github.com/openchami), [Slack](https://openchami.slack.com) to be part of this exciting journey.

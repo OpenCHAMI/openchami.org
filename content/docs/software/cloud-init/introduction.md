@@ -31,7 +31,7 @@ seo:
 ## **🔗 Learn More & Get Started**
 - 📖 **Explore the Cloud-Init repo:** [GitHub: OpenCHAMI/cloud-init](https://github.com/OpenCHAMI/cloud-init)
 - 🛠 **Configure your own cloud-init payloads:** [Example Configs](https://github.com/OpenCHAMI/cloud-init/tree/main/demo)
-- 🔐 **Read about WireGuard security integration:** [Security Docs](/docs/security/bootstrapping/)
+- 🔐 **Read about WireGuard security integration:** [Security Docs](/blog/2025/02/a-new-approach-to-security-how-openchami-eliminates-hardcoded-ssh-keys/)
 - 💬 **Join the OpenCHAMI community:** [Discussions](https://github.com/OpenCHAMI/community)
 
 With OpenCHAMI, **Cloud-Init isn’t just for cloud instances—it’s for your entire compute fleet.** 🚀
