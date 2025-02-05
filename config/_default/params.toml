@@ -1,6 +1,6 @@
 # Hugo
-title = "My Docs"
-description = "Congrats on setting up a new Doks project!"
+title = "OpenCHAMI: Open Composable Heterogeneous Adaptive Management Infrastructure"
+description = "The Homepage of the OpenCHAMI project"
 images = ["cover.png"]
 
 # mainSections

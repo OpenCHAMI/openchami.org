@@ -4,7 +4,7 @@ date: 2024-03-01T10:00:00-04:00
 description: "In this post, David describes how we authenticate every request within OpenCHAMI without a service mesh."
 summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT." 
 draft: false
-weight: 50
+weight: 11
 categories: ["Development", "LANL"]
 tags: []
 contributors: ["David J. Allen (LANL)"]

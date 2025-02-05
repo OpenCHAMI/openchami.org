@@ -2,6 +2,7 @@
 title: "OpenCHAMI Mini Bootcamp"
 date: 2024-11-13
 draft: false
+weight: 10
 categories: ["HPC", "OpenCHAMI", "LANL"]
 contributors: ["Travis Cotton", "Alex Lovell-Troy"]
 ---
