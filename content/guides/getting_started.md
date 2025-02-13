@@ -61,14 +61,6 @@ curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar
 # This should respond with an empty set of Components: {"Components":[]}
 ```
 
-Create a separate token that a script can use to update dnsmasq
-
-```bash {title="Generate a dedicated token and use it with dnsmasq"}
- echo "DNSMASQ_ACCESS_TOKEN=$(gen_access_token)" >> .env
- docker compose -f base.yml -f postgres.yml -f jwt-security.yml -f haproxy-api-gateway.yml -f openchami-svcs.yml -f autocert.yml -f dnsmasq.yml up -d
-
-```
-
 Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/quickstart/).
 {{< /callout >}}
 
