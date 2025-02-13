@@ -62,6 +62,8 @@ curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar
 ```
 
 Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/quickstart/).
+
+Also, take a look at the [`ochami` command line tool](https://github.com/OpenCHAMI/ochami) for interacting with OpenCHAMI beyond using cURL.
 {{< /callout >}}
 
 ### Dependencies and Assumptions
