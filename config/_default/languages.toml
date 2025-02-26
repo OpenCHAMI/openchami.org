@@ -5,5 +5,5 @@
   [en.params]
     languageISO = "EN"
     languageTag = "en-US"
-    footer = 'Brought to you by <a class="text-muted" href="https://github.com/OpenCHAMI/community">the OpenCHAMI community</a>'
-    alertText = '<a class="alert-link stretched-link fw-normal" href="/blog/example-post/">Doks version 1.0 just shipped!</a>'
+    footer = 'Copyright © OpenCHAMI a Series of LF Projects, LLC. For web site terms of use, trademark policy and other project policies please see <a href=https://lfprojects.org>lfprojects.org</a>.'
+  
