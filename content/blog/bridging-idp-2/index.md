@@ -1,11 +1,11 @@
-+++
+---
 title = 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 2)'
 date = 2024-12-01T03:43:00-05:00
 draft = true
 weight = 13
 categories = ['LANL', 'Development']
 contributors = ["David J. Allen (LANL)"]
-+++
+---
 
 # Bridging the Gap between Identity Provider and Authorization Server (Part 2)
 
@@ -13,7 +13,7 @@ This post is going to cover in more detail about addressing the issues mentioned
 
 ## So what is OPAAL exactly?
 
-The acronym stands for "OIDC Provider Automated Authorization Login" and is a tool designed specifically to streamline consuming ID tokens from an external identity provider (IDP) from the OpenCHAMI stack. OPAAL would use the claims from the ID token to create another JWT to use with our internal OIDC authorization server to grant access to internal resources via an access token. This didn't seem like an unreasonable thing to do at the time, but we ran into some problems before coming to this solution. 
+The acronym stands for "OIDC Provider Automated Authorization Login" and is a tool designed specifically to streamline consuming ID tokens from an external identity provider (IDP) from the OpenCHAMI stack. OPAAL would use the claims from the ID token to create another JWT to use with our internal OIDC authorization server to grant access to internal resources via an access token. This didn't seem like an unreasonable thing to do at the time, but we ran into some problems before coming to this solution.
 
 Our use case required logging into a self-hosted instance of GitLab that we did not control and routing the response to back somewhere we could consume the ID token. This was really beneficial because it did not require us to set up our own IDP service. Initially, this was done with Ory Hydra, but we ran into complications trying to set up the login flow with Kratos's self-service nodes for Identity and Session management within the Ory stack. Documentation was limited and support was almost non-existent, so we moved on. And so, here we are.
 
@@ -44,7 +44,7 @@ c -- redirect with token --> d[OPAAL]
 d --> e["authorization server (Hydra)"]
 ```
 
-After consuming the ID token, OPAAL creates and signs another JWT, but not to return to the user as an access token however. Since OPAAL is not an OIDC-compliant provider, having *it issue access tokens would be a bad idea*. Instead, the JWT that OPAAL creates is to perform a JWT bearer grant with Hydra. The details about how this work is explained in [Hydra's documentation](https://www.ory.sh/docs/hydra/guides/jwt). Ultimately, using the JWT bearer grant allowed for flexible access token customization that was needed to include information from the ID token, which would not have been possible using the other grant types. 
+After consuming the ID token, OPAAL creates and signs another JWT, but not to return to the user as an access token however. Since OPAAL is not an OIDC-compliant provider, having *it issue access tokens would be a bad idea*. Instead, the JWT that OPAAL creates is to perform a JWT bearer grant with Hydra. The details about how this work is explained in [Hydra's documentation](https://www.ory.sh/docs/hydra/guides/jwt). Ultimately, using the JWT bearer grant allowed for flexible access token customization that was needed to include information from the ID token, which would not have been possible using the other grant types.
 
 ### Why does the tool exists?
 
