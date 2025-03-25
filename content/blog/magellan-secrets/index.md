@@ -12,9 +12,9 @@ contributors: ["David J. Allen"]
 
 # Storing BMC Credentials with Magellan
 
-Baseboard Management Controllers (BMCs) are essential for remote hardware management but managing their credentials can pose security risks if not done carefully. With the [v0.20](https://github.com/OpenCHAMI/magellan/releases/tag/v0.2.0) release of Magellan, administrators now have a straightforward and secure solution: the `secrets` command, designed to store encrypted BMC credentials locally, reducing complexity and enhancing safety. This post outlines this new capability, demonstrates typical workflows, and addresses some important implementation and security considerations.
+Baseboard Management Controllers (BMCs) are essential for remote hardware management but managing their credentials can pose security risks if not done carefully. With the [v0.2.0](https://github.com/OpenCHAMI/magellan/releases/tag/v0.2.0) release of Magellan, administrators now have a straightforward and secure solution: the `secrets` command, designed to store encrypted BMC credentials locally, reducing complexity and enhancing safety. This post outlines this new capability, demonstrates typical workflows, and addresses some important implementation and security considerations.
 
-As of the [v0.20](https://github.com/OpenCHAMI/magellan/releases/tag/v0.2.0) release, it's now possible to store BMC credentials in an encrypted local secret store using the new `secrets` command. This is incredibly useful when you're trying to access multiple BMC nodes that might have different usernames and passwords without having to specify each one every single time. 
+As of the [v0.2.0](https://github.com/OpenCHAMI/magellan/releases/tag/v0.2.0) release, it's now possible to store BMC credentials in an encrypted local secret store using the new `secrets` command. This is incredibly useful when you're trying to access multiple BMC nodes that might have different usernames and passwords without having to specify each one every single time.
 
 This post will provide a quick rundown about this new feature, how to use it, and some of the security considerations taken into account with its implementation.
 
@@ -40,32 +40,32 @@ The typical `magellan` workflow might look something like this:
 With SecretStore, the classic workflow is still possible.  The StaticStore implementation responds with the same username and password for all nodes.  It gets more interesting with the LocalStore which allows the admin to securely store a different username and password for each node and use them for the scan.
 
 #### 1. Perform a `scan` to find BMC nodes on network
-   
+
    ```bash
    magellan scan --subnet 172.16.0.0 --subnet-mask 255.255.255.0
    ```
 
 #### 2. Generate and set the `MASTER_KEY` environment variable using the new `secrets generatekey` command
-   
+
    ```bash
    # Using the same MASTER_KEY in the future is essential.  Keep this safe.
    export MASTER_KEY=$(magellan secrets generatekey)
    ```
 
 #### 3. Inspect the BMC nodes found from the `scan` using the `list` command
-   
+
    ```bash
    magellan list
    ```
 
 #### 4. Store secrets for the BMC nodes listed by the `list` command using `secrets store` command (host must be EXACT!)
-   
+
    ```bash
    magellan secrets store https://172.16.0.101:443 $bmc_username:$bmc_password
    ```
 
 #### 5. Run a `collect` or `crawl` to gather inventory information providing the login credentials for the BMC nodes
-   
+
    ```bash
    magellan crawl https://172.16.0.101:443 -i
    magellan collect \
@@ -79,7 +79,7 @@ Some of the new `secrets` sub-commands are omitted here for brevity, but can be 
 
 ## Are my secrets *actually* safe?
 
-The implementation is simple and straight-forward, but it is sufficient for `magellan`. There were a couple of concerns that we wanted to address. 
+The implementation is simple and straight-forward, but it is sufficient for `magellan`. There were a couple of concerns that we wanted to address.
 
 We obviously did not want to store anything in plain-text, which is *super bad*. The consensus was that the secrets needed to be stored in a way that was undecipherable by anyone without the appropriate key. Right now, this is only done with `magellan secrets retrieve` for a single `secretID` provided.
 
@@ -90,7 +90,7 @@ The file itself can always be protected using permissions and such so there wasn
 
 ## What's Next?
 
-With Magellan v0.20, securely managing BMC credentials has become easier and more streamlined. The introduction of the new `secrets` command provides a secure way to store and retrieve encrypted credentials locally, significantly enhancing both usability and security for diverse infrastructures.
+With Magellan v0.2.0, securely managing BMC credentials has become easier and more streamlined. The introduction of the new `secrets` command provides a secure way to store and retrieve encrypted credentials locally, significantly enhancing both usability and security for diverse infrastructures.
 
 Future enhancements may explore additional security layers and support integration with external secret management tools, especially if Magellan evolves into a micro-service architecture.
 
