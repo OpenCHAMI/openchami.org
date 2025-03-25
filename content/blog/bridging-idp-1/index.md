@@ -1,14 +1,14 @@
-+++
-title = 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 1)'
-date = 2024-06-03T03:43:00-05:00
-draft = false
-weight = 12
-categories = ['LANL', 'Development']
-contributors = ["David J. Allen (LANL)"]
-+++
+---
+title: 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 1)'
+date:  2024-06-03T03:43:00-05:00
+draft:  false
+weight:  12
+categories:  ['LANL', 'Development']
+contributors: ["David J. Allen (LANL)"]
+---
 
 
-When it comes to authentication, it is not unrealistic to want to use an existing identity provider, like Gitlab or Google, to provide users with multiple login options. This prevents burdening the user to register another account with your service and lowers the barrier for them to use your service. Instead, the user is able to use an account they are more likely to already have with other sites. This is also good for developers as it allows them to skip having to create their own login page and maintain their own backend with a lot of the wiring need to grant users access to resources, given that the developers trust the identity provider. The application or service presenting the login challenge must first register their application with the trusted identity provider so that the IDP can verify the application credentials, ask the user to consent to allowing certain information or actions, and send an ID token and/or access token to the appropriate callback URI  for the service provider to consume. 
+When it comes to authentication, it is not unrealistic to want to use an existing identity provider, like Gitlab or Google, to provide users with multiple login options. This prevents burdening the user to register another account with your service and lowers the barrier for them to use your service. Instead, the user is able to use an account they are more likely to already have with other sites. This is also good for developers as it allows them to skip having to create their own login page and maintain their own backend with a lot of the wiring need to grant users access to resources, given that the developers trust the identity provider. The application or service presenting the login challenge must first register their application with the trusted identity provider so that the IDP can verify the application credentials, ask the user to consent to allowing certain information or actions, and send an ID token and/or access token to the appropriate callback URI  for the service provider to consume.
 
 ## So what's the Problem?
 
@@ -22,16 +22,16 @@ So when we want to get an access token for our service, we would have to go thro
 
 3. If the user agrees to consent, then the IDP sends an authorization code to the service as defined by [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1) with an authorization code.
 
-4. Finally, the service must make a request back to the IDP presenting the code in the HTTP headers to perform the token grant and receive a bearer token. 
-   
+4. Finally, the service must make a request back to the IDP presenting the code in the HTTP headers to perform the token grant and receive a bearer token.
+
    Here's an example of what an ID token would look like coming from an OIDC implementation as an encoded string:
-   
+
    ```json
    eyJhbGciOiJSUzI1NiIsImtpZCI6IjBiYTdjYjhlLWRhZDItNGY5ZS05NmU0LWIzNzMyYjcxYWU3NyIsInR5cCI6IkpXVCJ9.eyJhdWQiOltdLCJjbGllbnRfaWQiOiI3MzhhYzYwMS04ZmQ0LTQ3OTctOTIyZC1lZWI0YzU5MjcwNjciLCJleHAiOjE3MTc0NDg5MzQsImV4dCI6e30sImlhdCI6MTcxNzQ0NTMzNCwiaXNzIjoiaHR0cHM6Ly90ZS1oZWFkLm9wZW5jaGFtaS5jbHVzdGVyLyIsImp0aSI6ImUzMTg2Njc1LTQzN2QtNGFjNi04NzQ1LWQ4NGU1MGJiNDkxZiIsIm5iZiI6MTcxNzQ0NTMzNCwic2NwIjpbIm9wZW5pZCIsInNtZC5yZWFkIl0sInN1YiI6IjczOGFjNjAxLThmZDQtNDc5Ny05MjJkLWVlYjRjNTkyNzA2NyJ9.YdPW9frHjFUBOwKdIO9ax84KB33WCSKSCLC9IlBsvWOyXo38EWzyICn31sRR_xACr2YETe90b5LpulXLON05S-NRvkPmBRDUeHdmLtLSHOivFuzvmqF9C0UmCVNkWdQqR4rUcuytSGpgwadXdLDzdy-vSj6gB5kpUT6h9WwavdAbAipvNnR81l_Kpuf7OAmJG3yF1lDkLYXBEm1-6xcbzBCKuK--8sojMlkykT3UolafCVy1jCWLTwVpGCG39O2aJkYuXb5XsdVziY9j-1v_9N60QQA13ntRuCCSGSlGqGEhldzkHHJ4sCAVR-HoQyMKMEMetFh1rt_h8U3FNprTW1Q1sai3N1GD5g345zO2kDezCGhBHbIiDkVpsUXHH39T4wkDoOe5v9Kvl6Gq8R5xhw3oq2yrb9OgFeZm0EqEwP3UZp2wnOuXA75qQzKg2Q9uI6Y7Bf0w_coPGrwWnzfuE9_Cvcu5mwbgRDnMvEN_JpotDbPLbm1YIUYgWBuBipf512HJFz_sn3iMiXLDJGHQ-qRYIzX7oZp4OzKBvxJe2UtXs9alneULa20un75bbJMbGqhw9PgJo6sjQiGGt4t9NZBw8lYPwG5KWp4eeEB_olr6zsvnIAZPuEsNI7xVVJqNaniqrdz9VY0TlLoRH2_Hj0c7vH3grXHCa4vxYGYi08E
    ```
-   
+
    And this is what it would look like decoded into JSON objects excluding the signature. (Note: This is actually an access token, but an ID token would look similar.)
-   
+
    ```json
     // header
     {
@@ -71,7 +71,7 @@ graph TD
     end
 ```
 
-If your authorization server is OIDC compliant, then this is bad news since the server will be required to reject the ID token. One solution would be to provided a way of specifying the audience when registering a client or with the authorization code URL as just mentioned. Most sites probably won't allow this out-of-the-box or have their own custom, non-standard way of doing this which is certainly not ideal. [RFC 8707](https://datatracker.ietf.org/doc/html/rfc8707#name-authorization-request) mentions resource indicators which may have remedy the situation, but as for now, this does not seem the way to go. 
+If your authorization server is OIDC compliant, then this is bad news since the server will be required to reject the ID token. One solution would be to provided a way of specifying the audience when registering a client or with the authorization code URL as just mentioned. Most sites probably won't allow this out-of-the-box or have their own custom, non-standard way of doing this which is certainly not ideal. [RFC 8707](https://datatracker.ietf.org/doc/html/rfc8707#name-authorization-request) mentions resource indicators which may have remedy the situation, but as for now, this does not seem the way to go.
 
 A better solution would be for your application or service to consume the ID token itself and then handle the an access token grant separately. This is the route that OpenCHAMI is taking for now, and it seems to work fine for our purposes, but it certainly has its advantages and disadvantages. Let's take a closer look at this solution to understand why we might and might not want to go forward with it.
 
