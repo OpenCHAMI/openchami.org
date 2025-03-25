@@ -1,10 +1,10 @@
 ---
-title = 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 2)'
-date = 2024-12-01T03:43:00-05:00
-draft = true
-weight = 13
-categories = ['LANL', 'Development']
-contributors = ["David J. Allen (LANL)"]
+title: 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 2)'
+date: 2024-12-01T03:43:00-05:00
+draft: true
+weight: 13
+categories: ['LANL', 'Development']
+contributors: ["David J. Allen (LANL)"]
 ---
 
 # Bridging the Gap between Identity Provider and Authorization Server (Part 2)
