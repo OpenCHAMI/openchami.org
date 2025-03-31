@@ -193,6 +193,27 @@ manta get hardware cluster fora -o details
 +---------------+-----------+---------------------------------+------------------------------------+
 ```
 
+#### **Add nodes to a HSM group based on hardware description**
+
+If we want to add four AMD Epyc cpus into fora_test HSM group:
+
+```
+manta add hardware -P 'epyc:4' -p fora -t fora_test
++---------------+--------+--------+
+| Node          | epyc   | memory |
++=================================+
+| x1001c1s0b0n0 | ✅ (2) |   ❌   |
+|---------------+--------+--------|
+| x1001c1s0b0n1 | ✅ (2) |   ❌   |
+|---------------+--------+--------|
+| x1001c1s2b0n0 | ✅ (2) |   ❌   |
++---------------+--------+--------+
+✔ Please check and confirm new hw summary for cluster 'fora_test': {"epyc": 6, "memory": 48} · no
+Cancelled by user. Aborting.
+```
+
+As a result of the previous command, manta will add two extra nodes x1001c1s0b0n0 and x1001c1s0b0n1 from group fora to fora_test
+
 #### **Authentication and Security**
 
 - **Integration with Keycloak** for centralized user authentication.
