@@ -439,3 +439,22 @@ Manta is built for **HPC administrators and developers** looking for a powerful 
 
 Stay tuned for detailed guides, real-world use cases, and tutorials on how to make the most of Manta. If you're interested in testing or contributing to the project, reach out—we'd love to collaborate!
 
+## Roadmap and GitHub Issues
+
+Our development roadmap is transparent and community-driven. We actively manage and update our roadmap through GitHub issues, which include:
+
+- Improve error messages:
+
+https://github.com/eth-cscs/manta/issues/64
+
+- Reuse functionality to build http API:
+
+https://github.com/eth-cscs/manta/issues/82
+
+- Review and Feedback on Current CLI Operations Implementation
+
+https://github.com/eth-cscs/manta/issues/93
+
+- Integrate CSM Functionalities into OCHAMI for HPC Cluster Management
+
+https://github.com/eth-cscs/manta/issues/94
