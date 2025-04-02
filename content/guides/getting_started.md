@@ -16,7 +16,7 @@ seo:
 
   In the guide below, we'll show you how to install and run the OpenCHAMI services with all the containers you need to generate an inventory of your compute nodes and boot them.
 
-  Things move quickly, so the official guide on github may have updated information. See the [quickstart README on Github](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart#readme) for the most current documentation.
+  Things move quickly, so the official guide on GitHub may have updated information. See the [quickstart README on GitHub](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart#readme) for the most current documentation.
 
 Happy HPC!
 
@@ -61,27 +61,27 @@ curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar
 # This should respond with an empty set of Components: {"Components":[]}
 ```
 
-Explore the environment on [Github](https://github.com/openchami/deployment-recipes/tree/main/quickstart/).
+Explore the environment on [GitHub](https://github.com/openchami/deployment-recipes/tree/main/quickstart/).
 
 Also, take a look at the [`ochami` command line tool](https://github.com/OpenCHAMI/ochami) for interacting with OpenCHAMI beyond using cURL.
 {{< /callout >}}
 
 ### Dependencies and Assumptions
 
-The OpenCHAMI services themselves are all containerized and tested running under `docker compose`.  It should be possible to run OpenCHAMI services on any system with docker installed.
+The OpenCHAMI services themselves are all containerized and tested running under `docker compose`.  It should be possible to run OpenCHAMI services on any system with Docker installed.
 
 This quickstart makes a few assumptions about the target operating system and is only tested on Rocky Linux 9.3 running on x86 processors.  Feel free to file bugs about other configurations, but we will prioritize support for systems that we can directly test at LANL.
 
 #### Assumptions
 
-* Linux - The quickstart automation makes several assumptions about the behavior Unix tools and their operation under bash from Rocky Linux 9.3
-* x86_64 - Some of the containers involved are built and tested for alternative operating systems and architectures, but the solution as a whole is only tested with x86 containers
-* Dedicated System - The docker compose setup assumes that it can take control of several TCP ports and interact with the host network for DHCP and TFTP.  It is tested on a dedicated virtual machine
-* Local Name Registration - The quickstart bootstraps a Certificate Authority and issues an SSL certificate with a predictable name.  For access, you will need to add that name/IP to /etc/hosts on all clients or make it resolvable through your site DNS
+* Linux - The quickstart automation makes several assumptions about the behavior Unix tools and their operation under bash from Rocky Linux 9.3.
+* x86_64 - Some of the containers involved are built and tested for alternative operating systems and architectures, but the solution as a whole is only tested with x86 containers.
+* Dedicated System - The `docker compose` setup assumes that it can take control of several TCP ports and interact with the host network for DHCP and TFTP.  It is tested on a dedicated virtual machine.
+* Local Name Registration - The quickstart bootstraps a Certificate Authority and issues an SSL certificate with a predictable name.  For access, you will need to add that name/IP to /etc/hosts on all clients or make it resolvable through your site DNS.
 
 #### Dependencies
 
-* Docker - This quickstart assumes that the target operating system is Rocky Linux 9.3, which by default does not come pre-installed with docker. Rocky also does not by default have access to docker's repositories, and will install an alternaitve that's incompatible with OpenCHAMI, Podman, when a user attempts to install `docker` from yum. We've provided steps from [Docker's installation guide](https://docs.docker.com/engine/install/rhel/) to make sure you can get your containers up and running with ease:
+* Docker - This quickstart assumes that the target operating system is Rocky Linux 9.3, which by default does not come pre-installed with Docker. Rocky also does not by default have access to Docker's repositories, and will install an alternaitve that's incompatible with OpenCHAMI, Podman, when a user attempts to install `docker` from yum. We've provided steps from [Docker's installation guide](https://docs.docker.com/engine/install/rhel/) to make sure you can get your containers up and running with ease:
 
 Install yum-utils and point your machine at Docker's repo:
 ```bash {title="Install yum-utils"}
@@ -128,11 +128,11 @@ Now that you've got a set of containers up and running that provide OpenCHAMI se
 
 ## Helpful docker compose cheatsheet
 
-This quickstart uses `docker compose` to start up services and define dependencies.  If you have a basic understanding of docker, you should be able to work with the included services.  Some handy items to remember for when you are exploring the deployment are below.
+This quickstart uses `docker compose` to start up services and define dependencies.  If you have a basic understanding of Docker, you should be able to work with the included services.  Some handy items to remember for when you are exploring the deployment are below.
 
 
 * `docker volume list` This lists all the volumes.  If they exist, the project will try to reuse them.  That might not be what you want.
-* `docker network list` ditto for networks
+* `docker network list` ditto for networks.
 * `docker ps -a` the -a shows you containers that aren't running.  We have several containers that are designed to do their thing and then exit.
 * `docker logs <container-id>` allows you to check the logs of containers even after they have exited
 * `docker compose ... down --volumes` will not only bring down all the services, but also delete the volumes
