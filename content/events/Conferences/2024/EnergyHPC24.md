@@ -1,6 +1,8 @@
 +++
 title = 'EnergyHPC 24'
 date = 2024-03-08T09:00:00-04:00
+start_date = 2024-03-05           # event start date
+end_date = 2024-03-07              # event end date
 draft = false
 categories = ['Development', 'LANL']
 contributors = ["Alex Lovell-Troy"]

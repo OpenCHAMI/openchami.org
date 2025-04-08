@@ -1,6 +1,8 @@
 ---
 title: 'Bristol Developer Summit'
 date: 2024-07-14T10:00:00-05:00
+start_date: 2024-09-17           # event start date
+end_date: 2024-09-19              # event end date
 description: "Join the OpenCHAMI community for the Developer Summit from September 17th - 19th, hosted by the University of Bristol."
 summary: "OpenCHAMI Developer Summit September 17th - 19th, hosted by the University of Bristol."
 draft: false
@@ -19,11 +21,11 @@ seo:
 
 We are excited to announce the upcoming OpenCHAMI Developer Summit, a gathering of key contributors and partners dedicated to the future of the OpenCHAMI software stack. Hosted by the University of Bristol, this event offers a unique opportunity for collaboration and innovation in the HPC community.
 
-**Dates:** September 17th-19th  
-**Registration:** [Register Here](https://forms.office.com/g/gzp6zcEGKf) (Open until September 2nd)  
-**Location:** University of Bristol ([View Map](https://maps.app.goo.gl/FHhzrTifxotGE9aK7))  
-**Attendee Profile:** Current OpenCHAMI Partners, Prospective Partners, Vendors, Experts  
-**Slack Channel:** [#2024-september-dev-summit](https://openchami.slack.com/archives/C07AKTJ14LT) 
+**Dates:** September 17th-19th
+**Registration:** [Register Here](https://forms.office.com/g/gzp6zcEGKf) (Open until September 2nd)
+**Location:** University of Bristol ([View Map](https://maps.app.goo.gl/FHhzrTifxotGE9aK7))
+**Attendee Profile:** Current OpenCHAMI Partners, Prospective Partners, Vendors, Experts
+**Slack Channel:** [#2024-september-dev-summit](https://openchami.slack.com/archives/C07AKTJ14LT)
 
 ### Program Outline
 
