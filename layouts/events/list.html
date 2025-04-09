@@ -1,0 +1,67 @@
+{{ define "main" }}
+
+<div style="max-width: 800px; margin: auto; text-align: center;">
+  <h1 style="margin-bottom: 40px;">Events</h1>
+
+  {{ $now := now }}
+  {{ $events := where site.RegularPages "Section" "events" }}
+
+  <!-- Upcoming Events -->
+  <h2 style="margin-top: 40px; margin-bottom: 20px;">Upcoming Events</h2>
+  {{ $upcoming := slice }}
+  {{ range $events }}
+    {{ if and (.Params.start_date) (.Params.end_date) (ge (time .Params.end_date) $now) }}
+      {{ $upcoming = $upcoming | append . }}
+    {{ end }}
+  {{ end }}
+
+  {{ if gt (len $upcoming) 0 }}
+    <ul style="list-style: none; padding: 0;">
+      {{ range sort $upcoming ".Params.start_date" "asc" }}
+        <li style="margin: 10px auto; padding: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: left;">
+          <a href="{{ .Permalink }}" style="text-decoration: none; font-size: 18px; color: #5a4fcf;">
+            {{ .Title }} →
+          </a>
+          <div style="font-size:14px;color:#666;">
+            {{ dateFormat "Jan 2" .Params.start_date }} – {{ dateFormat "Jan 2, 2006" .Params.end_date }}
+          </div>
+        </li>
+      {{ end }}
+    </ul>
+  {{ else }}
+    <p>No upcoming events at this time.</p>
+  {{ end }}
+
+  <!-- Past Events -->
+  <h2 style="margin-top: 60px; margin-bottom: 20px;">Past Events</h2>
+  {{ $past := slice }}
+  {{ range $events }}
+    {{ if or (not .Params.start_date) (not .Params.end_date) (lt (time .Params.end_date) $now) }}
+      {{ $past = $past | append . }}
+    {{ end }}
+  {{ end }}
+
+  {{ if gt (len $past) 0 }}
+    <ul style="list-style: none; padding: 0;">
+      {{ range sort $past ".Params.end_date" "desc" }}
+        <li style="margin: 10px auto; padding: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: left;">
+          <a href="{{ .Permalink }}" style="text-decoration: none; font-size: 18px; color: #5a4fcf;">
+            {{ .Title }} →
+          </a>
+          <div style="font-size:14px;color:#666;">
+            {{ if and .Params.start_date .Params.end_date }}
+              {{ dateFormat "Jan 2" .Params.start_date }} – {{ dateFormat "Jan 2, 2006" .Params.end_date }}
+            {{ else }}
+              Date not specified
+            {{ end }}
+          </div>
+        </li>
+      {{ end }}
+    </ul>
+  {{ else }}
+    <p>No past events listed.</p>
+  {{ end }}
+
+</div>
+
+{{ end }}

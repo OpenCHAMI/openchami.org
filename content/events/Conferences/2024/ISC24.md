@@ -1,6 +1,8 @@
 +++
 title = 'International SuperComputing 24'
 date = 2024-05-17T09:00:00-04:00
+start_date = 2024-12-17           # event start date
+end_date = 2024-12-24              # event end date
 draft = false
 categories = ['Development', 'LANL']
 contributors = ["Alex Lovell-Troy"]
