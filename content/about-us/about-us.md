@@ -14,58 +14,7 @@ See the announcement at [hpsf.io](https://hpsf.io/blog/2025/openchami-joins-hpsf
 
 #### Founding Partners
 
-
-<div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center;">
-  <!-- LANL Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/lanl.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
- <!-- NERSC Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/nersc.jpeg"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-    <!-- HPE Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/hpe.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-      <!-- Univ of Bristol Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/univ_bristol.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-  <!-- Linux Foundation Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/lf.png"
-      alt="The Linux Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-
-  <!-- HPSF Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/hpsf.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-</div>
+{{< partners-logos >}}
 
 ---
 
@@ -188,12 +137,6 @@ HPC/AI infrastructure management.
   **GitHub**: [OpenCHAMI Organization](https://github.com/OpenCHAMI)
   **Community Channels**: Forums, mailing lists, and social media.
 </details>
-
----
-
-
-
-
 
 ---
 
