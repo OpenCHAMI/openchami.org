@@ -1,15 +1,71 @@
 ---
 title: "About Us"
-date: 2025-04-09T12:00:00Z  # Adjust as needed
+date: 2025-04-010T12:00:00Z  # Adjust as needed
 draft: false
 ---
 
 # Who We Are
 
 OpenCHAMI is an open-source, composable toolkit for high-performance computing (HPC) and AI infrastructure management.
-We’ve recently formed partnerships with both the **Linux Foundation** and the **High Performance Software Foundation (HPSF)**
+We’ve recently joined both the **Linux Foundation** and the **High Performance Software Foundation (HPSF)**
 to deepen our commitment to open-source collaboration in the HPC/AI community.
 
+See the announcement at [hpsf.io](https://hpsf.io/blog/2025/openchami-joins-hpsf-composable-software-to-securely-and-quickly-provision-hpc-ai-clusters/)!
+
+#### Founding Partners
+
+
+<div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center;">
+  <!-- LANL Logo -->
+  <div style="flex:1; max-width:200px;">
+    <img
+      src="/images/logos/lanl.png"
+      alt="High Performance Software Foundation Logo"
+      style="max-width: 100%; height:auto;"
+    />
+  </div>
+ <!-- NERSC Logo -->
+  <div style="flex:1; max-width:200px;">
+    <img
+      src="/images/logos/nersc.jpeg"
+      alt="High Performance Software Foundation Logo"
+      style="max-width: 100%; height:auto;"
+    />
+  </div>
+    <!-- HPE Logo -->
+  <div style="flex:1; max-width:200px;">
+    <img
+      src="/images/logos/hpe.png"
+      alt="High Performance Software Foundation Logo"
+      style="max-width: 100%; height:auto;"
+    />
+  </div>
+      <!-- Univ of Bristol Logo -->
+  <div style="flex:1; max-width:200px;">
+    <img
+      src="/images/logos/univ_bristol.png"
+      alt="High Performance Software Foundation Logo"
+      style="max-width: 100%; height:auto;"
+    />
+  </div>
+  <!-- Linux Foundation Logo -->
+  <div style="flex:1; max-width:200px;">
+    <img
+      src="/images/logos/lf.png"
+      alt="The Linux Foundation Logo"
+      style="max-width: 100%; height:auto;"
+    />
+  </div>
+
+  <!-- HPSF Logo -->
+  <div style="flex:1; max-width:200px;">
+    <img
+      src="/images/logos/hpsf.png"
+      alt="High Performance Software Foundation Logo"
+      style="max-width: 100%; height:auto;"
+    />
+  </div>
+</div>
 
 ---
 
@@ -26,30 +82,30 @@ practitioners—making OpenCHAMI a natural fit for HPC Infrastructure Management
 
 ---
 
-## Partnership with the Linux Foundation
+## Joining the Linux Foundation
 
 **Empowering Decentralized Innovation in HPC/AI Infrastructure Management**
 OpenCHAMI, the open-source, composable toolkit for HPC and AI infrastructure management,
 is excited to announce its formal integration into the **Linux Foundation**—a neutral, trusted hub where developers and
 organizations collaborate to code, manage, and scale transformative open technology projects.
 
-This significant milestone reinforces OpenCHAMI’s dedication to developing open, scalable, and composable solutions for
+This significant milestone reinforces OpenCHAMI’s dedication to developing secure, scalable, and composable solutions for
 provisioning and managing HPC and AI infrastructures across diverse environments.
 Together, OpenCHAMI and the Linux Foundation will **drive the future of HPC/AI infrastructure management** by combining
 community-driven innovation with the power of a neutral, globally recognized open-source home.
 
 By joining the Linux Foundation, we gain a **neutral, trusted hub** where developers and organizations collaborate to
-code, manage, and scale transformative open technology projects. At the same time, our HPSF partnership strengthens
+code, manage, and scale transformative open technology projects. At the same time, our HPSF membership strengthens
 our alignment with a global community of HPC professionals focused on fostering innovation in HPC and AI.
 
 ---
 
-## Partnership with HPSF
+## Joining the HPSF
 
 As HPC and AI systems continue to expand in capability and complexity, their administration demands robust, flexible,
-and community-driven tooling. By collaborating with **HPSF**, OpenCHAMI signals its alignment with the foundation’s
-mission to *“fuel innovation in high performance computing through open-source collaboration.”* This partnership will
-empower broader community engagement, shared best practices, and a united effort to support the long-term evolution of
+and community-driven tooling. By joining with **HPSF**, OpenCHAMI signals its alignment with the foundation’s
+mission to *“fuel innovation in high performance computing through open-source collaboration.”* As a part of HPSF, the project is able to better share the mission of openness within the HPC community and benefit from the wisdome and contributions of the other projects.
+This is an opportunity to empower broader community engagement, shared best practices, and a united effort to support the long-term evolution of
 HPC/AI infrastructure management.
 
 ---
@@ -135,60 +191,7 @@ HPC/AI infrastructure management.
 
 ---
 
-## Our Partners
 
-
-<div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center;">
-  <!-- LANL Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/lanl.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
- <!-- NERSC Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/nersc.jpeg"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-    <!-- HPE Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/hpe.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-      <!-- Univ of Bristol Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/univ_bristol.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-  <!-- Linux Foundation Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/lf.png"
-      alt="The Linux Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-
-  <!-- HPSF Logo -->
-  <div style="flex:1; max-width:200px;">
-    <img
-      src="/images/logos/hpsf.png"
-      alt="High Performance Software Foundation Logo"
-      style="max-width: 100%; height:auto;"
-    />
-  </div>
-</div>
 
 
 
