@@ -1,6 +1,6 @@
 +++
 title = '5th High-Performance Computing Security Workshop (NIST)'
-date = 2025-04-07
+date = 2025-05-06
 start_date = 2025-05-07
 end_date = 2025-05-08
 draft = false
@@ -12,7 +12,7 @@ contributors = ["Alex Lovell-Troy"]
 
 **Date**: May 7–8, 2025
 
-**Location**: NIST NCCoE, Rockville, MD
+**Location**: NIST NCCoE,9700 Great Seneca Highway, Rockville, MD
 
 **Website**: [NIST HPC Security Workshop](https://www.nist.gov/news-events/events/2025/05/5th-high-performance-computing-security-workshop)
 

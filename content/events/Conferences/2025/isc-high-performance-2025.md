@@ -12,10 +12,12 @@ contributors = ["Alex", "David", "Devon"]
 
 **Date**: June 10–13, 2025
 
-**Location**: Congress Center Hamburg, Hamburg, Germany
+**Location**: CCH-Congress Center Hamburg, Congressplatz 1, 20355 Hamburg, Germany
 
 **Website**: [ISC 2025 Attendance](https://isc-hpc.com/attendance/)
 
-One of the premier HPC conferences. **Alex, David, and Devon** will present tutorials, a workshop, and represent OpenCHAMI at the DOE booth.
+**Regisration**: [ISC 2025 Registration](https://isc-hpc.com/registration/)
+
+One of the premier HPC conferences. **Alex, David, and Devon** will present [tutorials](https://isc.app.swapcard.com/widget/event/isc-high-performance-2025/planning/UGxhbm5pbmdfMjU4MTgxMA==), a workshop, and represent OpenCHAMI at the DOE booth.
 
 Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).

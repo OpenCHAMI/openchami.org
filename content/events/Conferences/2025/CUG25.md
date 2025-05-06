@@ -12,7 +12,7 @@ contributors = ["Travis Cotton"]
 
 **Date**: May 4–8, 2025
 
-**Location**: Stony Brook University, New York, NY
+**Location**: The Westin Jersey City Newport, 479 Washington Boulevard Jersey City, NJ 07310
 
 **Website**: [CUG 2025 Registration](https://cug.org/cug-2025-registration/)
 
