@@ -14,5 +14,6 @@ contributors = ["Matt Williams"]
 **Location**: Chicago, IL
 
 **Website**: [HPSF Conference](https://events.linuxfoundation.org/hpsf-conference/)
+**Registration**:[HPSF Registration](https://events.linuxfoundation.org/hpsf-conference/register/)
 
 OpenCHAMI will be attending, with **Matt Williams** representing OpenCHAMI.
