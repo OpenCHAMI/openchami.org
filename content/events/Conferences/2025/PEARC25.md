@@ -5,7 +5,7 @@ start_date = 2025-07-20
 end_date = 2025-07-24
 draft = false
 categories = ['Conference', 'Research Computing']
-contributors = ["David", "Devon"]
+contributors = ["David J. Allen (LANL)", "Devon Bautista"]
 +++
 
 **Event**: Practice & Experience in Advanced Research Computing (PEARC25)
