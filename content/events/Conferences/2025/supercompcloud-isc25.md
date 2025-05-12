@@ -5,7 +5,7 @@ start_date = 2025-06-13
 end_date = 2025-06-13
 draft = false
 categories = ['Workshop', 'Cloud', 'HPC']
-contributors = ["Alex"]
+contributors = ["Alex Lovell-Troy"]
 +++
 
 **Event**: SuperCompCloud @ ISC’25 (9th Workshop)

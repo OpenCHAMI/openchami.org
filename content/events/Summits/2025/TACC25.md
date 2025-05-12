@@ -5,7 +5,7 @@ start_date = 2025-09-09
 end_date = 2025-09-11
 draft = false
 categories = ['Summit', 'Development', 'HPC']
-contributors = ["OpenCHAMI Core Team"]
+contributors = ["Alex Lovell-Troy", "Yogi Porla"]
 +++
 
 

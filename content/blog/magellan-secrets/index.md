@@ -7,7 +7,7 @@ draft: false
 weight: 10
 categories: ["Security", "HPC", "Magellan"]
 tags: ["Magellan", "BMC Discovery", "Inventory", "Secrets"]
-contributors: ["David J. Allen"]
+contributors: ["David J. Allen (LANL)"]
 ---
 
 # Storing BMC Credentials with Magellan
