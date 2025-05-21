@@ -50,7 +50,7 @@ By relying on a shared, read-only system image, we eliminate inconsistencies bet
 
 A Path Forward: Enhancing Security and Scalability
 
-While this workflow is robust, there’s always room for improvement. One area we’re exploring is improving the node identity process. Today, we trust that if a request is coming in on the right network and from the right IP address, it is coming from a known HPC node.  Relying on the network isn't enough for us.  We want cryptographic certianty which node is initiating the tunnel.  Modern servers allow us to do this using special hardware called the Trusted Platform Module (TPM) which can generate keys and handle signatures without allowing the private key to be accessible to the Operating System. Using a TPM, nodes can prove their authenticity to the server before even initiating a WireGuard tunnel. This would further enhance trust and security across the cluster.
+While this workflow is robust, there’s always room for improvement. One area we’re exploring is improving the node identity process. Today, we trust that if a request is coming in on the right network and from the right IP address, it is coming from a known HPC node.  Relying on the network isn't enough for us.  We want cryptographic certainty which node is initiating the tunnel.  Modern servers allow us to do this using special hardware called the Trusted Platform Module (TPM) which can generate keys and handle signatures without allowing the private key to be accessible to the Operating System. Using a TPM, nodes can prove their authenticity to the server before even initiating a WireGuard tunnel. This would further enhance trust and security across the cluster.
 
 Final Thoughts
 
