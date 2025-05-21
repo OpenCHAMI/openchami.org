@@ -6,7 +6,6 @@ draft: false
 weight: 50
 pinned: false
 homepage: false
-contributors: []
 ---
 
 

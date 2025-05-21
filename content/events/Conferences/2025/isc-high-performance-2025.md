@@ -5,7 +5,7 @@ start_date = 2025-06-10
 end_date = 2025-06-13
 draft = false
 categories = ['Conference', 'HPC']
-contributors = ["Alex", "David", "Devon"]
+contributors = ["Alex Lovell-Troy", "David J. Allen (LANL)", "Devon Bautista"]
 +++
 
 **Event**: ISC High Performance 2025
