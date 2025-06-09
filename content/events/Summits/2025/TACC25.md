@@ -11,7 +11,7 @@ contributors = ["Alex Lovell-Troy", "Yogi Porla"]
 
 ### Texas Advanced Computing Center • Austin, TX • September 9 – 11 2025
 **Event**: OpenCHAMI Developer Summit @ TACC 2025
-**Event Registration**:[Eventbrite Registration](https://www.eventbrite.com/e/1384590971869?aff=oddtdtcreator)
+**Event Registration**: [Eventbrite Registration](https://www.eventbrite.com/e/1384590971869?aff=oddtdtcreator)
 
 **Date**: September 9–11, 2025
 
