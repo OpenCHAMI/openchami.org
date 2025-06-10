@@ -11,6 +11,13 @@ seo:
  canonical: "https://openchami.org"
  noindex: false
 ---
+## OpenCHAMI Developer Summit @ TACC 2025
+
+Join us **Sep 9th, 2025** at the Texas Advanced Computing Center (TACC) for the OpenCHAMI Developer Summit. Expect hands‑on sessions, live demos, and deep discussions with HPC and AI/ML infrastructure experts.
+
+- **[Register here](https://www.eventbrite.com/e/1384590971869)** 🎟️
+- Learn more: [Event details](/events/2025/openchami-developer-summit-@-tacc-2025/)
+
 
 ## Open Composable Heterogeneous Adaptable Management Infrastructure
 
@@ -29,11 +36,11 @@ seo:
 
 HPC system management has traditionally relied on **monolithic, complex, and rigid** solutions that are difficult to adapt to modern workloads. OpenCHAMI **bridges the gap between HPC and cloud-native technologies** by providing:
 
-- **Security & Compliance** – Designed with modern security best practices for protecting critical infrastructure.  
-- **Cloud-Like Flexibility** – Enables dynamic, on-demand scaling and **automation** of system resources.  
-- **Open & Transparent Governance** – Unlike proprietary solutions, OpenCHAMI is **community-led** and continuously evolving.  
+- **Security & Compliance** – Designed with modern security best practices for protecting critical infrastructure.
+- **Cloud-Like Flexibility** – Enables dynamic, on-demand scaling and **automation** of system resources.
+- **Open & Transparent Governance** – Unlike proprietary solutions, OpenCHAMI is **community-led** and continuously evolving.
 
-### **Watch OpenCHAMI in Action** 🎥  
-Learn how OpenCHAMI simplifies HPC system management with **security-first architecture, composability, and microservices-based deployment.**  
+### **Watch OpenCHAMI in Action** 🎥
+Learn how OpenCHAMI simplifies HPC system management with **security-first architecture, composability, and microservices-based deployment.**
 
 {{< youtube UbBdbhzXjbA >}}
