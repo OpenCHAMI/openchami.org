@@ -28,6 +28,10 @@
   identifier = "lorem"
   url = "/tutorial/lorem/"
 
+[[main]]
+  name = "Announcements"
+  url = "/announcements/"
+  weight = 25
 
 
 [[main]]
