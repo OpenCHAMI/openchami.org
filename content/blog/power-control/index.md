@@ -98,13 +98,6 @@ PCS receives this command, performs the action on the device, and its next polli
 
 ---
 
-## Why This Approach Matters 💡
-
-* **Stateful Awareness**: Because PCS is constantly polling, it has a near-real-time view of your hardware's power state. It can even detect manual changes made outside of PCS, providing a truly reliable source of truth.
-* **Performance and Responsiveness**: User queries are fast because they hit the PCS cache, not the slow hardware interfaces.
-* **True Abstraction**: A sysadmin no longer needs to worry if they're talking to a `Redfish` or `JAWS` device—they just talk to the unified PCS API.
-* **Secure by Design**: Integrating with Vault for credential management removes the need to pass plaintext passwords in scripts or command-line histories.
-
 ## What’s Next?
 
 With these enhancements, OpenCHAMI has taken a major step forward in unified, programmatic hardware management. The stateful, polling model we've established could easily be extended to manage other critical data center hardware, such as network switches or smart cooling units, under the same consistent API.
