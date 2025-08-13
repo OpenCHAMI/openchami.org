@@ -68,59 +68,54 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | **Day 3 – Hackathon & Road-Mapping** | *Building the Future* | Code, scripting, docs sprint • RFD drafting • Summit wrap-up & next steps |
 
 ## Schedule
-
-
+*(All times CST)*
 ### Day 1 – Tuesday, Sept 9
-
-
-
 
 | Time | Session | Speakers / Track | Room |
 | --- | --- | --- | --- |
-| 08:30 – 09:00 | Arrival, Coffee & Badge Pick‑up | — | Foyer |
-| 09:00 – 09:15 | Welcome to TACC | Dan Stanzione (TACC) | Auditorium |
-| 09:15 – 09:45 | Keynote – Omnia × OpenCHAMI: Automating HPC at Scale | Dell Technologies (TBC) | Auditorium |
-| 09:45 – 10:30 | Who We Are & Where We Run – project origin, community structure, live site reports | Core maintainers | Auditorium |
-| 10:30 – 10:45 | Coffee Break | — | Foyer |
-| 10:45 – 12:00 | Architecture Deep‑Dive – node lifecycle, attestation, policy engine | Eng. Leads | Auditorium |
-| 12:00 – 13:00 | Lunch (on‑site) | — | Atrium |
-| 13:00 – 14:15 | Gap & RFD Lightning Pitches – five‑minute slots per proposal | Open mic | Auditorium |
-| 14:15 – 16:30 | Break‑out Rooms – RFD working groups (Security, Scheduling, Ops, Docs) | All participants | ACV 1‑4 |
-| 16:30 – 17:00 | Road‑map Read‑out & Day‑2 Preview | Alex Lovell‑Troy | Auditorium |
-| 18:00 – 20:00 | Optional Social / Sponsor Dinner | Host (TBC) | Off‑site |
+| 09:00 – 10:00 | Registration: Arrival, Coffee & Badge Pick-up | — | Foyer |
+| 10:00 – 10:30 | Keynote – Welcome | Dan Stanzione (TACC) | Auditorium |
+| 10:30 – 11:00 | Keynote – Omnia × OpenCHAMI: Automating HPC at Scale | Dell Technologies (TBC) | Auditorium |
+| 11:00 – 11:45 | Who We Are & Where We Run – project origin, community structure, live site reports | Alex Lovell-Troy | Auditorium |
+| 11:45 – 12:00 | Site Reports | Yogi Porla | Auditorium |
+| 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
+| 13:15 – 14:00 | vTDS Partner Talk | Eric Lund / Harold Longley | Auditorium |
+| 14:00 – 15:00 | RFDs (Closed, Open, and New Ideas) | Open Mic | Auditorium |
+| 15:00 – 15:15 | Break | — | Foyer |
+| 15:15 – 16:00 | Split up on Individual RFDs | Open Mic | TBC |
+| 16:00 – 16:45 | Road to 1.0 | Alex / Yogi | Auditorium |
+| 16:45 – 17:30 | Community Q&A | Alex | Auditorium |
+| 18:00 – 20:00 | Optional Social / Sponsor Dinner | TBC | Off-site |
 
+---
 
 ### Day 2 – Wednesday, Sept 10
-
-
-
 
 | Time | Session | Speakers / Track | Room |
 | --- | --- | --- | --- |
 | 08:30 – 09:00 | Coffee & Networking | — | Foyer |
-| 09:00 – 12:00 | Tutorial Track A (Beginner) – Deploying OpenCHAMI from scratch | LA‑ICP / TACC trainers | Lab A |
-| 09:00 – 12:00 | Tutorial Track B (Advanced) – Customizing plugins, Keylime attestation | Core devs | Lab B |
-| 09:00 – 12:00 | Governance Workshop – GitHub org, licensing, TSC elections | TSC members | Conf C |
-| 12:00 – 13:00 | Lunch | — | Atrium |
-| 13:00 – 15:30 | Tutorials continue (Tracks A & B) + Governance drafting session | — | Respective rooms |
-| 15:30 – 15:45 | Break | — | Foyer |
-| 15:45 – 17:00 | Ask‑the‑Experts Panel – open Q&A with maintainers | Mixed panel | Auditorium |
+| 09:00 – 09:30 | Why Does OpenCHAMI Matter | Adam Hough | Auditorium |
+| 09:30 – 10:30 | Tutorials | Devon Bautista / David Allen| Auditorium |
+| 10:30 – 10:45 | Break | — | Foyer |
+| 11:00 – 12:00 | Tutorials | Devon Bautista / David Allen | Auditorium |
+| 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
+| 13:15 – 15:00 | Governance Workshop – GitHub org, licensing, TSC elections | Alex / Travis Raines / Yogi | Auditorium |
+| 15:00 – 15:30 | Break | — | Foyer |
+| 15:30 – 16:30 | Brainstorming for Future Features | Mixed panel | Auditorium |
+| 16:30 – 17:30 | Overflow and Parking Lot (Talks and Demos) | Alex | Auditorium |
 
+---
 
 ### Day 3 – Thursday, Sept 11
 
-
-
-
 | Time | Session | Speakers / Track | Room |
 | --- | --- | --- | --- |
-| 08:30 – 09:00 | Coffee & Hackathon Team Sign‑ups | — | Foyer |
-| 09:00 – 12:30 | Hackathon / Docsathon – code, docs, CI pipelines | Self‑organised teams | Labs A‑D |
-| 12:30 – 13:30 | Working Lunch | — | Atrium |
-| 13:30 – 15:30 | Hackathon continues; parallel Future‑Road‑map BoF for non‑coders | — | Labs / Conf C |
-| 15:30 – 16:30 | Team Demos & RFD Show‑and‑Tell | Hackathon teams | Auditorium |
-| 16:30 – 17:00 | Closing & Next Steps | Steering Committee | Auditorium |
-
+| 08:30 – 09:00 | Coffee & Networking | — | Foyer |
+| 09:00 – 09:30 | Partner Talks | TBD | Auditorium |
+| 09:30 – 10:00 | Hackathon Team Sign-ups | Self-organised teams | Auditorium |
+| 10:00 – 12:00 | Hackathon / Docsathon – code, docs, CI pipelines | Self-organised teams | Auditorium |
+| 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
+| 13:15 – 14:15 | Wrap Up and Next Steps | Alex | Auditorium |
 
 ---
 
