@@ -106,7 +106,7 @@ There are many ways to contribute and stay connected:
 - 💻 Submit a PR or review [open issues](https://github.com/OpenCHAMI/openchami.org/issues)
 - 📖 [Participate in RFDs](https://github.com/OpenCHAMI/OpenCHAMI/discussions/categories/requests-for-discussion)
 - 🏛️ [Join the Monthly Meeting](https://zoom-lfx.platform.linuxfoundation.org/meeting/94869062758?password=d29ae83a-c5ba-4488-828d-0bd620c1e870)
-- 📢 [Subscribe to the Mailing List](https://openchami.org/subscribe)
+- 📢 [Subscribe to the Mailing List](/#subscribe)
 
 ---
 

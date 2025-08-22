@@ -131,7 +131,7 @@ There are many ways to contribute:
 
 - **💬 Connect with the Community**
   - [Slack Workspace](https://openchami.org/slack) for real-time chat
-  - [Subscribe to the Mailing List](https://openchami.org/subscribe)
+  - [Subscribe to the Mailing List](/#subscribe)
 
 - **📢 Attend Events & Spread the Word**
   Look for OpenCHAMI talks at ISC, PEARC, and join us at our Dev Summit in September 2025 in Austin, TX.
