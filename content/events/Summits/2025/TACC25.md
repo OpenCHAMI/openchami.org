@@ -17,11 +17,11 @@ contributors = ["Alex Lovell-Troy", "Yogi Porla"]
 
 **Location**: Texas Advanced Computing Center, Austin, TX
 
-**Website**: https://openchami.org/tacc25/
+**Website**: [TACC25](https://openchami.org/tacc25/)
 
 **Hosts**:  TACC, OpenCHAMI Community
 
----
+**Slack**: [#2025-september-dev-summit](https://openchami.slack.com/archives/C09A4CH729Z)
 
 ## Who Should Attend?
 
@@ -74,17 +74,17 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | Time | Session | Speakers / Track | Room |
 | --- | --- | --- | --- |
 | 09:00 – 10:00 | Registration: Arrival, Coffee & Badge Pick-up | — | Foyer |
-| 10:00 – 10:30 | Keynote – Welcome | Dan Stanzione (TACC) | Auditorium |
-| 10:30 – 11:00 | Keynote – Omnia × OpenCHAMI: Automating HPC at Scale | Dell Technologies (TBC) | Auditorium |
-| 11:00 – 11:45 | Who We Are & Where We Run – project origin, community structure, live site reports | Alex Lovell-Troy | Auditorium |
-| 11:45 – 12:00 | Site Reports | Yogi Porla | Auditorium |
+| 10:00 – 10:30 | Keynote – Welcome | Dan Stanzione (TACC) | Roc 1.990 |
+| 10:30 – 11:00 | Keynote – Omnia × OpenCHAMI: Automating HPC at Scale | Dell Technologies (TBC) | Roc 1.990 |
+| 11:00 – 11:45 | Who We Are & Where We Run – project origin, community structure, live site reports | Alex Lovell-Troy | Roc 1.990 |
+| 11:45 – 12:00 | Site Reports | Yogi Porla | Roc 1.990 |
 | 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
-| 13:15 – 14:00 | vTDS Partner Talk | Eric Lund / Harold Longley | Auditorium |
-| 14:00 – 15:00 | RFDs (Closed, Open, and New Ideas) | Open Mic | Auditorium |
+| 13:15 – 14:00 | vTDS Partner Talk | Eric Lund / Harold Longley | Roc 1.990 |
+| 14:00 – 15:00 | RFDs (Closed, Open, and New Ideas) | Open Mic | Roc 1.990 |
 | 15:00 – 15:15 | Break | — | Foyer |
 | 15:15 – 16:00 | Split up on Individual RFDs | Open Mic | TBC |
-| 16:00 – 16:45 | Road to 1.0 | Alex / Yogi | Auditorium |
-| 16:45 – 17:30 | Community Q&A | Alex | Auditorium |
+| 16:00 – 16:45 | Road to 1.0 | Alex / Yogi | Roc 1.990 |
+| 16:45 – 17:30 | Community Q&A | Alex | Roc 1.990 |
 | 18:00 – 20:00 | Optional Social / Sponsor Dinner | TBC | Off-site |
 
 ---
@@ -94,15 +94,15 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | Time | Session | Speakers / Track | Room |
 | --- | --- | --- | --- |
 | 08:30 – 09:00 | Coffee & Networking | — | Foyer |
-| 09:00 – 09:30 | Why Does OpenCHAMI Matter | Adam Hough | Auditorium |
-| 09:30 – 10:30 | Tutorials | Devon Bautista / David Allen| Auditorium |
+| 09:00 – 09:30 | Why Does OpenCHAMI Matter | Adam Hough | Roc 1.990 |
+| 09:30 – 10:30 | Tutorials | Devon Bautista / David Allen| Roc 1.990 |
 | 10:30 – 10:45 | Break | — | Foyer |
-| 11:00 – 12:00 | Tutorials | Devon Bautista / David Allen | Auditorium |
+| 11:00 – 12:00 | Tutorials | Devon Bautista / David Allen | Roc 1.990 |
 | 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
-| 13:15 – 15:00 | Governance Workshop – GitHub org, licensing, TSC elections | Alex / Travis Raines / Yogi | Auditorium |
+| 13:15 – 15:00 | Governance Workshop – GitHub org, licensing, TSC elections | Alex / Travis Raines / Yogi | Roc 1.990 |
 | 15:00 – 15:30 | Break | — | Foyer |
-| 15:30 – 16:30 | Brainstorming for Future Features | Mixed panel | Auditorium |
-| 16:30 – 17:30 | Overflow and Parking Lot (Talks and Demos) | Alex | Auditorium |
+| 15:30 – 16:30 | Brainstorming for Future Features | Mixed panel | Roc 1.990 |
+| 16:30 – 17:30 | Overflow and Parking Lot (Talks and Demos) | Alex | Roc 1.990 |
 
 ---
 
@@ -111,21 +111,21 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | Time | Session | Speakers / Track | Room |
 | --- | --- | --- | --- |
 | 08:30 – 09:00 | Coffee & Networking | — | Foyer |
-| 09:00 – 09:30 | Partner Talks | TBD | Auditorium |
-| 09:30 – 10:00 | Hackathon Team Sign-ups | Self-organised teams | Auditorium |
-| 10:00 – 12:00 | Hackathon / Docsathon – code, docs, CI pipelines | Self-organised teams | Auditorium |
+| 09:00 – 09:30 | Partner Talks | Alex | Roc 1.990 |
+| 09:30 – 10:00 | Hackathon Team Sign-ups | Self-organised teams | Roc 1.990 |
+| 10:00 – 12:00 | Hackathon / Docsathon – code, docs, CI pipelines | Self-organised teams | Roc 1.990 |
 | 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
-| 13:15 – 14:15 | Wrap Up and Next Steps | Alex | Auditorium |
+| 13:15 – 14:15 | Wrap Up and Next Steps | Alex | Roc 1.990 |
 
 ---
 
 ## Tracks & Chairs
 - **Architecture:** Alex Lovell-Troy — [alovelltroy@lanl.gov](mailto:alovelltroy@lanl.gov)
-- **Introductory Topics:** TBD (Chair)
-- **Tutorials:** TBD (Chair)
+- **Introductory Topics:** Travis Raines
+- **Tutorials:** Devon Bautista
 - **Partner Talks:** Adam Hough — [Adam.Hough@shell.com](mailto:Adam.Hough@shell.com)
-- **Feedback (Governance, Gaps etc):** TBD (Chair)
-- **Hackathon:** TBD (Chair)
+- **Feedback (Governance, Gaps etc):** Yogi Porla - [yogi@lanl.gov](mailto:yogi@lanl.gov)
+- **Hackathon:** Jonathan Dietz - [jd@broadwing.io](mailto:jd@broadwing.io)
 
 
 ---
