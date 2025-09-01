@@ -108,6 +108,7 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | 16:00 – 16:45 | Hackathon Planning — Jonathan Dietz (Broadwing) | — | Roc 1.990 |
 | 16:15 – 17:00 | Road to 1.0 | — | Roc 1.990 |
 
+
 ---
 
 ### Day 3 – Thursday, Sept 11
@@ -121,6 +122,7 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
 | 13:15 – 14:15 | Wrap-up and Next Steps — Alex | — | Roc 1.990 |
 
+
 ---
 
 ## Tracks & Chairs
@@ -128,9 +130,9 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 - **Introductory Topics:** Travis Raines
 - **Tutorials:** Devon Bautista
 - **Partner Talks:** Adam Hough — [Adam.Hough@shell.com](mailto:Adam.Hough@shell.com)
+
 - **Feedback (Governance, Gaps):** Yogi Porla — [yogi@lanl.gov](mailto:yogi@lanl.gov)
 - **Hackathon:** Jonathan Dietz — [jd@broadwing.io](mailto:jd@broadwing.io)
-
 ---
 
 ## Registration
