@@ -1,133 +1,173 @@
-
 <!DOCTYPE html>
 <html lang='en'>
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>TACC 25 – OpenCHAMI Developer Summit</title>
+<title>TACC 25 – OpenCHAMI Developer Summit (Updated Schedule)</title>
 <style>
-body { font-family: Arial, sans-serif; margin: 0; color: #333; line-height: 1.6; }
-header { background-color: #0a3d62; color: #fff; padding: 3rem 1rem; text-align: center; }
-header h1 { margin: 0; font-size: 2.5rem; }
-header p { margin: 0.5rem 0 0; font-size: 1.2rem; }
-nav { background-color: #f4f4f4; padding: 1rem; text-align: center; }
-nav a { margin: 0 1rem; color: #0a3d62; text-decoration: none; font-weight: bold; }
-nav a:hover { text-decoration: underline; }
-main { max-width: 1000px; margin: auto; padding: 2rem 1rem; }
-section { margin-bottom: 2rem; }
-h2 { color: #0a3d62; margin-bottom: 0.5rem; }
-.schedule-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-.schedule-table th, .schedule-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-.schedule-table th { background-color: #e9ecef; color: #333; }
-footer { background-color: #f4f4f4; padding: 1rem; text-align: center; font-size: 0.9rem; color: #666; }
+  body { font-family: Arial, sans-serif; margin: 0; color: #333; line-height: 1.6; }
+  header { background-color: #0a3d62; color: #fff; padding: 3rem 1rem; text-align: center; }
+  header h1 { margin: 0; font-size: 2.5rem; }
+  header p { margin: 0.5rem 0 0; font-size: 1.2rem; }
+  nav { background-color: #f4f4f4; padding: 1rem; text-align: center; }
+  nav a { margin: 0 1rem; color: #0a3d62; text-decoration: none; font-weight: bold; }
+  nav a:hover { text-decoration: underline; }
+  main { max-width: 1100px; margin: auto; padding: 2rem 1rem; }
+  section { margin-bottom: 2rem; }
+  h2 { color: #0a3d62; margin-bottom: 0.5rem; }
+  .schedule-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; table-layout: fixed; }
+  .schedule-table th, .schedule-table td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
+  .schedule-table th { background-color: #e9ecef; color: #333; }
+  .muted { color: #666; font-style: italic; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; margin: 4px 10px 0 0; }
+  .swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #bbb; }
+
+  /* Category colors (matching the spreadsheet) */
+  .row-partner     { background: #cfe0ff; } /* Partner Talks (blue) */
+  .row-feedback    { background: #ffe7a8; } /* Feedback/Governance (yellow) */
+  .row-break       { background: #cdecc9; } /* Breaks/Lunch (green) */
+  .row-arch        { background: #cde7df; } /* Architecture (teal) */
+  .row-intro       { background: #dbeeff; } /* Introductory Topics (light blue) */
+  .row-hack        { background: #fff6a1; } /* Hackathon (yellow highlight) */
+  .row-tutorial    { background: #f6d7d9; } /* Tutorials (pink) */
+  .row-default     { background: #ffffff; } /* default / unlabeled */
+
+  /* small label “chips” (kept for parallel rows) */
+  .chip { display: inline-block; padding: 2px 6px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #ddd; margin-right: 6px; white-space: nowrap; }
+  .chip-arch { background: #d8f3dc; }
+  .chip-intro { background: #cfe8ff; }
+  .chip-hack { background: #fff8a6; }
+  .chip-tutorial { background: #f2d7d5; }
+  .chip-feedback { background: #ffe6a6; }
+  .chip-break { background: #e7f5ff; }
 </style>
 </head>
 <body>
 <header>
-    <!-- Summit Banner -->
   <img src="/images/tacc25_banner.png" alt="OpenCHAMI Developer Summit 2025" style="max-width:100%; height:auto;">
-<h1>TACC 25 – OpenCHAMI Developer Summit</h1>
-<p>September 9–11, 2025 · Texas Advanced Computing Center, Austin, TX</p>
+  <h1>TACC 25 – OpenCHAMI Developer Summit</h1>
+  <p>September 9–11, 2025 · Texas Advanced Computing Center, Austin, TX</p>
 </header>
+
 <nav>
-<a href='#details'>Details</a>
-<a href='#location'>Location & Directions</a>
-<a href='#schedule'>Schedule</a>
-<a href='#tracks'>Tracks & Chairs</a>
-<a href='#registration'>Registration</a>
-<a href='#sponsors'>Sponsors</a>
+  <a href="#details">Details</a>
+  <a href="#location">Location & Directions</a>
+  <a href="#schedule">Schedule</a>
+  <a href="#tracks">Tracks & Chairs</a>
+  <a href="#registration">Registration</a>
+  <a href="#sponsors">Sponsors</a>
 </nav>
+
 <main>
-<section id='details'>
-<h2>Event Details</h2>
-<p>The OpenCHAMI community is gathering at the Texas Advanced Computing Center (TACC) for three days of collaboration, learning and hacking. Whether you’re new to OpenCHAMI or a long‑time contributor, there will be tracks for every skill level. Meet fellow sysadmins, developers and researchers working on open HPC automation and help shape the project’s future.</p>
-<p><strong>Hosts:</strong> TACC & The OpenCHAMI Community.</p>
-<p><strong>Slack:</strong> <a href='https://openchami.slack.com/archives/C09A4CH729Z' target='_blank'>#2025-september-dev-summit</a></p>
-</section>
-<section id='location'>
-<h2>Location & Directions</h2>
-<p><strong>Venue:</strong> Advanced Computing Building (ACB), Texas Advanced Computing Center, <a href='https://maps.app.goo.gl/9Ydq5owUg1r4KVh57' target='_blank'>10505 Exploration Way, Austin, TX 78758</a>.</p>
-<p><i> Please note that the TACC address is 10100 Burnet Rd, Austin, TX 78758 , however the entrance is on Exploration Way.</i></p>
-<p>From the Burnet Road entrance, continue past the guard booth (you don’t need to stop), pass the chain link gate to Exploration Way, then make a right. ACB is the second to last building on the right with the overhanging patios. From the Braker Lane entrance, ACB is the second building on the left with the overhanging patios (10505 Exploration Way).</p>
-<p>When you arrive at ACB, you may park in the covered parking lot or on the street. Please obtain a parking pass from one of the kiosks, or you may use the ParkMobile app (zone 96113). Please check in with the receptionist when you enter the building.</p>
-
-</section>
-
-
-
-
-  <section id='schedule'>
-    <h2>Schedule <small>(All times CST )</small></h2>
-
-    <h3 id='day-1-–-tuesday,-sept-9'>Day 1 – Tuesday, Sept 9</h3>
-    <table class='schedule-table'>
-    <tr><th>Time</th><th>Session</th><th>Speakers / Track</th><th>Room</th></tr>
-    <tr><td>09:00 – 10:00</td><td>Registration: Arrival, Coffee & Badge Pick-up</td><td>—</td><td>Foyer</td></tr>
-    <tr><td>10:00 – 10:30</td><td>Keynote – Welcome</td><td>Dan Stanzione (TACC)</td><td>Roc 1.990</td></tr>
-    <tr><td>10:30 – 11:00</td><td>Keynote – Omnia × OpenCHAMI: Automating HPC at Scale</td><td>Onur Celebioglu (Dell) </td><td>Roc 1.990</td></tr>
-    <tr><td>11:00 – 11:45</td><td>Who We Are & Where We Run – project Origin, community structure, etc</td><td>Alex Lovell-Troy</td><td>Roc 1.990</td></tr>
-    <tr><td>11:45 – 12:00</td><td>Site Reports</td><td>Yogi Porla</td><td>Roc 1.990</td></tr>
-    <tr><td>12:00 – 13:15</td><td>Lunch (on-site)</td><td>—</td><td>Foyer</td></tr>
-    <tr><td>13:15 – 14:00</td><td>vTDS Partner Talk</td><td>Eric Lund / Harold Longley</td><td>Roc 1.990</td></tr>
-    <tr><td>14:00 – 15:00</td><td> <a href='https://github.com/OpenCHAMI/roadmap/issues/51' target='_blank'> RFDs</a> (Closed, Open, and New Ideas)</td><td>Open Mic</td><td>Roc 1.990</td></tr>
-    <tr><td>15:00 – 15:15</td><td>Break</td><td>—</td><td>Foyer</td></tr>
-    <tr><td>15:15 – 16:00</td><td>Split up on Individual RFDs</td><td>Open Mic</td><td>TBC</td></tr>
-    <tr><td>16:00 – 16:45</td><td>Road to 1.0</td><td>Alex / Yogi</td><td>Roc 1.990</td></tr>
-    <tr><td>16:45 – 17:30</td><td>Community Q&amp;A</td><td>Alex</td><td>Roc 1.990</td></tr>
-    <tr><td>18:00 – 20:00</td><td>Optional Social / Sponsor Dinner</td><td>TBC</td><td>Off-site</td></tr>
-    </table>
-
-
-  <h3 id='day-2-–-wednesday,-sept-10'>Day 2 – Wednesday, Sept 10</h3>
-  <table class='schedule-table'>
-  <tr><th>Time</th><th>Session</th><th>Speakers / Track</th><th>Room</th></tr>
-  <tr><td>08:30 – 09:00</td><td>Coffee & Networking</td><td>—</td><td>Foyer</td></tr>
-  <tr><td>09:00 – 09:30</td><td>Why Does OpenCHAMI Matter</td><td>Adam Hough</td><td>Roc 1.990</td></tr>
-  <tr><td>09:30 – 10:30</td><td>Tutorials</td><td>Devon / David</td><td>Roc 1.990</td></tr>
-  <tr><td>10:30 – 10:45</td><td>Break</td><td>—</td><td>Foyer</td></tr>
-  <tr><td>11:00 – 12:00</td><td>Tutorials</td><td>Devon / David</td><td>Roc 1.990</td></tr>
-  <tr><td>12:00 – 13:15</td><td>Lunch (on-site)</td><td>—</td><td>Foyer</td></tr>
-  <tr><td>13:15 – 15:00</td><td>Governance Workshop – GitHub org, licensing, TSC elections</td><td>Alex / Travis Raines / Yogi</td><td>Roc 1.990</td></tr>
-  <tr><td>15:00 – 15:30</td><td>Break</td><td>—</td><td>Foyer</td></tr>
-  <tr><td>15:30 – 16:30</td><td>Brainstorming for Future Features</td><td>Mixed panel</td><td>Roc 1.990</td></tr>
-  <tr><td>16:30 – 17:30</td><td>Overflow and Parking Lot (Talks and Demos)</td><td>Alex</td><td>Roc 1.990</td></tr>
-  </table>
-
-  <h3 id='day-3-–-thursday,-sept-11'>Day 3 – Thursday, Sept 11</h3>
-  <table class='schedule-table'>
-  <tr><th>Time</th><th>Session</th><th>Speakers / Track</th><th>Room</th></tr>
-  <tr><td>08:30 – 09:00</td><td>Coffee & Networking</td><td>—</td><td>Foyer</td></tr>
-  <tr><td>09:00 – 09:30</td><td>Partner Talks</td><td>Alex Lovell-Troy</td><td>Roc 1.990</td></tr>
-  <tr><td>09:30 – 10:00</td><td>Hackathon Team Sign-ups</td><td>Self-organised teams</td><td>Roc 1.990</td></tr>
-  <tr><td>10:00 – 12:00</td><td> <a href='https://docs.google.com/document/d/1Z2boOLUXllM_YMJ9US7ciVjsA8fETQnZfu5SOzSEWpI/edit?usp=sharing' target='_blank'>Hackathon / Docsathon</a> – code, docs, CI pipelines</td><td>Self-organised teams</td><td>Roc 1.990</td></tr>
-  <tr><td>12:00 – 13:15</td><td>Lunch (on-site)</td><td>—</td><td>Foyer</td></tr>
-  <tr><td>13:15 – 14:15</td><td>Wrap Up and Next Steps</td><td>Alex</td><td>Roc 1.990</td></tr>
-  </table>
-
+  <section id="details">
+    <h2>Event Details</h2>
+    <p>The OpenCHAMI community is gathering at the <a href="https://tacc.utexas.edu/">Texas Advanced Computing Center (TACC)</a> for three days of collaboration, learning and hacking. Whether you’re new to OpenCHAMI or a long-time contributor, there will be tracks for every skill level. Meet fellow sysadmins, developers and researchers working on open HPC automation and help shape the project’s future.</p>
+    <p><strong>Hosts:</strong> TACC & The OpenCHAMI Community.</p>
+    <p><strong>Slack:</strong> <a href="https://openchami.slack.com/archives/C09A4CH729Z" target="_blank">#2025-september-dev-summit</a></p>
+    <p><strong>Add to your calendar:</strong> <a href="/calendar/tacc25_schedule.ics">Download the .ics file</a></p>
   </section>
 
-<section id='tracks'>
-<h2>Tracks & Chairs</h2>
-<ul>
-<li><strong>Architecture:</strong> Alex Lovell-Troy  alovelltroy@lanl.gov</li>
-<li><strong>Introductory Topics:</strong> Travis Raines </li>
-<li><strong>Tutorials:</strong> Devon Bautista </li>
-<li><strong>Partner Talks</strong> Adam Hough Adam.Hough@shell.com </li>
-<li><strong>Feedback(Governance, Gaps etc):</strong> Yogi Porla </li>
-<li><strong>Hackathon:</strong> Jonathan Dietz  jd@broadwing.io </li>
-</ul>
-</section>
-<section id='registration'>
-<h2>Registration</h2>
-<p>Registration is required for attendance. Please secure your spot by visiting our <a href='https://www.eventbrite.com/e/1384590971869' target='_blank'>Eventbrite registration page</a>. Capacity is limited and on‑site meals are provided based on registration.</p>
-</section>
-<section id='sponsors'>
-<h2>Sponsors</h2>
-<p>We’re grateful to our sponsors for supporting the OpenCHAMI Developer Summit. Sponsor information and logos will appear here soon. If your organization is interested in sponsoring the event, please contact us at <a href='mailto:contact@openchami.org'>contact@openchami.org</a>.</p>
-</section>
+  <section id="location">
+    <h2>Location & Directions</h2>
+    <p><strong>Venue:</strong> Advanced Computing Building (ACB), Texas Advanced Computing Center, <a href="https://maps.app.goo.gl/9Ydq5owUg1r4KVh57" target="_blank">10505 Exploration Way, Austin, TX 78758</a>.</p>
+    <p><i>Please note that the TACC address is 10100 Burnet Rd, Austin, TX 78758, however the entrance is on Exploration Way.</i></p>
+    <p>From the Burnet Road entrance, continue past the guard booth, pass the chain link gate to Exploration Way, then make a right. ACB is the second to last building on the right with the overhanging patios. From the Braker Lane entrance, ACB is the second building on the left with the overhanging patios (10505 Exploration Way).</p>
+    <p>When you arrive at ACB, you may park in the covered parking lot or on the street. Please obtain a parking pass from one of the kiosks, or you may use the ParkMobile app (zone&nbsp;96113). Please check in with the receptionist when you enter the building.</p>
+  </section>
+
+  <section id="schedule">
+    <h2>Schedule <small class="muted">(CST)</small></h2>
+
+    <!-- Day 1 (merged “session + speakers/track”) -->
+    <h3 id="day-1">Day 1 – Tuesday, Sept 9</h3>
+    <table class="schedule-table">
+      <tr><th style="width:140px">Time</th><th>Session &amp; Speakers / Track</th><th style="width:120px">Room</th></tr>
+      <tr class="row-break"><td>09:00 – 10:00</td><td>Registration and Coffee</td><td>Foyer</td></tr>
+      <tr class="row-partner"><td>10:00 – 10:15</td><td>Keynote Welcome — Alex / Dan</td><td>Roc 1.990</td></tr>
+      <tr class="row-partner"><td>10:15 – 10:45</td><td>Omnia × OpenCHAMI Keynote — Alex / Onur Celebioglu (Dell)</td><td>Roc 1.990</td></tr>
+      <tr class="row-intro"><td>11:00 – 11:15</td><td>Introductory: Who are we? - Alex</td><td>Roc 1.990</td></tr>
+      <tr class="row-intro"><td>11:15 – 11:30</td><td>Introductory: Current Deployments - Alex</td><td>Roc 1.990</td></tr>
+      <tr class="row-arch"><td>11:30 – 11:45</td><td>Introductory: Architecture Deep Dive - Alex</td><td>Roc 1.990</td></tr>
+      <tr class="row-feedback"><td>11:45 – 12:00</td><td>Site Reports — Yogi Porla (facilitator)</td><td>Roc 1.990</td></tr>
+      <tr class="row-break"><td>12:00 – 13:00</td><td>Lunch (on-site)</td><td>Foyer</td></tr>
+      <tr class="row-partner"><td>13:45 – 14:30</td><td>vTDS Partner Talk — Eric Lund / Harold Longley</td><td>Roc 1.990</td></tr>
+      <tr class="row-partner"><td>14:30 – 14:45</td><td>Provisioning HPC Clusters at TACC — John Desantis (TACC)</td><td>Roc 1.990</td></tr>
+      <tr class="row-break"><td>14:45 – 15:00</td><td>Break</td><td>Foyer</td></tr>
+      <tr class="row-feedback"><td>16:30 – 17:00</td><td>RFDs (Closed &amp; Open), Roadmap 1.0, New Ideas — Alex / Yogi</td><td>Roc 1.990</td></tr>
+      <tr class="row-feedback"><td>17:00 – 17:30</td><td>Community Q&amp;A — Alex</td><td>Roc 1.990</td></tr>
+      <tr class="row-default"><td>18:00 – 20:00</td><td>Optional Social / Sponsor Dinner</td><td>Off-site</td></tr>
+    </table>
+
+    <!-- Day 2 -->
+    <h3 id="day-2">Day 2 – Wednesday, Sept 10</h3>
+    <table class="schedule-table">
+      <tr><th style="width:140px">Time</th><th>Plenary</th><th>Parallel Tracks</th><th style="width:120px">Room</th></tr>
+      <tr class="row-break"><td>08:30 – 09:00</td><td colspan="2">Coffee &amp; Networking</td><td>Foyer</td></tr>
+      <tr class="row-partner"><td>09:00 – 09:30</td><td colspan="2">Why Does OpenCHAMI Matter — Adam Hough (Shell)</td><td>Roc 1.990</td></tr>
+      <tr><td>09:30 – 10:30</td><td class="row-tutorial"><span class="chip chip-tutorial">Tutorials</span> — Devon Bautista</td><td class="row-arch"><span class="chip chip-arch">Architecture &amp; Governance</span></td><td>Roc 1.990</td></tr>
+      <tr class="row-break"><td>10:30 – 10:45</td><td colspan="2">Break</td><td>Foyer</td></tr>
+      <tr><td>10:45 – 12:00</td><td class="row-tutorial"><span class="chip chip-tutorial">Tutorials</span> — Devon Bautista</td><td class="row-intro"><span class="chip chip-intro">Quality &amp; API Mechanics</span></td><td>Roc 1.990</td></tr>
+      <tr class="row-break"><td>12:00 – 13:15</td><td colspan="2">Lunch (on-site)</td><td>Foyer</td></tr>
+      <tr class="row-feedback"><td>13:45 – 14:00</td><td colspan="2">RPM signing — Cole Kennedy (TestifySec)</td><td>Roc 1.990</td></tr>
+      <tr class="row-feedback"><td>14:00 – 14:30</td><td colspan="2">GitHub Automation — Taylor Ludwig (Broadwing)</td><td>Roc 1.990</td></tr>
+      <tr class="row-feedback"><td>14:30 – 15:30</td><td colspan="2">Brainstorming for Future Features</td><td>Roc 1.990</td></tr>
+      <tr class="row-break"><td>15:30 – 16:00</td><td colspan="2">Break</td><td>Foyer</td></tr>
+      <tr class="row-hack"><td>16:00 – 16:45</td><td colspan="2">Hackathon Planning — Jonathan Dietz (Broadwing)</td><td>Roc 1.990</td></tr>
+      <tr class="row-arch"><td>16:15 – 17:00</td><td colspan="2">Road to 1.0</td><td>Roc 1.990</td></tr>
+    </table>
+
+    <!-- Day 3 -->
+    <h3 id="day-3">Day 3 – Thursday, Sept 11</h3>
+    <table class="schedule-table">
+      <tr><th style="width:140px">Time</th><th>Plenary</th><th>Parallel Tracks</th><th style="width:120px">Room</th></tr>
+      <tr class="row-break"><td>08:30 – 09:00</td><td colspan="2">Coffee &amp; Networking</td><td>Foyer</td></tr>
+      <tr class="row-partner"><td>09:00 – 09:30</td><td colspan="2">Case Study on OpenCHAMI — Nic Jones</td><td>Roc 1.990</td></tr>
+      <tr><td>09:30 – 10:00</td><td class="row-hack"><span class="chip chip-hack">Hackathon Team Sign-ups</span> — Jonathan Dietz (Broadwing)</td><td class="row-intro"><span class="chip chip-intro">RFD Brainstorming &amp; Planning for Next Event</span></td><td>Roc 1.990</td></tr>
+      <tr><td>10:00 – 12:00</td><td class="row-hack"><a href="https://docs.google.com/document/d/1Z2boOLUXllM_YMJ9US7ciVjsA8fETQnZfu5SOzSEWpI/edit?usp=sharing" target="_blank"><span class="chip chip-hack">Hackathon / Docsathon</span></a> — code, docs, CI pipelines</td><td class="row-hack">Self-organised teams</td><td>Roc 1.990</td></tr>
+      <tr class="row-break"><td>12:00 – 13:15</td><td colspan="2">Lunch (on-site)</td><td>Foyer</td></tr>
+      <tr class="row-feedback"><td>13:15 – 14:15</td><td colspan="2">Wrap-up and Next Steps — Alex</td><td>Roc 1.990</td></tr>
+    </table>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><span class="swatch" style="background:#cfe0ff"></span> Partner Talks</div>
+      <div class="legend-item"><span class="swatch" style="background:#ffe7a8"></span> Feedback / Governance</div>
+      <div class="legend-item"><span class="swatch" style="background:#cdecc9"></span> Breaks &amp; Lunch</div>
+      <div class="legend-item"><span class="swatch" style="background:#cde7df"></span> Architecture</div>
+      <div class="legend-item"><span class="swatch" style="background:#dbeeff"></span> Introductory Topics</div>
+      <div class="legend-item"><span class="swatch" style="background:#fff6a1"></span> Hackathon</div>
+      <div class="legend-item"><span class="swatch" style="background:#f6d7d9"></span> Tutorials</div>
+    </div>
+  </section>
+
+  <section id="tracks">
+    <h2>Tracks & Chairs</h2>
+    <ul>
+      <li><strong>Architecture:</strong> Alex Lovell-Troy &nbsp;<a href="mailto:alovelltroy@lanl.gov">alovelltroy@lanl.gov</a></li>
+      <li><strong>Introductory Topics:</strong> Travis Raines</li>
+      <li><strong>Tutorials:</strong> Devon Bautista</li>
+      <li><strong>Partner Talks:</strong> Adam Hough &nbsp;<a href="mailto:Adam.Hough@shell.com">Adam.Hough@shell.com</a></li>
+      <li><strong>Feedback (Governance, Gaps):</strong> Yogi Porla</li>
+      <li><strong>Hackathon:</strong> Jonathan Dietz &nbsp;<a href="mailto:jd@broadwing.io">jd@broadwing.io</a></li>
+    </ul>
+  </section>
+
+  <section id="registration">
+    <h2>Registration</h2>
+    <p>Registration is required for attendance. Please secure your spot by visiting our <a href="https://www.eventbrite.com/e/1384590971869" target="_blank">Eventbrite registration page</a>. Capacity is limited and on-site meals are provided based on registration.</p>
+    <p><strong>Add to your calendar:</strong> <a href="/calendar/tacc25_schedule.ics">Download the .ics file</a></p>
+  </section>
+
+  <section id="sponsors">
+    <h2>Sponsors</h2>
+    <p>We’re grateful to our sponsors for supporting the OpenCHAMI Developer Summit. Sponsor information and logos will appear here soon. If your organization is interested in sponsoring the event, please contact us at <a href="mailto:contact@openchami.org">contact@openchami.org</a>.</p>
+  </section>
+
 </main>
+
 <footer>
-<p>&copy; 2025 OpenCHAMI · Built with love for the HPC community.</p>
+  <p>&copy; 2025 OpenCHAMI · Built with love for the HPC community.</p>
 </footer>
 </body>
 </html>

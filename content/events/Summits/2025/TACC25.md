@@ -64,58 +64,64 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 | Day | Theme | Highlights |
 |---|---|---|
 | **Day 1 – Introductions & Current State** | *Setting the Stage* | Project history • Site reports • Needs & gaps workshop • Status review |
-| **Day 2 – Tutorials & Governance** | *Hands-On & Cleanup* | Full-day deployment tutorial • Parallel TSC/governance refinement track |
-| **Day 3 – Hackathon & Road-Mapping** | *Building the Future* | Code, scripting, docs sprint • RFD drafting • Summit wrap-up & next steps |
+| **Day 2 – Tutorials & Governance** | *Hands-On & Cleanup* |Deployment tutorial • Parallel TSC/governance refinement track |
+| **Day 3 – Hackathon & Road-Map** | *Building the Future* | Code, scripting, docs sprint • RFD drafting • Summit wrap-up & next steps |
 
 ## Schedule
 *(All times CST)*
+
 ### Day 1 – Tuesday, Sept 9
 
-| Time | Session | Speakers / Track | Room |
-| --- | --- | --- | --- |
-| 09:00 – 10:00 | Registration: Arrival, Coffee & Badge Pick-up | — | Foyer |
-| 10:00 – 10:30 | Keynote – Welcome | Dan Stanzione (TACC) | Roc 1.990 |
-| 10:30 – 11:00 | Keynote – Omnia × OpenCHAMI: Automating HPC at Scale | Dell Technologies (TBC) | Roc 1.990 |
-| 11:00 – 11:45 | Who We Are & Where We Run – project origin, community structure, live site reports | Alex Lovell-Troy | Roc 1.990 |
-| 11:45 – 12:00 | Site Reports | Yogi Porla | Roc 1.990 |
-| 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
-| 13:15 – 14:00 | vTDS Partner Talk | Eric Lund / Harold Longley | Roc 1.990 |
-| 14:00 – 15:00 | RFDs (Closed, Open, and New Ideas) | Open Mic | Roc 1.990 |
-| 15:00 – 15:15 | Break | — | Foyer |
-| 15:15 – 16:00 | Split up on Individual RFDs | Open Mic | TBC |
-| 16:00 – 16:45 | Road to 1.0 | Alex / Yogi | Roc 1.990 |
-| 16:45 – 17:30 | Community Q&A | Alex | Roc 1.990 |
-| 18:00 – 20:00 | Optional Social / Sponsor Dinner | TBC | Off-site |
+| Time | Session & Speakers | Room |
+| --- | --- | --- |
+| 09:00 – 10:00 | Registration and Coffee | Foyer |
+| 10:00 – 10:15 | Keynote Welcome — Alex / Dan | Roc 1.990 |
+| 10:15 – 10:45 | Omnia × OpenCHAMI Keynote — Alex / Onur Celebioglu (Dell) | Roc 1.990 |
+| 11:00 – 11:15 | Introductory: Who are we? | Roc 1.990 |
+| 11:15 – 11:30 | Introductory: Current Deployments | Roc 1.990 |
+| 11:30 – 11:45 | Introductory: Architecture Deep Dive | Roc 1.990 |
+| 11:45 – 12:00 | Site Reports — Yogi Porla (facilitator) | Roc 1.990 |
+| 12:00 – 13:00 | Lunch (on-site) | Foyer |
+| 13:45 – 14:30 | vTDS Partner Talk — Eric Lund / Harold Longley | Roc 1.990 |
+| 14:30 – 14:45 | Provisioning HPC Clusters at TACC — John Desantis (TACC) | Roc 1.990 |
+| 14:45 – 15:00 | Break | Foyer |
+| 16:30 – 17:00 | RFDs (Closed & Open), Roadmap 1.0, New Ideas — Alex / Yogi | Roc 1.990 |
+| 17:00 – 17:30 | Community Q&A — Alex | Roc 1.990 |
+| 18:00 – 20:00 | Optional Social / Sponsor Dinner | Off-site |
 
 ---
 
 ### Day 2 – Wednesday, Sept 10
 
-| Time | Session | Speakers / Track | Room |
+| Time | Plenary | Parallel Track | Room |
 | --- | --- | --- | --- |
 | 08:30 – 09:00 | Coffee & Networking | — | Foyer |
-| 09:00 – 09:30 | Why Does OpenCHAMI Matter | Adam Hough | Roc 1.990 |
-| 09:30 – 10:30 | Tutorials | Devon Bautista / David Allen| Roc 1.990 |
+| 09:00 – 09:30 | Why Does OpenCHAMI Matter — Adam Hough (Shell) | — | Roc 1.990 |
+| 09:30 – 10:30 | Tutorials — Devon | Architecture & Governance | Roc 1.990 |
 | 10:30 – 10:45 | Break | — | Foyer |
-| 11:00 – 12:00 | Tutorials | Devon Bautista / David Allen | Roc 1.990 |
+| 10:45 – 12:00 | Tutorials — Devon | Quality & API Mechanics | Roc 1.990 |
 | 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
-| 13:15 – 15:00 | Governance Workshop – GitHub org, licensing, TSC elections | Alex / Travis Raines / Yogi | Roc 1.990 |
-| 15:00 – 15:30 | Break | — | Foyer |
-| 15:30 – 16:30 | Brainstorming for Future Features | Mixed panel | Roc 1.990 |
-| 16:30 – 17:30 | Overflow and Parking Lot (Talks and Demos) | Alex | Roc 1.990 |
+| 13:45 – 14:00 | RPM signing — Cole Kennedy (TestifySec) | — | Roc 1.990 |
+| 14:00 – 14:30 | GitHub Automation — Taylor Ludwig (Broadwing) | — | Roc 1.990 |
+| 14:30 – 15:30 | Brainstorming for Future Features | — | Roc 1.990 |
+| 15:30 – 16:00 | Break | — | Foyer |
+| 16:00 – 16:45 | Hackathon Planning — Jonathan Dietz (Broadwing) | — | Roc 1.990 |
+| 16:15 – 17:00 | Road to 1.0 | — | Roc 1.990 |
+
 
 ---
 
 ### Day 3 – Thursday, Sept 11
 
-| Time | Session | Speakers / Track | Room |
+| Time | Plenary | Parallel Track | Room |
 | --- | --- | --- | --- |
 | 08:30 – 09:00 | Coffee & Networking | — | Foyer |
-| 09:00 – 09:30 | Partner Talks | Alex | Roc 1.990 |
-| 09:30 – 10:00 | Hackathon Team Sign-ups | Self-organised teams | Roc 1.990 |
-| 10:00 – 12:00 | Hackathon / Docsathon – code, docs, CI pipelines | Self-organised teams | Roc 1.990 |
+| 09:00 – 09:30 | Case Study on OpenCHAMI — Nic Jones | — | Roc 1.990 |
+| 09:30 – 10:00 | Hackathon Team Sign-ups — Jonathan Dietz (Broadwing) | RFD Brainstorming & Planning for Next Event | Roc 1.990 |
+| 10:00 – 12:00 | Hackathon / Docsathon — code, docs, CI pipelines | Self-organised teams | Roc 1.990 |
 | 12:00 – 13:15 | Lunch (on-site) | — | Foyer |
-| 13:15 – 14:15 | Wrap Up and Next Steps | Alex | Roc 1.990 |
+| 13:15 – 14:15 | Wrap-up and Next Steps — Alex | — | Roc 1.990 |
+
 
 ---
 
@@ -124,30 +130,26 @@ When you arrive at ACB, you may park in the covered parking lot or on the street
 - **Introductory Topics:** Travis Raines
 - **Tutorials:** Devon Bautista
 - **Partner Talks:** Adam Hough — [Adam.Hough@shell.com](mailto:Adam.Hough@shell.com)
-- **Feedback (Governance, Gaps etc):** Yogi Porla - [yogi@lanl.gov](mailto:yogi@lanl.gov)
-- **Hackathon:** Jonathan Dietz - [jd@broadwing.io](mailto:jd@broadwing.io)
 
-
+- **Feedback (Governance, Gaps):** Yogi Porla — [yogi@lanl.gov](mailto:yogi@lanl.gov)
+- **Hackathon:** Jonathan Dietz — [jd@broadwing.io](mailto:jd@broadwing.io)
 ---
 
 ## Registration
+Registration is required for attendance. Please secure your spot by visiting our [Eventbrite registration page](https://www.eventbrite.com/manage/events/1384590971869/details). Capacity is limited and on-site meals are provided based on registration.
 
-
-Registration is required for attendance. Please secure your spot by visiting our [Eventbrite registration page](https://www.eventbrite.com/manage/events/1384590971869/details). Capacity is limited and on‑site meals are provided based on registration.
+👉 **Add to your calendar:** [Download .ics file](/calendar/tacc25_schedule.ics)
 
 ---
 
 ## Sponsors
-
-
 We’re grateful to our sponsors for supporting the OpenCHAMI Developer Summit. Sponsor information and logos will appear here soon. If your organization is interested in sponsoring the event, please contact us at [contact@openchami.org](mailto:contact@openchami.org).
 
 ---
 
 > **We look forward to seeing you at TACC!**
 > A formal invitation with hotel and travel details will follow shortly.
-> For questions or attendee suggestions, email **[contact@openchami.org](contact@openchami.org)**.
+> For questions or attendee suggestions, email **[contact@openchami.org](mailto:contact@openchami.org)**.
 
 ---
-
 *Save the date and stay tuned for more updates!*

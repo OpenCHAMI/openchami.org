@@ -1,0 +1,294 @@
+BEGIN:VCALENDAR
+PRODID:-//OpenCHAMI//TACC25//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:TACC 25 – OpenCHAMI Developer Summit
+X-WR-TIMEZONE:America/Chicago
+BEGIN:VEVENT
+UID:9f1e02e6-e9d8-4b7f-be64-c67f46b3489e@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T090000
+DTEND;TZID=America/Chicago:20250909T100000
+SUMMARY:Registration and Coffee
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:c1b211d0-4eaf-4ced-8244-060ee5be3246@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T100000
+DTEND;TZID=America/Chicago:20250909T101500
+SUMMARY:Keynote Welcome — Alex & Dan
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:7331f238-ea1e-4fa6-a5ae-ddc65a2bb8da@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T101500
+DTEND;TZID=America/Chicago:20250909T104500
+SUMMARY:Keynote: Omnia × OpenCHAMI — Alex & Onur (Dell)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:e50bb4bd-0313-4fe6-b19e-85b38df4add3@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T110000
+DTEND;TZID=America/Chicago:20250909T111500
+SUMMARY:Introductory: Who are we?
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:c767aa20-9e6e-4b2f-a274-ee6daafd8e29@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T111500
+DTEND;TZID=America/Chicago:20250909T113000
+SUMMARY:Introductory: Current Deployments
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:28126bbd-6110-40b9-8604-3083f1822d75@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T113000
+DTEND;TZID=America/Chicago:20250909T114500
+SUMMARY:Introductory: Architecture Deep Dive
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:0cf714d1-c79a-4a4a-b459-4751e77df3cf@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T114500
+DTEND;TZID=America/Chicago:20250909T120000
+SUMMARY:Site Reports — Yogi Porla (facilitator)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:49c17556-fcda-43fe-86eb-930cc582e1bf@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T120000
+DTEND;TZID=America/Chicago:20250909T130000
+SUMMARY:Lunch (on-site)
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:98d25fb9-3c78-44c6-ae23-3c130dd5befe@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T134500
+DTEND;TZID=America/Chicago:20250909T143000
+SUMMARY:vTDS Partner Talk — Eric Lund & Harold Longley
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:30e8054a-5d55-4128-901e-72d9764b7e55@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T143000
+DTEND;TZID=America/Chicago:20250909T144500
+SUMMARY:Provisioning HPC Clusters at TACC — John Desantis (TACC)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:8492d9ba-e450-4dc5-a0f6-3f2bb752b2e4@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T144500
+DTEND;TZID=America/Chicago:20250909T150000
+SUMMARY:Break
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:b8ccea45-9da7-4763-b6a0-b6253588c674@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T163000
+DTEND;TZID=America/Chicago:20250909T170000
+SUMMARY:RFDs (Closed & Open) + Roadmap 1.0 + New Ideas — Alex & Yogi
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:1bdc8a61-f957-486a-a0b5-f4fe93db7f4c@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T170000
+DTEND;TZID=America/Chicago:20250909T173000
+SUMMARY:Community Q&A — Alex
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:7613670f-bea1-4456-ac72-d5ea7c946bf5@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250909T180000
+DTEND;TZID=America/Chicago:20250909T200000
+SUMMARY:Optional Social / Sponsor Dinner
+LOCATION:Off-site
+END:VEVENT
+BEGIN:VEVENT
+UID:6b135eb7-28a5-4021-8fd7-f6c48aa1ada5@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T083000
+DTEND;TZID=America/Chicago:20250910T090000
+SUMMARY:Coffee & Networking
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:59ab620e-b483-4ec9-8a71-ac10deb0a44d@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T090000
+DTEND;TZID=America/Chicago:20250910T093000
+SUMMARY:Why Does OpenCHAMI Matter — Adam Hough (Shell)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:e703ac86-b47b-4e3d-b354-f29129c29da4@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T093000
+DTEND;TZID=America/Chicago:20250910T103000
+SUMMARY:Tutorials — Devon
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+DESCRIPTION:Parallel with Architecture & Governance
+END:VEVENT
+BEGIN:VEVENT
+UID:56d9d919-59cc-43dc-b44d-659aa74a5b21@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T093000
+DTEND;TZID=America/Chicago:20250910T103000
+SUMMARY:Architecture & Governance (Parallel)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+DESCRIPTION:Parallel with Tutorials
+END:VEVENT
+BEGIN:VEVENT
+UID:139aec34-d945-47a7-a803-90e92acec3f7@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T103000
+DTEND;TZID=America/Chicago:20250910T104500
+SUMMARY:Break
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:8452cd5a-ca84-4536-abd5-85724c33125b@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T104500
+DTEND;TZID=America/Chicago:20250910T120000
+SUMMARY:Tutorials — Devon
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+DESCRIPTION:Parallel with Quality & API Mechanics
+END:VEVENT
+BEGIN:VEVENT
+UID:b338aa03-01e6-45fa-8de0-0bd1acc4552d@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T104500
+DTEND;TZID=America/Chicago:20250910T120000
+SUMMARY:Quality & API Mechanics (Parallel)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+DESCRIPTION:Parallel with Tutorials
+END:VEVENT
+BEGIN:VEVENT
+UID:bb0bce30-a653-42fe-ad86-e2dec1fd9f33@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T120000
+DTEND;TZID=America/Chicago:20250910T131500
+SUMMARY:Lunch (on-site)
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:6500520e-871c-4f6c-a682-5e17d7df53b1@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T134500
+DTEND;TZID=America/Chicago:20250910T140000
+SUMMARY:RPM signing — Cole Kennedy (TestifySec)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:5cb27cff-7aa1-4733-b01b-b99b8865ad0e@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T140000
+DTEND;TZID=America/Chicago:20250910T143000
+SUMMARY:GitHub Automation — Taylor Ludwig (Broadwing)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:ad10b854-6950-4992-a99a-6aa73cb152a0@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T143000
+DTEND;TZID=America/Chicago:20250910T153000
+SUMMARY:Brainstorming for Future Features
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:10e6e160-78cb-4aad-8bb5-42ab3f4835d9@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T153000
+DTEND;TZID=America/Chicago:20250910T160000
+SUMMARY:Break
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:dc2e7d30-c4d9-4b6b-8f12-8d043bbcf840@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T160000
+DTEND;TZID=America/Chicago:20250910T164500
+SUMMARY:Hackathon Planning — Jonathan Dietz (Broadwing)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:9641afb1-99f9-46f3-b106-5b89cad2885e@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250910T161500
+DTEND;TZID=America/Chicago:20250910T170000
+SUMMARY:Road to 1.0
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:e2292c1e-9180-40e6-8987-f96b2663f367@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T083000
+DTEND;TZID=America/Chicago:20250911T090000
+SUMMARY:Coffee & Networking
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:8d1f976e-5347-4928-9e32-b5305709432d@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T090000
+DTEND;TZID=America/Chicago:20250911T093000
+SUMMARY:Case Study on OpenCHAMI — Nic Jones
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:ab049917-c30d-4b39-83a7-9ac9d2f198a7@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T093000
+DTEND;TZID=America/Chicago:20250911T100000
+SUMMARY:Hackathon Team Sign-ups — Jonathan Dietz (Broadwing)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+DESCRIPTION:Parallel with RFD Brainstorming & Planning
+END:VEVENT
+BEGIN:VEVENT
+UID:0b737068-cb8e-482a-8d67-e7280d99c650@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T093000
+DTEND;TZID=America/Chicago:20250911T100000
+SUMMARY:RFD Brainstorming & Planning for Next Event (Parallel)
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+DESCRIPTION:Parallel with Hackathon Team Sign-ups
+END:VEVENT
+BEGIN:VEVENT
+UID:1f05fb45-147e-488b-b057-ba197c771a88@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T100000
+DTEND;TZID=America/Chicago:20250911T120000
+SUMMARY:Hackathon / Docsathon — code, docs, CI pipelines
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:06b6ccf2-1dc0-4afd-9fc6-256b3f894c37@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T120000
+DTEND;TZID=America/Chicago:20250911T131500
+SUMMARY:Lunch (on-site)
+LOCATION:Texas Advanced Computing Center (ACB) – Foyer, Austin, TX
+END:VEVENT
+BEGIN:VEVENT
+UID:4dad7385-ea5a-4e5a-b4eb-0a591208a039@openchami.org
+DTSTAMP:20250901T213004Z
+DTSTART;TZID=America/Chicago:20250911T131500
+DTEND;TZID=America/Chicago:20250911T141500
+SUMMARY:Wrap-up and Next Steps — Alex
+LOCATION:Texas Advanced Computing Center (ACB) – Roc 1.990, Austin, TX
+END:VEVENT
+END:VCALENDAR
