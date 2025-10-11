@@ -24,7 +24,7 @@ At LANL, we use [Buildah](https://buildah.io/) and containers to create images a
    ```bash
    CNAME=$(buildah from scratch)
    ```
-2. Mount it 
+2. Mount it
    ```bash
    MNAME=$(buildah mount $CNAME)
    ```
