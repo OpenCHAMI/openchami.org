@@ -1,0 +1,15 @@
+{{ define "main" }}
+
+<div style="max-width: 800px; margin: auto; text-align: center;">
+  <h1>{{ .Title }}</h1>
+  <div style="max-width: 800px; margin: auto; text-align: left;">
+    {{ $docs := site.GetPage .Path }}
+    <ul style="padding: 0;">
+      {{ range $docs.Pages }}
+      <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+      {{ end }}
+    </ul>
+  </div>
+</div>
+
+{{ end }}

@@ -3,6 +3,7 @@ title: "🔧 Dynamic Cloud-Init Configuration in OpenCHAMI"
 description: "How OpenCHAMI uses Cloud-Init to provision nodes dynamically with security, automation, and flexibility."
 date: 2025-02-03T00:00:00+00:00
 lastmod: 2025-02-03T00:00:00+00:00
+weight: 500
 draft: false
 categories: ["Cloud-Init", "HPC", "Infrastructure", "Automation"]
 tags: ["Cloud-Init", "Provisioning", "WireGuard", "Security"]
@@ -21,12 +22,12 @@ This post walks through a **real-world example** using **Cloud-Init's group-base
 
 We’ll configure **two nodes**, each belonging to **different Cloud-Init groups**:
 
-- **Node 1: Compute Node**  
-  - **Groups:** `slurm`, `tenant-foo`  
+- **Node 1: Compute Node**
+  - **Groups:** `slurm`, `tenant-foo`
   - **Config:** Installs **Slurm from OpenHPC**, adds a `root-foo` user with sudo and SSH.
 
-- **Node 2: IO Node**  
-  - **Groups:** `tenant-foo`, `ephemeral-storage`  
+- **Node 2: IO Node**
+  - **Groups:** `tenant-foo`, `ephemeral-storage`
   - **Config:** Adds `root-foo` with SSH, ensures `/dev/sda1` is partitioned and formatted, then mounts it to `/opt/ephemeral`.
 
 Each group contributes **specific configurations**, and nodes receive the combined settings from all groups they belong to.
@@ -145,36 +146,36 @@ curl -X PUT http://localhost:27777/cloud-init/admin/groups/ephemeral-storage    
 
 At boot, each node requests cloud-init information in a **standard order**:
 
-1. **Requests `/meta-data`**:  
-   - Retrieves **inventory information**, including a unique **instance-id** for each boot.  
-   - Includes **hostname, location, and other identity details** when available.  
+1. **Requests `/meta-data`**:
+   - Retrieves **inventory information**, including a unique **instance-id** for each boot.
+   - Includes **hostname, location, and other identity details** when available.
 
-2. **Requests `/user-data`**:  
-   - Reserved for future use, currently empty in OpenCHAMI.  
+2. **Requests `/user-data`**:
+   - Reserved for future use, currently empty in OpenCHAMI.
 
-3. **Requests `/vendor-data`**:  
-   - Returns a **list of cloud-config YAML files**, one for each group the node belongs to.  
+3. **Requests `/vendor-data`**:
+   - Returns a **list of cloud-config YAML files**, one for each group the node belongs to.
    - Example: If a node is part of `io` and `tenant-foo`, it receives a list of:
      ```yaml
      /io.yaml
      /tenant-foo.yaml
      ```
 
-4. **Processes Cloud-Config Files**:  
-   - The cloud-init client **fetches each listed YAML file**, parses them, and applies configurations.  
+4. **Processes Cloud-Config Files**:
+   - The cloud-init client **fetches each listed YAML file**, parses them, and applies configurations.
 
-5. **Sends `phone-home` Confirmation**:  
-   - After processing all `#cloud-config` files, the node sends a **status update** to the cloud-init server indicating **it has fully booted**.  
+5. **Sends `phone-home` Confirmation**:
+   - After processing all `#cloud-config` files, the node sends a **status update** to the cloud-init server indicating **it has fully booted**.
 
 ### **🚀 Example Boot Configurations**
-- **Compute Node (Groups: `slurm`, `tenant-foo`)**  
-  ✅ Installs **Slurm**  
-  ✅ Adds **root-foo** user with **SSH and sudo access**  
+- **Compute Node (Groups: `slurm`, `tenant-foo`)**
+  ✅ Installs **Slurm**
+  ✅ Adds **root-foo** user with **SSH and sudo access**
 
-- **IO Node (Groups: `tenant-foo`, `ephemeral-storage`)**  
-  ✅ Adds **root-foo** user with **SSH access**  
-  ✅ **Partitions and formats `/dev/sda1` if necessary**  
-  ✅ **Mounts `/dev/sda1` to `/opt/ephemeral`**  
+- **IO Node (Groups: `tenant-foo`, `ephemeral-storage`)**
+  ✅ Adds **root-foo** user with **SSH access**
+  ✅ **Partitions and formats `/dev/sda1` if necessary**
+  ✅ **Mounts `/dev/sda1` to `/opt/ephemeral`**
 
 ---
 
@@ -186,9 +187,9 @@ At boot, each node requests cloud-init information in a **standard order**:
 ---
 
 ## **💡 Why This Matters**
-✔️ **Uses OpenCHAMI’s API correctly** (Base64-encoded JSON).  
-✔️ **Automates cluster-wide provisioning** without manual intervention.  
-✔️ **Ensures each node gets exactly what it needs based on its role**.  
+✔️ **Uses OpenCHAMI’s API correctly** (Base64-encoded JSON).
+✔️ **Automates cluster-wide provisioning** without manual intervention.
+✔️ **Ensures each node gets exactly what it needs based on its role**.
 
 By leveraging **Cloud-Init with OpenCHAMI**, HPC admins can **securely and automatically configure compute and IO nodes at scale**—without managing per-node configurations manually.
 
