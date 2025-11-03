@@ -10,19 +10,34 @@ tags: ["Fabrica", "Hardware", "Inventory"]
 contributors: ["Ben McDonald"]
 ---
 
-# Unified Power Control in OpenCHAMI: Managing BMCs and PDUs with PCS
+## What is Fabrica?
 
-Managing a modern data center requires control over a diverse set of hardware. System administrators need to wrangle not just servers via their Baseboard Management Controllers (BMCs), but also critical power infrastructure like Power Distribution Units (PDUs). The problem is that these devices often speak different languages; BMCs typically use the `Redfish` API, while many PDUs have their own unique interfaces.
+Fabrica is a command-line tool designed to accelerate the development of production-ready REST APIs in Go.
 
-With recent enhancements to the Magellan tool as a part of the OpenCHAMI softawre stack, this complexity can now be managed through a single, consistent interface. OpenCHAMI's Power Control Service (PCS) now provides a unified API to query and control the power state of both BMCs and PDUs, backed by a always-on monitoring engine.
+At its core, Fabrica is a code generator. The primary workflow involves defining your API's resources as simple Go structs. Once you define these structs, Fabrica generates the complete, surrounding API infrastructure. This generated code includes:
 
-This post will demonstrate this powerful new capability and explain some of the changes in Magellan, the State Management Database (SMD), and PCS that make this unified workflow possible.
+* CRUD (Create, Read, Update, Delete) HTTP handlers.
+* A choice of multiple backends, including simple file-based storage (for development) and SQL databases for production.
+* Automatically generated OpenAPI 3.0 documentation, which also provides a usable Swagger UI.
+* A type-safe Go client for interacting with your new API.
 
-Note that the full deployment recipe and instructions ran in this blog post are available at the demo repository on GitHub: **[https://github.com/bmcdonald3/openchami-demo](https://github.com/bmcdonald3/openchami-demo)**. This also includes a more full workflow, powering back on and querying the status of a transition, with expected output from a real machine.
+Fabrica is designed to automatically conform to the OpenCHAMI specifications, decided upon by the OpenCHAMI Technical Steering Committee and members of the API working group, so that code will automatically be OpenCHAMI compliant.
+
+A key concept Fabrica uses is its Kubernetes-inspired resource structure. Every resource you create is wrapped in a standard "envelope" that separates the `spec` from the `status`.
+
+* The `spec` is the *desired state* of the resource.
+  * e.g., "I want this node to be powered on"
+  * can be updated by the user
+* The `status` is the  observed state of the resource.
+  * e.g., "This node is powered off".
+  * this is updated by the system, not the user
+  * can be thought of representing what "actually is" at a moment in time
+
+This separation provides a clear and consistent pattern for managing resource state, a pattern common in cloud-native tools.
 
 ---
 
-## A Smarter Architecture for Unified Control
+## Let's give it a try... 
 
 The workflow for managing BMCs and PDUs with OpenCHAMI tools involves four key components:
 
