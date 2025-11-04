@@ -129,7 +129,7 @@ go run ./cmd/server
 
 **Test the API:**
 **Step 1: Create the "Device" resource envelope.**
-A user or system registers a new device by name. 
+A user or system registers a new device by name and the service generates the UID. 
 
 ```bash
 # Create a new "Device" resource named "compute-node-01"
