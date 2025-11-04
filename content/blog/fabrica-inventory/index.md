@@ -203,7 +203,7 @@ Output:
 
 What if you need an endpoint that isn't simple CRUD? For example, what if we want a custom endpoint `/devices/summary` that returns a simple report, like `{"total_devices": 5, "types": {"Node": 3, "Rack": 2}}`?
 
-To make this change, we can modify the file that waas generated at `cmd/server/main.go`.
+To make this change, we can modify the file that was generated at `cmd/server/main.go`.
 
 ### How it Works
 
