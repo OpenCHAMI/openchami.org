@@ -39,7 +39,7 @@ This separation provides a clear and consistent pattern for managing resource st
 
 ## Let's give it a try... 
 
-To see how Fabrica works, let's build a real-world API. We'll use it to create an `inventory-api` for tracking hardware assets, based on the OpenCHAMI data model (see [RFD #112](https://github.com/OpenCHAMI/roadmap/issues/112)).
+To see how Fabrica works, let's build a real-world API. We'll use it to create an `inventory-api` for tracking hardware assets, based on the OpenCHAMI data model (see [RFD 112](https://github.com/OpenCHAMI/roadmap/issues/112)).
 
 ### 1. Understanding the Inventory Model
 
