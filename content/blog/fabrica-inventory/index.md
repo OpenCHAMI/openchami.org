@@ -66,7 +66,7 @@ This creates `pkg/resources/device/device.go`. We open it and edit the two gener
 
 We want this struct to be empty. The system, not the user, populates the device data.
 
-```bash
+```go
 // DeviceSpec defines the desired state of a Device
 // This should be empty for our inventory-API, as all data
 // is observed state populated by the system.
