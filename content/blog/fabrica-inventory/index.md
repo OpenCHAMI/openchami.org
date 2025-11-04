@@ -1,8 +1,8 @@
 ---
-title: "Should I use Fabrica? Getting Started and Creating a Hardware Inventory API"
-description: "Learn how Fabrica works, what it can do, and create a fully functional Hardware Inventory API with Fabrica."
-date: 2025-11-03T00:00:00+00:00
-lastmod: 2025-11-03T00:00:00+00:00
+title: "Using Fabrica to Generate a Hardware Inventory API"
+description: "Learn how Fabrica works, what it can do, and create a fully functional Hardware Inventory API in minutes."
+date: 2025-11-04T00:00:00+00:00
+lastmod: 2025-11-04T00:00:00+00:00
 draft: false
 weight: 10
 categories: ["HPC", "Hardware", "Inventory"]
