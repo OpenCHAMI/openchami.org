@@ -12,6 +12,10 @@ homepage: false
 ---
 <!-- vi: set tw=80 sw=2 sts=2: -->
 
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+**This handbook is still under construction!** More content to come.
+{{< /callout >}}
+
 Welcome to OpenCHAMI!
 
 This handbook is meant to serve as a guide and a reference for deploying,
