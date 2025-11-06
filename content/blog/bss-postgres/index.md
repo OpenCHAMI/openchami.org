@@ -75,5 +75,3 @@ References
 - Org: https://github.com/OpenCHAMI
 
 {{< blog-cta >}}
-
-{{< blog-cta >}}

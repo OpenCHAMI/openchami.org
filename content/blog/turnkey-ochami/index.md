@@ -14,16 +14,19 @@ canonical = "/blog/turnkey-ochami/"
 
 You want to try OpenCHAMI without a long project. This guide walks you through a small, safe deployment that fits a weekend. You will deploy core services, register a few nodes, and power one on. If it works for you, you can grow from here.
 
-What you get
+## What you get
+
 You will run a handful of services with docker-compose. You will have inventory, boot scripts, and a simple way to control a node. You will also have a clean place to put secrets.
 
-Key repos
+## Key repos
+
 - Deployment recipes: https://github.com/OpenCHAMI/deployment-recipes
 - SMD (inventory): https://github.com/OpenCHAMI/smd
 - BSS (boot scripts): https://github.com/OpenCHAMI/bss
 - Magellan (discovery): https://github.com/OpenCHAMI/magellan
 
-Before you start
+## Before you start
+
 Pick a small test area. One head node or VM host is enough. A couple of bare-metal nodes or VMs help you test power and boot. Make sure your user can run Docker.
 
 Step 1: get the files
@@ -54,21 +57,26 @@ Point a node at a known-good kernel and initrd. Keep it simple for your first ru
 curl -X POST http://localhost:28080/v1/boot -d '{"xname":"x0c0s1b0n0","kernel":"https://example.org/kernel","initrd":"https://example.org/initrd"}' -H 'Content-Type: application/json'
 ```
 
-What next
+## What next
+
 Try a PXE boot on your test node. Watch the BSS logs. If it asks for a boot script, you are close. If not, check DHCP and cabling.
 
-Tips from the field
+## Tips from the field
+
 - Keep your first image small. You can add packages later with cloud-init.
 - Use a canary group to test changes before you touch many nodes.
 - Store BMC credentials in a secrets store and not in Git. Magellan supports a local encrypted store for quick starts.
 
-When you are ready
+## When you are ready
+
 Add Magellan to discover BMCs and PDUs and send inventory to SMD. Then wire a power tool that reads from SMD and issues Redfish calls. This gives you a clean loop: discover, record, power, boot.
 
-Where this fits
+## Where this fits
+
 This weekend deploy is not a full site. It is a small, safe start. It helps you see OpenCHAMI in your environment and find gaps early. From here, you can scale services, move to managed databases, and add auth.
 
-References
+## References
+
 - Deployment recipes: https://github.com/OpenCHAMI/deployment-recipes
 - SMD: https://github.com/OpenCHAMI/smd
 - BSS: https://github.com/OpenCHAMI/bss

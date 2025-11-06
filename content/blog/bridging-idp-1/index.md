@@ -12,14 +12,18 @@ contributors = ["David J. Allen (LANL)"]
 lastmod = 2025-11-06
 canonical = "/blog/bridging-idp-1/"
 +++
+
+
 Many sites want to let users log in with an external identity provider (IdP) like Google or GitLab, but still issue their own access tokens for microservices. That sounds simple, but just forwarding the IdP’s ID token to your authorization server won’t work in most OIDC servers. The audience will not match, and the server must reject it.
 
 This post explains the problem and shows a simple pattern that does work. In Part 2, we’ll connect this to OPAAL for OpenCHAMI.
 
-Why the naive approach fails
+## Why the naive approach fails
+
 An ID token from the external IdP proves the user’s identity to your application. It does not prove the user is a valid audience for your authorization server. Most off‑the‑shelf OIDC servers require the token audience (aud) to point to them. You can’t change that in many hosted IdPs, so forwarding the token gets rejected.
 
-A working pattern
+## A working pattern
+
 Instead of forwarding the ID token, your service should:
 1) Verify the ID token locally using the IdP’s JWKS.
 2) Map claims you care about (subject, email, groups).

@@ -16,23 +16,28 @@ Power events should be predictable. When you turn a node off, you want it to go 
 
 In this post, you will learn the common patterns for power control, where to plug in Redfish credentials, and how to use a simple API call for one node or a small group.
 
-Why Redfish
+## Why Redfish
+
 Redfish is a vendor-neutral API for out-of-band management. Most modern BMCs support it. By standardizing on Redfish, you avoid vendor lock-in and keep your scripts simple. OpenCHAMI uses this to send the right command to each BMC based on inventory.
 
-Where it lives in OpenCHAMI
+## Where it lives in OpenCHAMI
+
 Inventory lives in SMD (System Management Database). It tracks nodes, BMC IPs, racks, roles, and more. A small power service (often part of site tooling) uses SMD to map a node to its BMC information, then issues a Redfish command. In many sites, this is exposed through a tiny REST API and a CLI wrapper.
 
-Key repos:
+## Key repos:
+
 - SMD: https://github.com/OpenCHAMI/smd
 - Example power tooling and references: https://github.com/OpenCHAMI/magellan
 - Org: https://github.com/OpenCHAMI
 
-Credentials
+## Credentials
+
 Store BMC credentials outside Git. Use your secret manager (Vault, AWS Secrets Manager, or your platform’s native tool). The power service reads them at runtime. You can scope credentials by rack or chassis if needed.
 
-Common tasks
+## Common tasks
 
-Single node power cycle
+### Single node power cycle
+
 This example cycles one node. Replace placeholders with your node ID or xname. The URL shown is an example for a site-local power API that wraps Redfish calls.
 
 ```bash
@@ -40,7 +45,8 @@ This example cycles one node. Replace placeholders with your node ID or xname. T
 curl -X POST "http://power.api.cluster/v1/nodes/compute-23/actions/power-cycle"
 ```
 
-Group power off
+### Group power off
+
 For draining a partition, target a group. The service expands the group using SMD inventory and sends Redfish to each BMC with a safe delay between calls.
 
 ```bash
@@ -48,7 +54,8 @@ For draining a partition, target a group. The service expands the group using SM
 curl -X POST "http://power.api.cluster/v1/groups/partition-a/actions/power-off?delayMs=500"
 ```
 
-Status check
+### Status check
+
 After a change, confirm state. Your API can proxy a quick Redfish read on each node.
 
 ```bash
@@ -56,22 +63,27 @@ After a change, confirm state. Your API can proxy a quick Redfish read on each n
 curl "http://power.api.cluster/v1/nodes/compute-23/power-state"
 ```
 
-Operational details
+## Operational details
+
 - Coordination with scheduler: always drain nodes before power off. Tie your power tool into Slurm reservations, or require a drain flag.
 - Rate limits: stagger calls (e.g., 250–1000 ms) so you do not overload chassis controllers.
 - Retries: retry a few times on BMC timeouts. Log both the request and the final outcome.
 - Audit: log who called the API. Forward logs to your collector so you can search by user, node, or window.
 
-Change management
+## Change management
+
 Keep your power API thin and versioned. Put the mapping logic (node to BMC) in SMD and keep the Redfish bits small. This keeps changes local and easy to reason about. If you migrate racks or renumber BMCs, update SMD and the rest just works.
 
-When things go wrong
+## When things go wrong
+
 If a node does not respond, try a BMC reboot through Redfish. If that fails, the issue is likely physical. Your logs will show the sequence and help you triage faster.
 
-Closing the loop
+## Closing the loop
+
 With OpenCHAMI, power control becomes a clean, scriptable building block. You can drain, power off, patch, and power on with the same simple patterns. The result is less time in vendor UIs and more time on clear runbooks.
 
-References
+## References
+
 - SMD: https://github.com/OpenCHAMI/smd
 - Org: https://github.com/OpenCHAMI
 
