@@ -1,5 +1,5 @@
 +++
-title = 'Magellan: Alternative Redfish Discovery for OpenCHAMI/CSM'
+title = 'Magellan: Alternative Redfish Discovery for OpenCHAMI'
 date = 2023-10-28T09:27:54-04:00
 draft = false
 categories = ['Development', 'LANL', 'SC23']
@@ -12,7 +12,6 @@ lastmod = 2025-11-06T00:00:00+00:00
 canonical = "/blog/ochami-magellan/"
 tags = ["Magellan", "Redfish", "Discovery", "OpenCHAMI"]
 +++
-
 
 # Magellan: A "bmclib"-based Discovery Tool
 
