@@ -36,7 +36,7 @@ curl -X POST http://localhost:27779/hsm/v2/partitions -k -d '{"name": "p2", "des
 {"type":"about:blank","title":"Conflict","detail":"operation would conflict with an existing member in another partition.","status":409}
 ```
 
-This is a feature of course and not a bug. We will also see how this same xname can be added to a group in the next section as well. 
+This is a feature of course and not a bug. We will also see how this same xname can be added to a group in the next section as well.
 
 ## Using  the Groups API
 
@@ -61,7 +61,7 @@ curl -X GET http://localhost:27779/hsm/v2/groups/test
 At this point, there are no members (as xnames) in the new group. Let's try adding the xname that we added in the partition before. This done via the membership API as well, but with groups instead of partitions. However, the endpoint is slightly different for adding groups.
 
 ```
-curl -X POST http://localhost:27779/hsm/v2/groups/test/members -d '{"ids": "x00s1b0"}' 
+curl -X POST http://localhost:27779/hsm/v2/groups/test/members -d '{"ids": "x00s1b0"}'
 ```
 
 Now for a quick test. Let's try adding another group, and then add the same xname as above to it.
@@ -75,7 +75,7 @@ Both commands should have worked with producing an error and the xname should be
 
 ### How Groups Differ from Partitions
 
-Although groups and partitions may seem very similiar on the surface, their use-cases are fundamentally different. For example, we saw before that we can add one xname to two groups, but not two partitions. 
+Although groups and partitions may seem very similiar on the surface, their use-cases are fundamentally different. For example, we saw before that we can add one xname to two groups, but not two partitions.
 
 Looking at both the `Group` and `Partition` data structure, we can see the similiarities by just observing the fields below. The only difference between the structs is the `ExclusiveGroup` field in the `Group` struct, but not the `Partition` struct.
 

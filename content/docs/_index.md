@@ -1,10 +1,11 @@
 ---
-title: "Docs"
-description: ""
-summary: ""
-date: 2023-09-07T16:12:03+02:00
-lastmod: 2025-02-03T00:00:00+00:00
+title: "Documentation"
+date: 2025-09-11T19:26:29+00:00
+lastmod: 2025-09-11T19:26:29+00:00
 draft: false
-toc: true
+weight: 50
+toc: false
+pinned: false
+homepage: false
+layout: cards
 ---
-

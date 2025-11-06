@@ -40,18 +40,13 @@
   weight = 30
 
 [[main]]
-  name = "Architecture"
-  url = "/architecture/"
-  weight = 35
-
-[[main]]
-  name = "Software"
-  url = "/docs/software"
+  name = "Docs"
+  url = "/docs/"
   weight = 40
 
 [[main]]
-  name = "Install Guide"
-  url = "/guides/getting_started/"
+  name = "Tutorial"
+  url = "/docs/tutorial"
   weight = 50
 
 [[main]]
@@ -60,14 +55,39 @@
   weight = 55
 
 [[main]]
-  name = "About Us"
-  url = "/about-us/about-us"
+  name = "About"
+  url = "/about-us"
   weight = 60
 
 [[main]]
   name = "Newsletters"
   url = "/newsletters/"
   weight = 65
+
+[[sidebar_docs]]
+name = "Tutorial"
+pageRef = "/docs/tutorial"
+weight = 10
+
+[[sidebar_docs]]
+name = "Handbook"
+pageRef = "/docs/handbook"
+weight = 20
+
+[[sidebar_docs]]
+name = "Guides"
+pageRef = "/docs/guides"
+weight = 30
+
+[[sidebar_docs]]
+name = "Architecture"
+pageRef = "/docs/architecture"
+weight = 40
+
+[[sidebar_docs]]
+name = "Software"
+pageRef = "/docs/software"
+weight = 50
 
 # [[social]]
 #   name = "Twitter"

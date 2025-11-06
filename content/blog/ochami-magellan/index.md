@@ -14,7 +14,7 @@ As part of our exploration of the [CSM codebase](https://github.com/Cray-HPE), w
 
 ## What is CSM and how does Magellan fit in?
 
-Cray System Management is the software we use to manage several of the HPC systems at LANL.  It was supplied by HPE as part of their exascale systems and they have subsequently open sourced much of it.  We want to work independently with that codebase and explore other ways of using it at our site.  
+Cray System Management is the software we use to manage several of the HPC systems at LANL.  It was supplied by HPE as part of their exascale systems and they have subsequently open sourced much of it.  We want to work independently with that codebase and explore other ways of using it at our site.
 
 CSM includes a whole cornucopia of services for managing systems with features like multi-tenancy, network and log management, and even a built in policy engine for security enforement.  We decided that our first project would be to start from the ground up, focusing solely on booting a diskless operating system on a small set of non-HPE nodes.  We sought the smallest useful set of CSM services to meet a narrow goal.
 
@@ -30,7 +30,7 @@ Magellan is designed to work alongside Cray's State Management Database's (SMD) 
 
 ## How does Magellan work?
 
-Magellan has two modes, scanning and collecting.  Both have separate corresponding CLI commands. Each leverages capabilities from existing libraries to do the heavy lifting.  In scanning mode, it is exploring a CIDR for any BMCs that advertise Redfish endpoints.  In collection mode, it queries those endpoints for all inventory information.  There is a third magellan command that isn't necesarily part of the inventory process.  We discovered during development that some versions of the BMC firmware returned redfish information that made no sense.  With a few lines of code, we added the ability to update BMC firmware directly from magellan as well.   
+Magellan has two modes, scanning and collecting.  Both have separate corresponding CLI commands. Each leverages capabilities from existing libraries to do the heavy lifting.  In scanning mode, it is exploring a CIDR for any BMCs that advertise Redfish endpoints.  In collection mode, it queries those endpoints for all inventory information.  There is a third magellan command that isn't necesarily part of the inventory process.  We discovered during development that some versions of the BMC firmware returned redfish information that made no sense.  With a few lines of code, we added the ability to update BMC firmware directly from magellan as well.
 
 ### Scanning for Redfish Services
 
@@ -55,7 +55,7 @@ magellan update --host 172.16.0.102 --port 443 --user username --pass password -
 magellan update --host 172.16.0.102 --port 443 --user username --pass password --firmware-url http://172.16.0.254:8005/bios/RBU/image.RBU --component BIOS
 ```
 
-The first command with update's a BMC node's firmware by setting the `--host` and `--port` flags to tell Magellan where to find the BMC on the network. Then, the `--user` and `--pass` flags must be set to login to the node. Finally, the `--firmware-url` flag must be set to tell Magellan where to find the firmware binaries and what component is being update via the `--component` flag. 
+The first command with update's a BMC node's firmware by setting the `--host` and `--port` flags to tell Magellan where to find the BMC on the network. Then, the `--user` and `--pass` flags must be set to login to the node. Finally, the `--firmware-url` flag must be set to tell Magellan where to find the firmware binaries and what component is being update via the `--component` flag.
 
 The status of the update can be checked using the following:
 
@@ -64,7 +64,7 @@ magellan update --status --host 172.16.0.102 --user username --pass password | j
 watch -n 1 "./magellan update --status --host 172.16.0.102 --user admin --pass password | jq '.'"
 ```
 
-Both of the update function calls make a HTTP request to the hosted firmware server and Redfish server to make the update.   
+Both of the update function calls make a HTTP request to the hosted firmware server and Redfish server to make the update.
 
 ## How does Magellan work with Cray's Hardware State Manager (SMD)?
 
@@ -108,8 +108,8 @@ While splitting commands allows for more flexibility, it breaks the continuously
 
 ```bash
 # Run all Magellan commands in sequence
-magellan scan --subnet 127.0.0.1 | 
-    magellan collect --user user --pass password | 
+magellan scan --subnet 127.0.0.1 |
+    magellan collect --user user --pass password |
     magellan upload --host http://my-host --port 27779
 ```
 
@@ -119,7 +119,7 @@ This solution offers more flexibility:
 # Save and modify output of scan for input to collect
 magellan scan --subnet 172.16.0.0/24 > input.txt
 cat "172.16.0.111" >> input.txt
-cat input.txt | magellan collect 
+cat input.txt | magellan collect
 ```
 
 Finally, Magellan can always be adapted send more or less information about BMC nodes as needed in the future. SMD would have to also be updated to parse more of this information of course, but the pipeline for doing so is already established. Additionally, updating this mechanism would have little to no impact on how SMD works today.

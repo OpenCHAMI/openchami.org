@@ -5,7 +5,7 @@ summary: ""
 date: 2024-03-07T16:13:18+02:00
 lastmod: 2024-03-07T16:13:18+02:00
 draft: false
-weight: 10
+weight: 500
 toc: true
 seo:
   title: "Cloud-Init in OpenCHAMI"
@@ -19,10 +19,10 @@ seo:
 [Cloud-Init](https://cloud-init.io/) is the de facto standard for customizing cloud instances at boot. OpenCHAMI extends this power to **compute nodes**, ensuring that every system gets the right configuration **at the right time**.
 
 ### **🚀 Why Cloud-Init in OpenCHAMI?**
-✔️ **Per-node identity** – Dynamically assigns each node an identity and configurations tailored to its role.  
-✔️ **Automated bootstrapping** – Ensures all compute nodes start with the correct software, settings, and secrets.  
-✔️ **WireGuard integration** – Establishes **secure, encrypted tunnels** between nodes and the cloud-init server.  
-✔️ **Group-based configurations** – Assign settings per **node group, hardware type, or workload profile**.  
+✔️ **Per-node identity** – Dynamically assigns each node an identity and configurations tailored to its role.
+✔️ **Automated bootstrapping** – Ensures all compute nodes start with the correct software, settings, and secrets.
+✔️ **WireGuard integration** – Establishes **secure, encrypted tunnels** between nodes and the cloud-init server.
+✔️ **Group-based configurations** – Assign settings per **node group, hardware type, or workload profile**.
 ✔️ **Immutable, stateless provisioning** – Define everything declaratively and keep nodes clean.
 
 

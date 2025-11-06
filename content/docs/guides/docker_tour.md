@@ -4,7 +4,7 @@ description: ""
 date: 2024-04-07T16:04:48+02:00
 lastmod: 2024-04-07T16:04:48+02:00
 draft: false
-weight: 100
+weight: 300
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -27,18 +27,18 @@ The quickstart compose files define the service, volumes, and networks necessary
 
 Docker volumes are specified in a top-level construct `volumes` within the compose format, and used by individual services.  They must be defined before they can be used.  Volumes exist as containers for files on the host running the docker compose project.  From an HPC background, you can think of them as shared mounts.  In the following example, we define three volumes.  When docker compose reads this configuration, it creates an empty volume for each of these names and keeps track of which containers are allowed to either read or write to the volume.  They do not exist on disk in a way that is easily browsable by the sysadmin.  Instead, they are opaque references to temporary directories that are maintained by the docker daemon.  Sysadmins with control over the docker daemon may attatch and detatch these volumes with advanced docker commands.  Volumes follow their own lifecycles which are separate from the container lifecycles.  Once a volume is created, it exists until the sysadmin deletes it.  Volumes even survive restarts of the docker daemon as well as restarts of the server.  In our quickstart, we specifically delete them using the `--volumes` flag passed to `docker compose down`.  Without the `--volumes` flag, the databases and certificates of previous runs would persist from experiment to experiment.
 
-In the following example, we are creating three volumes with the intention of using them to create files through one container and read them in a different container without having to create services to copy those files around.  
+In the following example, we are creating three volumes with the intention of using them to create files through one container and read them in a different container without having to create services to copy those files around.
 
 * The first empty volume is called `step-root-ca` which is used in OpenCHAMI to hold the CA bundle needed to verify all locally signed certificates.  The certificate authority writes to it and all other containers can mount it with the `:ro` flag to read the certificate.
-* The second empty volume is called `haproxy-certs`.  This volume holds the certificates that our API gateway (haproxy) needs for SSL termination.  Haproxy itself doesn't have the capacity to request certs.  We rely on a sidecar which interacts with the certificate authority to generate and renew the SSL certificates as needed. 
+* The second empty volume is called `haproxy-certs`.  This volume holds the certificates that our API gateway (haproxy) needs for SSL termination.  Haproxy itself doesn't have the capacity to request certs.  We rely on a sidecar which interacts with the certificate authority to generate and renew the SSL certificates as needed.
 
 ```yaml
 volumes:
   step-root-ca:
-  haproxy-certs:  
+  haproxy-certs:
 ```
 
-Containers specify which volumes they need access to in a `volumes:` section of their service definition.  
+Containers specify which volumes they need access to in a `volumes:` section of their service definition.
 
 ## Docker Networks
 

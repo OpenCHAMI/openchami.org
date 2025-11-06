@@ -1,0 +1,70 @@
+{{ define "main" }}
+<section class="section section-tiles py-5">
+  <div class="container">
+    <header class="mb-4">
+      <h1 class="h2 mb-1">{{ .LinkTitle }}</h1>
+      {{ with .Params.lead }}<p class="lead text-muted mb-0">{{ . }}</p>{{ end }}
+    </header>
+
+    {{/* Collect pages in this section (direct children). 
+         Change to .RegularPagesRecursive to include subsections too. */}}
+    {{/*{{ $pages := .RegularPages.ByWeight.ByTitle }}*/}}
+    {{ $pages := sort .Pages }}
+
+    {{/* Paginate (12 per page) */}}
+    {{ $paginator := .Paginate $pages 12 }}
+
+    <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-3">
+      {{ range $paginator.Pages }}
+      <div class="col">
+        <article class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h2 class="h5 card-title mb-2">
+              <a class="stretched-link text-decoration-none" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+            </h2>
+
+            {{ with .Params.description }}
+            <p class="card-text text-muted mb-3 clamp-3">{{ . }}</p>
+            {{ else }}
+              {{ with .Summary }}
+              <p class="card-text text-muted mb-3 clamp-3">{{ . | plainify | truncate 140 }}</p>
+              {{ end }}
+            {{ end }}
+
+            {{ with .Params.tags }}
+            <div class="mt-auto d-flex flex-wrap gap-2">
+              {{ range first 3 . }}
+              <span class="badge text-bg-secondary">{{ . }}</span>
+              {{ end }}
+            </div>
+            {{ end }}
+          </div>
+        </article>
+      </div>
+      {{ end }}
+    </div>
+
+    {{ if gt $paginator.TotalPages 1 }}
+    <nav class="mt-4" aria-label="Pagination">
+      <ul class="pagination">
+        {{ with $paginator.Prev }}
+        <li class="page-item"><a class="page-link" href="{{ .URL }}" rel="prev">{{ .LinkTitle }}</a></li>
+        {{ else }}
+        <li class="page-item disabled"><span class="page-link">{{ .LinkTitle }}</span></li>
+        {{ end }}
+
+        <li class="page-item disabled">
+          <span class="page-link">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+        </li>
+
+        {{ with $paginator.Next }}
+        <li class="page-item"><a class="page-link" href="{{ .URL }}" rel="next">{{ .LinkTitle }}</a></li>
+        {{ else }}
+        <li class="page-item disabled"><span class="page-link">{{ .LinkTitle }}</span></li>
+        {{ end }}
+      </ul>
+    </nav>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

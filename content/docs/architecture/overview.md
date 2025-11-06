@@ -4,7 +4,7 @@ description: "A high-level overview of OpenCHAMI's architecture, including its c
 date: 2025-02-03T00:00:00+00:00
 lastmod: 2025-02-03T00:00:00+00:00
 draft: false
-weight: 10
+weight: 400
 toc: true
 ---
 
@@ -35,7 +35,7 @@ graph TD;
     API -->|Query/Set System State| SMD("SMD: State Management Daemon");
     API -->|Customize Configs| Cloud-Init("Cloud-Init: Config Management");
 
-    
+
     BSS -->|Provide Boot Parameters| ComputeNodes("Compute Nodes");
     SMD -->|Track System State| ComputeNodes;
     SMD -->|Provide Inventory Details| Cloud-Init;
@@ -43,15 +43,15 @@ graph TD;
     SMD -->|Provide Inventory Details| CoreDHCP;
     Magellan -->|Report Inventory| SMD;
     Cloud-Init -->|Provide Customized Configurations| ComputeNodes;
-    CoreDHCP -->|Provide IP Addresses|ComputeNodes; 
+    CoreDHCP -->|Provide IP Addresses|ComputeNodes;
 ```
 
 ## 🚀 Key Architectural Benefits
 
-✅ **Security-First Design** – Implements **zero-trust authentication**, fine-grained **access control**, and **OIDC-based authorization**.  
-✅ **Composable & Scalable** – Modular microservices allow for flexible deployments across **cloud and on-prem** environments.  
-✅ **Microservices-Based** – Each component operates independently, ensuring **fault tolerance and easy upgrades**.  
-✅ **Cloud-Like Flexibility** – HPC system management with the **efficiency of cloud platforms**.  
+✅ **Security-First Design** – Implements **zero-trust authentication**, fine-grained **access control**, and **OIDC-based authorization**.
+✅ **Composable & Scalable** – Modular microservices allow for flexible deployments across **cloud and on-prem** environments.
+✅ **Microservices-Based** – Each component operates independently, ensuring **fault tolerance and easy upgrades**.
+✅ **Cloud-Like Flexibility** – HPC system management with the **efficiency of cloud platforms**.
 
 ## 📌 Next Steps
 

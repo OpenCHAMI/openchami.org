@@ -1,11 +1,11 @@
 ---
 title: "Guides"
-description: ""
+description: "An assortment of guides for performing OpenCHAMI workflows."
 summary: ""
-date: 2023-09-07T16:06:50+02:00
-lastmod: 2023-09-07T16:06:50+02:00
+date: 2025-09-15T19:26:29+00:00
+lastmod: 2025-09-15T19:26:29+00:00
 draft: false
-weight: 800
+weight: 300
 toc: true
 seo:
   title: "" # custom title (optional)

@@ -112,7 +112,7 @@ TOKEN=$(curl -s -k -u "$client_id:$client_secret" \
 #{"access_token":"ory_at_a59sQd0cK1etcqemS0YnZiw_IDW4UjtrA-ygI-sM4dk.udmBh1sM8HJ-lTGyGbO8SPMZQ6B6TOsm8-hTB9CWBig","expires_in":3599,"scope":"openid","token_type":"bearer"}
 ```
 
-And voila! We have our token that we will use to make a HTTP request to a protected SMD endpoint as described in the above section. 
+And voila! We have our token that we will use to make a HTTP request to a protected SMD endpoint as described in the above section.
 
 ## Accessing the Protected Endpoints
 

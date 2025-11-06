@@ -75,7 +75,7 @@ Table schema for the BSS database. Generated with [dbdiagram.io](https://dbdiagr
 
 At the core, nodes (specified by boot MAC address, hostname, or node ID) are
 assigned a boot configuration, which consists of a kernel URI, an optional
-initrd URI, and optional kernel parameters. 
+initrd URI, and optional kernel parameters.
 
 #### A Note on Grouping Nodes
 
@@ -145,7 +145,7 @@ then a boot script generated could look like (ignoring cloud-init):
 
 ```ipxe
 #!ipxe
-kernel --name kernel https://example.org/kernel initrd=initrd console=tty0 console=ttyS0,115200n8 xname=x0c0s1b0 ds=nocloud-net;s=localhost/ || goto boot_retry                                               
+kernel --name kernel https://example.org/kernel initrd=initrd console=tty0 console=ttyS0,115200n8 xname=x0c0s1b0 ds=nocloud-net;s=localhost/ || goto boot_retry
 initrd --name initrd https://example.org/initrd || goto boot_retry
 boot || goto boot_retry
 :boot_retry
@@ -164,7 +164,7 @@ like the below, going straight to the failover boot script:
 ```ipxe
 #!ipxe
 sleep 10
-chain https://api-gw-service-nmn.local/apis/bss/boot/v1/bootscript?mac=02:0b:b8:00:30:00&arch=${buildarch}&ts=1696373833 
+chain https://api-gw-service-nmn.local/apis/bss/boot/v1/bootscript?mac=02:0b:b8:00:30:00&arch=${buildarch}&ts=1696373833
 ```
 
 ## Concluding Thoughts

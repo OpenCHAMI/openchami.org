@@ -5,7 +5,7 @@ summary: ""
 date: 2024-03-07T16:13:18+02:00
 lastmod: 2024-03-07T16:13:18+02:00
 draft: false
-weight: 910
+weight: 500
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -20,10 +20,10 @@ Managing large-scale infrastructure requires **automated hardware discovery** an
 
 ## **🔹 Key Features of Magellan**
 
-✔️ **Network Scanning** – Discover **active BMC nodes** in a subnet automatically.  
-✔️ **Inventory Collection** – Retrieve **detailed system information** from each discovered node via Redfish.  
-✔️ **Firmware Management** – Identify and update firmware versions on discovered nodes.  
-✔️ **SMD Integration** – Load **hardware inventory data directly into OpenCHAMI’s System Management Database (SMD).**  
-✔️ **JSON Export** – Store inventory data in structured **JSON format** for easy parsing and external integration.  
+✔️ **Network Scanning** – Discover **active BMC nodes** in a subnet automatically.
+✔️ **Inventory Collection** – Retrieve **detailed system information** from each discovered node via Redfish.
+✔️ **Firmware Management** – Identify and update firmware versions on discovered nodes.
+✔️ **SMD Integration** – Load **hardware inventory data directly into OpenCHAMI’s System Management Database (SMD).**
+✔️ **JSON Export** – Store inventory data in structured **JSON format** for easy parsing and external integration.
 
 ---

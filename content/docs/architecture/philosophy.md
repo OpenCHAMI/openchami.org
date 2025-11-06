@@ -3,7 +3,7 @@ title: "Design Philosophy"
 date: 2024-04-07T16:12:03+02:00
 lastmod: 2024-04-07T16:12:03+02:00
 draft: false
-weight: 40
+weight: 400
 toc: true
 pinned: false
 homepage: false
@@ -12,7 +12,7 @@ homepage: false
 ## OpenCHAMI services tend to:
 
 * be HTTPS Microservices
-* run as containers 
+* run as containers
 * be configured at runtime through flags and environment variables
 * be based on go 1.21 and the wolfi base containers from chainguard
 * leverage bearer tokens for decentralized authentication and authorization

@@ -2,7 +2,7 @@
 title: 'Authenticated Service to Service Communication with client credentials'
 date: 2024-03-01T10:00:00-04:00
 description: "In this post, David describes how we authenticate every request within OpenCHAMI without a service mesh."
-summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT." 
+summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT."
 draft: false
 weight: 11
 categories: ["Development", "LANL"]
@@ -49,7 +49,7 @@ type OAuthClient struct {
 }
 ```
 
-These are all common parameters need for our requests either in the request's body or header. We then implement the `CreateOAuthClient` function. 
+These are all common parameters need for our requests either in the request's body or header. We then implement the `CreateOAuthClient` function.
 
 ### Creating an OAuth2 Client With the Authentication Server
 
@@ -99,7 +99,7 @@ The trickest part of making this request is knowing what to include in each requ
 
 ### Authorizing the OAuth2 Client
 
-The next piece of the puzzle is to authorize the OAuth2 client to receive a token. This step will not work if you don't set `oidc.dynamic_client_registration.enabled=true` in the Hydra config. Also, regardless of the `token_endpoint_auth_method`, you are **required to include the `registration_access_token` in the authorization header when using dynamic registration**. 
+The next piece of the puzzle is to authorize the OAuth2 client to receive a token. This step will not work if you don't set `oidc.dynamic_client_registration.enabled=true` in the Hydra config. Also, regardless of the `token_endpoint_auth_method`, you are **required to include the `registration_access_token` in the authorization header when using dynamic registration**.
 
 Like in the previous step, this step includes making another request to the authentication server. We include the client ID and secret in the request body, but set the `Authorization` header to `Bearer {registrationAccessToken}`. Make sure to also include the correct URL encoded `redirect_uri` (without an "s") string, set the same `state` parameter as before, and to set the `Content-Type` header to `application/x-www-form-urlencoded`.
 
@@ -197,7 +197,7 @@ if err != nil {
 log.Printf("Access Token: %v\n", accessToken)
 ```
 
-Running this should print the access token if everything worked correctly. 
+Running this should print the access token if everything worked correctly.
 
 ## Conclusion
 

@@ -3,7 +3,7 @@ title: "Early Design Decisions"
 date: 2024-04-07T16:12:03+02:00
 lastmod: 2024-04-07T16:12:03+02:00
 draft: false
-weight: 30
+weight: 400
 toc: true
 pinned: false
 homepage: false

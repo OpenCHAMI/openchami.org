@@ -5,7 +5,7 @@ summary: "Add Nodes"
 date: 2024-04-07T16:04:48+02:00
 lastmod: 2024-04-07T16:04:48+02:00
 draft: false
-weight: 510
+weight: 300
 toc: true
 seo:
   title: "" # custom title (optional)
@@ -46,7 +46,7 @@ curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar
    This indicates that something isn't working with the access token in your Authorization header.  First confirm that the header is being specified correctly.  It's imporant that the header matches precisely. `"Authorization: Bearer <token>"` where the token is a very long string.
 
 
- 
+
 
 ## Adding nodes with ochami-cmdline
 
