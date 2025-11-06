@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "openchami.org"
+SPDX-PackageSupplier = "OpenCHAMI maintainers <oss@openchami.org>"
+SPDX-PackageDownloadLocation = "https://github.com/OpenCHAMI/openchami.org"
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2020-2025 Hyas", "2023-2025 OpenCHAMI contributors"]
+SPDX-License-Identifier = "MIT"

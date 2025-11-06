@@ -51,3 +51,23 @@ Most items can be changed directly by updating the markdown files in the [conten
 Sometimes the renderer fails to delete expired pages from the cache. Stopping the server and deleting the [public](public/) directory before restarting is safe. If a build lock persists, remove `.hugo_build.lock` and retry.
 
 This site uses [Doks](https://getdoks.org/) which has its own documentation for customization and organization of things like images.
+
+## License and REUSE compliance
+
+This repository follows the REUSE specification for licensing metadata.
+
+- Primary license: MIT (see `LICENSE` and `LICENSES/MIT.txt`)
+- Repository-wide licensing metadata: `.reuse/dep5`
+- CI check: GitHub Actions workflow at `.github/workflows/reuse.yml`
+
+To verify locally (optional):
+
+```bash
+# Install the REUSE tool (requires Python)
+pipx install reuse  # or: pip install --user reuse
+
+# From the repo root
+reuse lint
+```
+
+Learn more: https://reuse.software/
