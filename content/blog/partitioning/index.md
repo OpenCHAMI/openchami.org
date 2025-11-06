@@ -13,7 +13,6 @@ canonical = "/blog/partitioning/"
 tags = ["SMD", "Partitions", "Groups", "Multi-tenancy"]
 +++
 
-{{< blog-cta >}}
 
 ## Background
 
@@ -176,3 +175,5 @@ Or using docker:
 ```bash
 docker build --tag smd:testing ${smd_root}/smd
 ```
+
+{{< blog-cta >}}

@@ -11,7 +11,7 @@ canonical = "/blog/smd-refactor/"
 tags = ["SMD", "Refactor", "OpenAPI", "HPC"]
 +++
 
-{{< blog-cta >}}
+
 
 For the OChami demo at SC 2023, two of the CSM microservices were needed to boot a 10-node cluster: the boot-script service (BSS) and the state management database (SMD). While working with the code for the demo, it was discovered that both microservices are packed with features not necessary for booting. This eventually led to evaluating more of the code the see what could be changed or simplified down to slimmer microservices. For the goals of OChami, it would be better if some of these features could be separated and refined into something that is more focused and can easily be migrated to cloud systems.
 
@@ -90,3 +90,5 @@ graph LR
 ```
 
 Moving forward, it may be interesting to look at some of the other parts of SMD to see what can be moved into separate microservices, modified, updated, or replaced altogether.
+
+{{< blog-cta >}}

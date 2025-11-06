@@ -13,11 +13,8 @@ canonical = "/blog/demo-and-exploration/"
 tags = ["CSM", "SMD", "BSS", "OpenCHAMI"]
 +++
 
-{{< blog-cta >}}
-
-
-
 ## Introduction
+
 High-performance computing is a critical domain for AI/ML and traditional parallel codes.  Every nuance in efficiency translates to significant computational gains or losses.  The system manager is often overlooked because it doesn’t interact directly with the applications.  However, the system management software is the most important software for preventing system downtime.  Reducing the amount of downtime a system incurs for maintenance can lead to more job runs and longer jobs through the lifetime of an HPC machine.  When Cray/HPE approached modernizing HPC system management to meet the needs of exascale, they turned to management paradigms more popular in cloud computing than those in traditional HPC management and subsequently open sourced the results.  We delved into the expansive set of repositories released by HPE with a goal to discern the core elements for booting a ten-node HPC cluster.  Of the 311 repositories, we found that only two microservices were necessary.  Over several months, we ran a set of experiments to explore the codebase, dependencies and interactions and ultimately boot a small cluster.
 
 ## The Cornerstones: Deciphering Essential Microservices
@@ -48,3 +45,5 @@ As part of our exploration of deployment strategies, we invested two weeks in de
 
 ## Concluding Thoughts: The Imperative of Robust System Management
 The HPC landscape is rife with challenges and opportunities. Our exploration, spanning the vast repositories of HPE's open-source release, to pioneering discovery with Magellan, and delving into versatile deployment strategies, has been illuminating. System management, often relegated to the background, stands out as a linchpin in HPC's pursuit of efficiency. Our endeavors underscore the necessity for adaptive, resilient system management paradigms, which can drastically augment the uptime and efficiency of HPC setups.
+
+{{< blog-cta >}}

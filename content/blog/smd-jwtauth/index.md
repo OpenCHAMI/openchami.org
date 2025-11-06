@@ -11,7 +11,7 @@ canonical = "/blog/smd-jwtauth/"
 tags = ["SMD", "JWT", "Hydra", "OIDC"]
 +++
 
-{{< blog-cta >}}
+
 Since we're pushing to use OpenCHAMI for Supercomputing Institute 2024, we needed to have both authentication and authorization implemented in our microservices to only allow students to access hardware assigned to them. Therefore, we found an off-the-shelf OAuth2 and OIDC implementation for handling this: [Ory Hydra](https://github.com/ory/hydra). We also had to make some *more* changes to SMD to inject middleware that made verifying the public key retrieved from the Hydra server trivial.
 
 For this post, I will be referring to [this commit of our deployment recipes](https://github.com/OpenCHAMI/deployment-recipes/commit/a243ddfcbf5e40f709daa37167c41e4fc851662a) and [this commit of our custom SMD](https://github.com/OpenCHAMI/smd/commit/802123c620559ac365b8855b8a5540b0aaf5e4b8).
@@ -188,3 +188,4 @@ As you can see here, the raw key is deserialized to an interface and not somethi
 That wraps up the main parts of implementing authentication and authorization into OpenCHAMI microservices. The next thing to do is to include roles and scopes to define who has access to what resource. Then afterwards, we'll have to revisit looking at integrating all of this with partitions and groups.
 
 
+{{< blog-cta >}}

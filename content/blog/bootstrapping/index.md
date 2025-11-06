@@ -63,7 +63,7 @@ References
 - SMD: https://github.com/OpenCHAMI/smd
 - Org: https://github.com/OpenCHAMI
 
+
 {{< blog-cta >}}
-    CloudInit->>Node: Terminates WireGuard tunnel
 
 
