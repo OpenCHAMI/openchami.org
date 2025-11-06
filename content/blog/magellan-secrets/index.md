@@ -1,14 +1,14 @@
----
-title: "Storing BMC Credentails with Magellan"
-description: "A new feature added to OpenCHAMI Magellan that makes BMC login easier, efficient, and secure."
-date: 2025-03-24T00:00:00+00:00
-lastmod: 2025-03-24T00:00:00+00:00
-draft: false
-weight: 10
-categories: ["Security", "HPC", "Magellan"]
-tags: ["Magellan", "BMC Discovery", "Inventory", "Secrets"]
-contributors: ["David J. Allen (LANL)"]
----
++++
+title = "Storing BMC Credentails with Magellan"
+description = "A new feature added to OpenCHAMI Magellan that makes BMC login easier, efficient, and secure."
+date = 2025-03-24T00:00:00+00:00
+lastmod = 2025-03-24T00:00:00+00:00
+draft = false
+weight = 10
+categories = ["Security", "HPC", "Magellan"]
+tags = ["Magellan", "BMC Discovery", "Inventory", "Secrets"]
+contributors = ["David J. Allen (LANL)"]
++++
 
 # Storing BMC Credentials with Magellan
 
@@ -95,3 +95,5 @@ With Magellan v0.2.0, securely managing BMC credentials has become easier and mo
 Future enhancements may explore additional security layers and support integration with external secret management tools, especially if Magellan evolves into a micro-service architecture.
 
 Your feedback is valuable! If you'd like to contribute ideas, report issues, or request new features, we invite you to [open an issue on GitHub](https://github.com/OpenCHAMI/magellan/issues) or directly submit a pull request.
+
+{{< blog-cta >}}

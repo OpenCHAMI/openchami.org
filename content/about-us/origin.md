@@ -48,13 +48,13 @@ was able discover and boot ten nodes. [Learn more
 here...](https://github.com/OpenCHAMI/lanl-demo-sc23)
 
 Following the initial demonstration, additional teams have been adding
-resoruces to the effort with their own goals.  Work continues on using
-OpenCHAMI to manage clusters at the US National Laboratories.  At the same
+resources to the effort with their own goals. Work continues on using
+OpenCHAMI to manage clusters at the US National Laboratories. At the same
 time, sites are working to manage HPC systems from the public cloud with
-OpenCHAMI on GKE.  Other sites are collaborating on managing multiple HPC
+OpenCHAMI on GKE. Other sites are collaborating on managing multiple HPC
 clusters with the same OpenCHAMI installation.
 
-In May of 2024, the team will showcase progress at the International
+In May 2024, the team showcased progress at the International
 Supercomputing Conference in Germany.  Installation times, boot times, and
 overall scale have improved considerably in the last six months.
 

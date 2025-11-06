@@ -1,63 +1,59 @@
----
-title: 'Authenticated Service to Service Communication with client credentials'
-date: 2024-03-01T10:00:00-04:00
-description: "In this post, David describes how we authenticate every request within OpenCHAMI without a service mesh."
-summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT."
-draft: false
-weight: 11
-categories: ["Development", "LANL"]
-tags: []
-contributors: ["David J. Allen (LANL)"]
-pinned: false
-homepage: false
-seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
----
++++
+title = "Service-to-Service Auth in OpenCHAMI: Client Credentials, Simple and Safe"
+description = "How microservices in OpenCHAMI get signed JWTs without a user present, plus a minimal test flow."
+summary = "A short guide to use OAuth2 client credentials to call another service with a JWT in OpenCHAMI."
+slug = "auth-comms-client-credentials"
+tags = ["auth", "JWT", "OAuth2", "OpenCHAMI"]
+categories = ["HPC", "Operations"]
+contributors = ["David J. Allen (LANL)"]
+date = 2024-03-01T10:00:00-04:00
+lastmod = "2025-11-06"
+draft = false
+canonical = "/blog/auth-comms/"
++++
 
-## Authentication and Authorization in OpenCHAMI
+Every request in OpenCHAMI must be authenticated. When a user calls a service, the request carries a signed JWT. But some calls are not started by a user. For example, BSS may call SMD to look up node details while building a boot script. We still need a valid token.
 
-OpenCHAMI is a loose collection of microservices that all obey the same rules for interoperability.  One important rule is that every request must be positively authenticated.  We have chosen bearer token authentication for each request as our preferred authentication method.  As covered in our [roadmap issue #11](https://github.com/OpenCHAMI/roadmap/issues/11), we have selected JSON Web Tokens(JWTs) as our token of choice.  It is a signed token that the caller can send in an HTTP header contains enough information to authenticate the user and describe how the token can be used.  Users follow a standard Oauth2 authorization flow to obtain their token.  Each microservice can then read the token to make decisions about what is permitted in the context of the request.  It is common for one microservice to get some information from another microservice in order to fulfil a request.  In that case, the user's original JWT can be forwarded along for other services to work with.  Following this pattern, it doesn't matter how many microservices are involved, the user's token can be reused in every context without changes.
+The answer is the OAuth2 client credentials flow. A service asks the auth server for a token that represents the service, not a human. The service then adds that token to the Authorization header when it calls another service.
 
-However, there are some situations in which the user isn't the originator of the request.  For example, when a compute node requests a boot script from [bss](https://github.com/OpenCHAMI/bss), there is no "user" involved.  When bss makes a call to smd to get more context , we need a way to indicate to smd that it should process the request. We also need a way to record who made the request and why.  The Oauth standard has a path we can take.  BSS can request its own token through the client credentials grant flow.  In this post, we'll explore how the OpenCHAMI project has extended JWT-based authentication to support client credentials in addition to user-based authentication.
+Repos
+- OPAAL (token service for OpenCHAMI): https://github.com/OpenCHAMI/opaal
+- BSS: https://github.com/OpenCHAMI/bss
+- SMD: https://github.com/OpenCHAMI/smd
 
-The OAuth 2.0 framework specification, [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4), details how an OAuth client may request a token from an authentication server. This is achieved by performing a client credentials grant flow, similar to how it was described in a [previous post](https://ochami.org/posts/smd-jwtauth/), but now we want to implement it directly into the microservice. Of course for this flow, **we assume that the clients are trusted** and that we have access to the authentication server's admin endpoints. Like before, Ory Hydra will be used as our authentication server, but we will use the HTTP RESTful API instead of the Hydra CLI tool.
+Minimal test flow (≤4 commands)
+The exact endpoints depend on your auth server. This example uses an OAuth-compatible server. Replace URLs and secrets for your lab.
 
-Implementing the flow requires to receive a token only requires three simple steps:
+```bash
+# 1) Register a client (once). The response includes client_id and client_secret.
+curl -sS -X POST http://auth.local/admin/clients -d '{"client_name":"bss","grant_types":["client_credentials"],"token_endpoint_auth_method":"client_secret_post"}' -H 'Content-Type: application/json'
 
-1. Create an OAuth2 client and make a `POST` request to the `/admin/clients`
+# 2) Ask for a token using client credentials
+ACCESS=$(curl -sS -X POST http://auth.local/oauth2/token -d 'grant_type=client_credentials&client_id=bss&client_secret=secret' | jq -r .access_token)
 
-2. Authorize the OAuth2 client with another `POST` request to the `/oauth2/auth`
-
-3. Receive an access token with a final `POST` request to the `/oauth2/token`
-
-The implementation is done in Go and integrated into our OpenCHAMI fork of BSS.
-
-## Implementing the Client Credentials Flow in BSS
-
-We need to be able to make HTTP requests to our authentication server to complete each step listed above. To simply things a bit, we can wrap some of the relevant OAuth2 details in a HTTP client.
-
-```go
-type OAuthClient struct {
-    http.Client
-    Id                      string
-    Secret                  string
-    RegistrationAccessToken string
-    RedirectUris            []string
-}
+# 3) Call SMD with the token
+curl -H "Authorization: Bearer $ACCESS" http://smd.local/v1/nodes/x0c0s1b0n0
 ```
 
-These are all common parameters need for our requests either in the request's body or header. We then implement the `CreateOAuthClient` function.
+Operational notes
+- Scope: issue only the scopes the service needs. Keep tokens short-lived.
+- Rotation: rotate client secrets on a schedule; keep two active during cutover.
+- Propagation: when a user call triggers other calls, pass the user token. Use client credentials only when there is no user.
+- Auditing: log who called what. Include the token subject and the client ID.
 
-### Creating an OAuth2 Client With the Authentication Server
+Where to put this in code
+Add a small helper to fetch a token and cache it until it is near expiry. On a 401 from a downstream service, fetch a new token and retry once. Keep the code small and well-tested.
 
-```go
-func (client *OAuthClient) CreateOAuthClient(registerUrl string) ([]byte, error) {
-    // hydra endpoint: POST /clients
-    data := []byte(`{
-        "client_name":                "bss",
+Closing thoughts
+With client credentials, services in OpenCHAMI can talk to each other safely without a user in the loop. Keep scopes tight, rotate secrets, and log requests. You now have a clean pattern you can reuse in every microservice.
+
+References
+- OPAAL: https://github.com/OpenCHAMI/opaal
+- BSS: https://github.com/OpenCHAMI/bss
+- SMD: https://github.com/OpenCHAMI/smd
+- Org: https://github.com/OpenCHAMI
+
+{{< blog-cta >}}
         "token_endpoint_auth_method": "client_secret_post",
         "scope":                      "openid email profile read",
         "grant_types":                ["client_credentials"],
@@ -203,4 +199,6 @@ Running this should print the access token if everything worked correctly.
 
 And that's all there is to it! There's still some cleaning up to do and improvements to be made to the code presented above, but this gets the job done. Keep in mind that it should not be necessary to have to create and authorize another client to receive another token after each one expires unless you unregister it. Also, it may be a good idea to control when the microservice is requesting a new token such as before making a request and receiving a 401 response. Anyways, these are just some of the considerations to think about and maybe cover in a future post.
 
-If you're interested in using cloud-like design patterns for the next generation of HPC System Management, we'd love to hear from you.  You can reach us through our [public Slack instance](https://openchami.org/slack) or [Github](https://github.com/openchami).
+If you're interested in using cloud-like design patterns for the next generation of HPC System Management, we'd love to hear from you. You can reach us through our [Slack](https://openchami.org/slack) or [GitHub](https://github.com/OpenCHAMI).
+
+{{< blog-cta >}}

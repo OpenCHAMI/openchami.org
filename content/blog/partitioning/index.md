@@ -6,8 +6,14 @@ categories = ['Development', 'LANL']
 summary = "SMD comes with a built-in partitioning feature that should allow us to partition off certain components through it's API.  In this blog post, we explore how groups and partitions work in practice."
 include_toc = true
 contributors = ["David J. Allen (LANL)"]
+description = "Hands-on look at SMD’s partition and group APIs: list partitions, add members by xname, and understand constraints for multi-tenancy."
+slug = "partitioning"
+lastmod = 2025-11-06T00:00:00+00:00
+canonical = "/blog/partitioning/"
+tags = ["SMD", "Partitions", "Groups", "Multi-tenancy"]
 +++
 
+{{< blog-cta >}}
 
 ## Background
 

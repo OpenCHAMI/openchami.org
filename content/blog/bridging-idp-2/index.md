@@ -1,63 +1,97 @@
----
-title: 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 2)'
-date: 2024-12-01T03:43:00-05:00
-draft: true
-weight: 13
-categories: ['LANL', 'Development']
-contributors: ["David J. Allen (LANL)"]
----
++++
+title = "Use an External IdP and Still Issue Your Own Tokens (Part 2: OPAAL)"
+description = "How OPAAL lets you accept an external IdP’s login and mint access tokens from your own auth server using a JWT bearer grant."
+summary = "A practical bridge: verify the IdP’s ID token, map claims, and exchange for an access token your services trust."
+slug = "bridging-idp-part-2"
+date = 2024-12-01T03:43:00-05:00
+draft = false
+weight = 13
+categories = ["HPC", "Operations"]
+tags = ["auth", "OIDC", "JWT", "OpenCHAMI"]
+contributors = ["David J. Allen (LANL)"]
+lastmod = 2025-11-06
+canonical = "/blog/bridging-idp-2/"
++++
 
-# Bridging the Gap between Identity Provider and Authorization Server (Part 2)
+In Part 1, we showed why you can’t just forward an external IdP’s ID token to your authorization server and expect it to work. The audience won’t match, and compliant servers must reject it. This post shows the working pattern in practice with OPAAL for OpenCHAMI.
 
-This post is going to cover in more detail about addressing the issues mentioned in the last post by discussing the initial solution for issuing access token JSON web tokens (JWT) used in OpenCHAMI, [OPAAL](https://github.com/OpenCHAMI/opaal). It will also cover some of the other things that were considered before coming to this solution as well and why OPAAL was necessary for what we were trying to accomplish at the time. Hopefully this post will shed some like on what OPAAL was meant to do and how it was used.
+OPAAL is a small bridge. It lets users authenticate with an external IdP you don’t control, then mints an access token from your own authorization server that your microservices trust. It does this by verifying the ID token, mapping claims you care about, and using a JWT bearer grant to ask your auth server for an access token.
 
-## So what is OPAAL exactly?
+What OPAAL does (and doesn’t)
+OPAAL stands for “OIDC Provider Automated Authorization Login.” Think of it as a login broker, not an OIDC provider. It:
+- Redirects users to the external IdP for login and consent.
+- Receives and verifies the IdP’s ID token (via JWKS).
+- Maps selected claims (subject, email, groups/roles) into a signed JWT assertion.
+- Exchanges that assertion with your authorization server (e.g., Hydra) using a JWT bearer grant to mint an access token.
 
-The acronym stands for "OIDC Provider Automated Authorization Login" and is a tool designed specifically to streamline consuming ID tokens from an external identity provider (IDP) from the OpenCHAMI stack. OPAAL would use the claims from the ID token to create another JWT to use with our internal OIDC authorization server to grant access to internal resources via an access token. This didn't seem like an unreasonable thing to do at the time, but we ran into some problems before coming to this solution.
+OPAAL does not try to be a full IdP or a general token issuer. It doesn’t replace Hydra, Authelia, or Keycloak. It’s a thin piece that lets you keep external login while issuing tokens your services understand.
 
-Our use case required logging into a self-hosted instance of GitLab that we did not control and routing the response to back somewhere we could consume the ID token. This was really beneficial because it did not require us to set up our own IDP service. Initially, this was done with Ory Hydra, but we ran into complications trying to set up the login flow with Kratos's self-service nodes for Identity and Session management within the Ory stack. Documentation was limited and support was almost non-existent, so we moved on. And so, here we are.
-
-First, let's take a brief look at how other web apps might work with external IDPs.
-
-### How might a web app do authentication?
-
-A web app might offer multiple ways to register an account and log into their service with social sign-on. If a user has an option to login with their already existing Google account for example, they would be redirected to a Google sign in page to enter their Google credentials. This would require that our web application be registered with Google as an OAuth 2.0 application so Google would know who and where to send the requested identity information that our application would need later. After the user logs into Google, Google will present a consent page telling the user what information our web application is requesting. If the user accepts, our web application will receive the information to consume, ideally in the form of a JWT. An oversimpified diagram of this process would look some like this:
-
-```mermaid
-flowchart LR
-a[web app login page] -- redirect --> b[external IDP login]
-b --> c[external IDP consent]
-c -- redirect with token --> d[web app service]
-```
-
-At this point, our web application has the identity information from the IDP it would need for the user to proceed to using our service. Depending on the service, there would not be a need to issue access tokens if our service did not provide any APIs to access. However, if our service was something like Github, we would need to issue our own token that must be included in every request to our APIs.
-
-### Where does OPAAL fit in all of this?
-
-Considering the example above, we can see that *OPAAL takes the place of a web application*. However, OPAAL adds another step to the process.
+End‑to‑end flow
+Here’s the high‑level request path with OPAAL in the middle:
 
 ```mermaid
 flowchart LR
-a["web app login (from OPAAL)"] -- redirect --> b[external IDP login]
-b --> c[external IDP consent]
-c -- redirect with token --> d[OPAAL]
-d --> e["authorization server (Hydra)"]
+	A[Browser: /login] -- redirect --> B[External IdP]
+	B --> C[Consent]
+	C -- id_token --> D[OPAAL]
+	D -- signed assertion --> E[Auth Server (e.g., Hydra)]
+	E -- access token --> F[OPAAL]
+	F -- token/cookie --> G[Your App/API]
 ```
 
-After consuming the ID token, OPAAL creates and signs another JWT, but not to return to the user as an access token however. Since OPAAL is not an OIDC-compliant provider, having *it issue access tokens would be a bad idea*. Instead, the JWT that OPAAL creates is to perform a JWT bearer grant with Hydra. The details about how this work is explained in [Hydra's documentation](https://www.ory.sh/docs/hydra/guides/jwt). Ultimately, using the JWT bearer grant allowed for flexible access token customization that was needed to include information from the ID token, which would not have been possible using the other grant types.
+Why this works
+The authorization server issues the access token, so audience, issuer, and signing keys match what your services expect. The external IdP is still the source of truth for user identity. OPAAL just proves to your auth server, via a signed assertion, that “this user just logged in with the IdP and here are the mapped claims.”
 
-### Why does the tool exists?
+Claim mapping and token shape
+Keep mapping simple and explicit:
+- Subject: Use the IdP’s stable user ID (sub) as your internal subject or map it to a canonical form.
+- Email/name: Optional, but helpful for logs and UIs.
+- Group → scope/role: Map only groups you trust into access token scopes/roles. Avoid raw pass‑through.
 
-During SI, our specific use-case required students to log-in through a web UI that would return an access token that was usable with OpenCHAMI services. Unfortunately, there was no good off-the-shelf solution at the time that did what we needed it to do without being too overly complicated to set up. This tool exist to solve the problems mentioned in the previous post, which if summed up into a single sentence: to bridge the gap between external identity provider logins and authorizing access to internal resources. That's it. The tool is not designed to be an OIDC provider nor a JWT issuer.
+You’ll configure your auth server to accept signed assertions from OPAAL (public key or client credential), and to include allowed mapped claims in the access token. The JWT bearer flow is defined in RFC 7523; access tokens as JWTs are covered in RFC 9068. Hydra documents the grant here: https://www.ory.sh/docs/hydra/guides/jwt
 
-Initially, the plan was to try to get the identity provider to speak to another tool in the Ory stack called Kratos using a self-service node. We had some success initially getting the self-service node up and running with our other services, but there were certainly some issues trying to integrate the UI to work with Hydra. I'm not sure if there's documentation that explains throughly how this is supposed to work out there, but trying to piece things together was not trivial which lead to OPAAL as an alternate solution.
+Operational notes
+Short, real‑world guidance we’ve found useful:
+- Keep OPAAL stateless. Store minimal session data and rely on the auth server for token lifetimes.
+- Prefer short‑lived access tokens. If you need long sessions, re‑issue silently or switch interactive users to authorization code flow.
+- Log token exchanges at INFO with request IDs, not token contents. Never log raw tokens.
+- Rate‑limit exchanges to protect your auth server during login spikes.
 
-The scope of the tool is only meant to encapsulate the specific problems of that comes with bridging identity providers, however, and should not required to use the rest of OpenCHAMI. Therefore, it can easily be removed and replaced with your own solution if it already exists (i.e. an existing web application like mentioned above). However, it is important to emphasize again that OPAAL *is not* meant to replace the role of a complete OIDC implementation like Hydra, Authelia, Keycloak,  and/or other solutions that are more developed and battle tested. In fact, having an IDP would still be required to work with this setup.
+Minimal lab sketch (≤4 commands)
+This sketch shows the essence: exchange a signed assertion for an access token, then call a service. Use your language’s JWT library to sign the assertion; curl shows the endpoints.
 
-### Wait...what is OPAAL-IDP then?
+```bash
+# 1) Exchange your signed JWT assertion for an access token (Hydra example)
+ACCESS=$(curl -sS -X POST http://auth.local/oauth2/token \
+	-d 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer' \
+	-d 'assertion=YOUR_SIGNED_JWT' | jq -r .access_token)
 
-Although there is an example IDP built into OPAAL, it only contains the bare minimum to replicate the functionality of an OIDC provider and is not fully OIDC compliant. **The internal IDP was made to work for SI and should not be used for anything else.** This will likely be replaced entirely for a more complete, tested, familiar, and reliable solution in the future.
+# 2) Call an API with that token (e.g., SMD)
+curl -H "Authorization: Bearer $ACCESS" http://smd.local/v1/nodes | jq '. | length'
+```
 
-## Conclusion
+If you already run Hydra, register OPAAL as a trusted issuer for the JWT bearer grant and publish OPAAL’s public key. Start with a small claim set, then add more only when a service needs them.
 
-As stated before, OPAAL is a tool created with a very pecific purpose in mind for a very specific use-case: to bridge the use of an external IDP with an internal authorization server for a specific use case. Keep in mind that this tool is not mandatory to use with the rest of the OpenCHAMI tools and services. Thanks to the modular design, you should be able to easily replace OPAAL with your own solution if you would like.
+What about an internal IdP?
+OPAAL includes a minimal example IdP used for training. It is not OIDC compliant and is not meant for production. In production, use a real IdP (your enterprise IdP, GitLab, Google, etc.) for login and keep OPAAL as the bridge.
+
+When to use this pattern
+Use OPAAL when:
+- You must accept external IdP login you do not control.
+- Your services need tokens issued by your own authorization server.
+- You want explicit control over token content and lifetimes.
+
+Skip OPAAL when:
+- You can make your services trust the external IdP’s access tokens directly.
+- You’re ready to move entirely to your own end‑to‑end IdP and authorization server.
+
+Wrap‑up
+OPAAL gives you a clean, testable way to keep external IdP login and still issue access tokens your services trust. Verify the ID token, map the claims you need, exchange via JWT bearer, and you’re done. It’s small, auditable, and fits well with OpenCHAMI’s modular approach.
+
+References
+- OPAAL: https://github.com/OpenCHAMI/opaal
+- Hydra JWT bearer grant: https://www.ory.sh/docs/hydra/guides/jwt
+- RFC 7523 (JWT bearer): https://www.rfc-editor.org/rfc/rfc7523
+- RFC 9068 (Access Tokens as JWTs): https://www.rfc-editor.org/rfc/rfc9068
+
+{{< blog-cta >}}

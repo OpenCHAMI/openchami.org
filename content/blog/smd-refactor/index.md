@@ -2,10 +2,16 @@
 title = 'Experimental Refactoring with SMD'
 date = 2024-01-24T10:24:44-05:00
 draft = false
-categories = ['LANL', 'Development', 'sc23']
+categories = ['LANL', 'Development', 'SC23']
 contributors = ["David J. Allen (LANL)"]
+description = "Slimming SMD by removing endpoints and simplifying handlers to focus on what’s needed for fast, reliable boots."
+slug = "smd-refactor"
+lastmod = 2025-11-06T00:00:00+00:00
+canonical = "/blog/smd-refactor/"
+tags = ["SMD", "Refactor", "OpenAPI", "HPC"]
 +++
 
+{{< blog-cta >}}
 
 For the OChami demo at SC 2023, two of the CSM microservices were needed to boot a 10-node cluster: the boot-script service (BSS) and the state management database (SMD). While working with the code for the demo, it was discovered that both microservices are packed with features not necessary for booting. This eventually led to evaluating more of the code the see what could be changed or simplified down to slimmer microservices. For the goals of OChami, it would be better if some of these features could be separated and refined into something that is more focused and can easily be migrated to cloud systems.
 

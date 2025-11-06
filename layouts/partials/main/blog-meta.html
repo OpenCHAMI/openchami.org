@@ -1,0 +1,16 @@
+{{/* Local override to make contributors optional and avoid nil len errors. */}}
+{{ $categories := .Params.categories | default (slice) }}
+{{ $contributors := .Params.contributors | default (slice) }}
+{{ $date := .Date }}
+
+<div class="post-meta">
+  {{ if $date }}
+    <span class="post-date">{{ time.Format "Jan 2, 2006" $date }}</span>
+  {{ end }}
+  {{ if gt (len $categories) 0 }}
+    <span class="post-categories"> • {{ delimit $categories ", " }}</span>
+  {{ end }}
+  {{ if gt (len $contributors) 0 }}
+    <span class="post-authors"> • by {{ delimit $contributors ", " }}</span>
+  {{ end }}
+</div>

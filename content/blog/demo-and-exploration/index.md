@@ -7,8 +7,13 @@ description = "To help bootstrap the OpenCHAMI effort, the team at LANL ran seve
 summary = "At LANL, we used two microservices from HPE's CSM to do discovery and boot of a ten node cluster and we learned so much along the way about redfish, postgres, httpboot, aws, and of course, ourselves."
 include_toc = true
 contributors = ["Alex Lovell-Troy"]
+slug = "demo-and-exploration"
+lastmod = 2025-11-06T00:00:00+00:00
+canonical = "/blog/demo-and-exploration/"
+tags = ["CSM", "SMD", "BSS", "OpenCHAMI"]
 +++
 
+{{< blog-cta >}}
 
 
 

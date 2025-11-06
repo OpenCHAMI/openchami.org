@@ -1,14 +1,18 @@
----
-title: "Introducing Manta: A Cutting-Edge CLI for HPC Infrastructure Management"
-date: 2023-10-05T00:00:00Z
-draft: false
-weight: 12
-description: "Discover Manta, a CLI for CSM and OpenCHAMI based HPC systems."
-tags: ["Manta", "Introduction", "Productivity"]
-categories: ["Development"]
-contributors: ["Manuel Sopena Ballesteros", "Miguel Gila", "Matteo Chesi"]
----
++++
+title = "Introducing Manta: A Cutting-Edge CLI for HPC Infrastructure Management"
+date = 2023-10-05T00:00:00Z
+draft = false
+weight = 12
+description = "Discover Manta, a CLI for CSM and OpenCHAMI based HPC systems."
+tags = ["Manta", "Introduction", "Productivity"]
+categories = ["Development"]
+contributors = ["Manuel Sopena Ballesteros", "Miguel Gila", "Matteo Chesi"]
+slug = "manta"
+lastmod = 2025-11-06
+canonical = "/blog/manta/"
++++
 
+{{< blog-cta >}}
 # Introducing Manta: A Cutting-Edge CLI for HPC Infrastructure Management
 
 Managing High-Performance Computing (HPC) infrastructure efficiently requires a tool that is both flexible and powerful. **Manta** is a next-generation Command Line Interface (CLI) designed to streamline HPC management for external developers by integrating multiple backend technologies and simplifying complex workflows. Whether you're managing thousands of compute nodes or configuring a single system, Manta provides a seamless and intuitive experience.

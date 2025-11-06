@@ -6,8 +6,14 @@ categories = ['Development', 'LANL', 'SC23']
 summary = "As part of LANL's exploration of the CSM codebase, they found it necessary to augment the built-in discovery features of CSM with a new standalone command based on gofish and bmclib."
 include_toc = true
 contributors = ["David J. Allen (LANL)"]
+description = "Magellan is a bmclib/gofish-based Redfish discovery tool for CSM/OpenCHAMI that scans, collects, and uploads inventory to SMD."
+slug = "ochami-magellan"
+lastmod = 2025-11-06T00:00:00+00:00
+canonical = "/blog/ochami-magellan/"
+tags = ["Magellan", "Redfish", "Discovery", "OpenCHAMI"]
 +++
 
+{{< blog-cta >}}
 # Magellan: A "bmclib"-based Discovery Tool
 
 As part of our exploration of the [CSM codebase](https://github.com/Cray-HPE), we found it necessary to augment the built-in Redfish discovery mechanism with one that was easier for us to maintain and troubleshoot.  Our tool, which we called `magellan` after the pioneering explorer, is based on [`bmclib`](https://github.com/bmc-toolbox/bmclib) and [`gofish`](https://github.com/stmcginnis/gofish).  It scans subnets for BMCs and collects inventory information to generate the compute node inventory in CSM.  Read on for the full story including the tradeoffs we made along the way.
