@@ -1,10 +1,10 @@
----
-title: "Booting 640 HPC Nodes in 5 Minutes: Part 3 - Interacting with OpenCHAMI"
-date: 2024-10-17
-draft: false
-categories: ["HPC", "OpenCHAMI", "Booting"]
-contributors: ["Alex Lovell-Troy"]
----
++++
+title = "Booting 640 HPC Nodes in 5 Minutes: Part 3 - Interacting with OpenCHAMI"
+date = 2024-10-17
+draft = false
+categories = ["HPC", "OpenCHAMI", "Booting"]
+contributors = ["Alex Lovell-Troy"]
++++
 
 ## Interacting with OpenCHAMI
 
@@ -18,7 +18,7 @@ Authentication and authorization in OpenCHAMI are handled via JSON Web Tokens (J
 
 During our deployment on Badger, we recognized the need for a dedicated client to interact with the OpenCHAMI API efficiently. Initially, we relied on `curl` commands wrapped in bash scripts, but this wasn’t sustainable and fairly frustrating for sysadmins.
 
-We developed a CLI tool that wraps API interactions, making it easier for sysadmins to manage nodes, deploy images, and monitor the system. You can find it on Github at [Github.com/OpenCHAMI/ochami-cmdline](https://github.com/OpenCHAMI/ochami-cmdline)
+We developed a CLI tool that wraps API interactions, making it easier for sysadmins to manage nodes, deploy images, and monitor the system. You can find it on GitHub at [github.com/OpenCHAMI/ochami-cmdline](https://github.com/OpenCHAMI/ochami-cmdline)
 
 ## Populating our Inventory System
 

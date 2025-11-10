@@ -7,6 +7,10 @@ description = "In-depth exploration of the 'In-Memory Working Set with Periodic 
 include_toc = true
 contributors = ["Alex Lovell-Troy"]
 summary = "This blog post dives into the 'In-Memory Working Set with Periodic Snapshots' pattern implemented in the node-orchestrator project. Learn how this approach leverages DuckDB and Parquet to efficiently manage control plane data, offering speed and reliability. Discover the advantages for HPC sysadmins, including reduced management overhead and simplified recovery, as well as comparisons to other data storage methods."
+slug = "databases-as-antipattern"
+lastmod = 2025-11-06T00:00:00+00:00
+canonical = "/blog/databases-as-antipattern/"
+tags = ["DuckDB", "Parquet", "Snapshots", "Control-plane"]
 +++
 
 Welcome to our first code deep dive! Today, we'll explore a development pattern used in our experimental node-orchestrator project. Rather than storing dynamic data in a traditional SQL database, we use DuckDB to maintain a working set in memory and periodically save snapshots in the Parquet file format common to Data Analytics. This approach helps us manage control plane data efficiently and safely.
@@ -56,3 +60,5 @@ Failure modes include RAM failures, where data in memory is lost if the system c
 #### Conclusion
 
 The "In-Memory Working Set with Periodic Snapshots" pattern offers a powerful approach for managing data in HPC systems. By leveraging the speed of in-memory data access and the safety of periodic snapshots, we can ensure our data is both fast to access and protected. Tools like DuckDB and Parquet make this pattern efficient and reliable, reducing the amount of code we need to write and maintain.
+
+{{< blog-cta >}}

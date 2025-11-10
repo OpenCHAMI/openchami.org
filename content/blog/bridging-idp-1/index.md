@@ -1,12 +1,17 @@
----
-title: 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 1)'
-date:  2024-06-03T03:43:00-05:00
-draft:  false
-weight:  12
-categories:  ['LANL', 'Development']
-contributors: ["David J. Allen (LANL)"]
----
-
++++
+title = "Bridging an External IdP to Your Auth Server (Part 1)"
+description = "Use an external IdP for login and still issue your own access tokens. A practical path that works with OpenCHAMI."
+summary = "Why forwarding the IdP’s ID token won’t work, and a simple pattern that does."
+slug = "bridging-idp-part-1"
+date = 2024-06-03T03:43:00-05:00
+draft = false
+weight = 12
+categories = ["HPC", "Operations"]
+tags = ["auth", "OIDC", "JWT", 'LANL', 'Development']
+contributors = ["David J. Allen (LANL)"]
+lastmod = 2025-11-06
+canonical = "/blog/bridging-idp-1/"
++++
 
 When it comes to authentication, it is not unrealistic to want to use an existing identity provider, like Gitlab or Google, to provide users with multiple login options. This prevents burdening the user to register another account with your service and lowers the barrier for them to use your service. Instead, the user is able to use an account they are more likely to already have with other sites. This is also good for developers as it allows them to skip having to create their own login page and maintain their own backend with a lot of the wiring need to grant users access to resources, given that the developers trust the identity provider. The application or service presenting the login challenge must first register their application with the trusted identity provider so that the IDP can verify the application credentials, ask the user to consent to allowing certain information or actions, and send an ID token and/or access token to the appropriate callback URI  for the service provider to consume.
 
@@ -92,3 +97,5 @@ As mentioned before, going with this type of solution has its positives and nega
 ## What's Next?
 
 As you can see, implementing a solution to use an external identity provider with your own services can be a struggle without any good off-the-shelf solutions. The next post will talk specifically about one solution that is currently being used for some of our needs with OpenCHAMI called OPAAL and how it solves the issues addressed in this post. It will also talk a little bit about some of the limitations with the way it is designed, what it is and isn't, and some of the things it may do in the future.
+
+{{< blog-cta >}}

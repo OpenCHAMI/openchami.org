@@ -1,21 +1,16 @@
----
-title: 'Authenticated Service to Service Communication with client credentials'
-date: 2024-03-01T10:00:00-04:00
-description: "In this post, David describes how we authenticate every request within OpenCHAMI without a service mesh."
-summary: "OpenCHAMI uses signed JWTs for authentication and authorization.  Users must include a valid token with every request which will then be passed on to every subsequent microservice involved in processing that request.  However, there are some internal requests that aren't triggered directly by a user.  For these, we still need a valid token, but without a specific user to tie it to, we need to use a different kind of JWT."
-draft: false
-weight: 11
-categories: ["Development", "LANL"]
-tags: []
-contributors: ["David J. Allen (LANL)"]
-pinned: false
-homepage: false
-seo:
-  title: "" # custom title (optional)
-  description: "" # custom description (recommended)
-  canonical: "" # custom canonical URL (optional)
-  noindex: false # false (default) or true
----
++++
+title = "Service-to-Service Auth in OpenCHAMI: Client Credentials, Simple and Safe"
+description = "How microservices in OpenCHAMI get signed JWTs without a user present, plus a minimal test flow."
+summary = "A short guide to use OAuth2 client credentials to call another service with a JWT in OpenCHAMI."
+slug = "auth-comms-client-credentials"
+tags = ["auth", "JWT", "OAuth2", "Development", "LANL"]
+categories = ["HPC", "Operations"]
+contributors = ["David J. Allen (LANL)"]
+date = 2024-03-01T10:00:00-04:00
+lastmod = "2025-11-06"
+draft = false
+canonical = "/blog/auth-comms/"
++++
 
 ## Authentication and Authorization in OpenCHAMI
 
@@ -204,3 +199,6 @@ Running this should print the access token if everything worked correctly.
 And that's all there is to it! There's still some cleaning up to do and improvements to be made to the code presented above, but this gets the job done. Keep in mind that it should not be necessary to have to create and authorize another client to receive another token after each one expires unless you unregister it. Also, it may be a good idea to control when the microservice is requesting a new token such as before making a request and receiving a 401 response. Anyways, these are just some of the considerations to think about and maybe cover in a future post.
 
 If you're interested in using cloud-like design patterns for the next generation of HPC System Management, we'd love to hear from you.  You can reach us through our [public Slack instance](https://openchami.org/slack) or [Github](https://github.com/openchami).
+
+
+{{< blog-cta >}}
