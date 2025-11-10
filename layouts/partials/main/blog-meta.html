@@ -1,0 +1,29 @@
+{{/* Local override to make contributors optional and link to contributor pages. */}}
+{{ $categories := .Params.categories | default (slice) }}
+{{ $contributors := .Params.contributors | default (slice) }}
+{{ $date := .Date }}
+
+<div class="post-meta">
+  {{ if $date }}
+    <span class="post-date">{{ time.Format "Jan 2, 2006" $date }}</span>
+  {{ end }}
+  {{ if gt (len $categories) 0 }}
+    <span class="post-categories"> • {{ delimit $categories ", " }}</span>
+  {{ end }}
+  {{ if gt (len $contributors) 0 }}
+    {{/* Include list/section pages too, since contributor profiles are _index.md */}}
+    {{ $contribPages := where site.Pages "Section" "contributors" }}
+    {{ $links := slice }}
+    {{ range $contributors }}
+      {{ $name := . }}
+      {{ $match := where $contribPages "Title" $name }}
+      {{ if gt (len $match) 0 }}
+        {{ $page := index $match 0 }}
+        {{ $links = $links | append (printf "<a href=\"%s\">%s</a>" $page.RelPermalink $name) }}
+      {{ else }}
+        {{ $links = $links | append $name }}
+      {{ end }}
+    {{ end }}
+    <span class="post-authors"> • by {{ delimit $links ", " | safeHTML }}</span>
+  {{ end }}
+</div>
