@@ -1,11 +1,16 @@
 +++
-title = 'Magellan: Alternative Redfish Discovery for OpenCHAMI/CSM'
+title = 'Magellan: Alternative Redfish Discovery for OpenCHAMI'
 date = 2023-10-28T09:27:54-04:00
 draft = false
 categories = ['Development', 'LANL', 'SC23']
 summary = "As part of LANL's exploration of the CSM codebase, they found it necessary to augment the built-in discovery features of CSM with a new standalone command based on gofish and bmclib."
 include_toc = true
 contributors = ["David J. Allen (LANL)"]
+description = "Magellan is a bmclib/gofish-based Redfish discovery tool for CSM/OpenCHAMI that scans, collects, and uploads inventory to SMD."
+slug = "ochami-magellan"
+lastmod = 2025-11-06T00:00:00+00:00
+canonical = "/blog/ochami-magellan/"
+tags = ["Magellan", "Redfish", "Discovery", "OpenCHAMI"]
 +++
 
 # Magellan: A "bmclib"-based Discovery Tool
@@ -127,3 +132,5 @@ Finally, Magellan can always be adapted send more or less information about BMC 
 ## Conclusion
 
 Magellan is a `bmclib`-based BMC discovery tool that reimagines how discovery can work with existing SMD instances and beyond. The tool provides a gateway to explore different ways to approach discovery with a broad range of hardware that would not be possible with the current CSM discovery process. At LANL, we have learned a lot about how the redfish standard can be used for discovery and how the team at HPE has implemented the CSM inventory system.  We have already contributed this code back to the community and plan to expand the discovery capabilities of Magellan in the future.
+
+{{< blog-cta >}}

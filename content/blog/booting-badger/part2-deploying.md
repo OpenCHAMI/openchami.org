@@ -1,10 +1,10 @@
----
-title: "Booting 640 HPC Nodes in 5 Minutes: Part 2 - Deploying OpenCHAMI "
-date: 2024-10-17
-draft: false
-categories: ["HPC", "OpenCHAMI", "Booting"]
-contributors: ["Alex Lovell-Troy"]
----
++++
+title = "Booting 640 HPC Nodes in 5 Minutes: Part 2 - Deploying OpenCHAMI "
+date = 2024-10-17
+draft = false
+categories = ["HPC", "OpenCHAMI", "Booting"]
+contributors = ["Alex Lovell-Troy"]
++++
 
 ## Deploying OpenCHAMI: Flexibility and Adaptability in Cluster Management
 

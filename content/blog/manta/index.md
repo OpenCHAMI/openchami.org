@@ -1,13 +1,16 @@
----
-title: "Introducing Manta: A Cutting-Edge CLI for HPC Infrastructure Management"
-date: 2023-10-05T00:00:00Z
-draft: false
-weight: 12
-description: "Discover Manta, a CLI for CSM and OpenCHAMI based HPC systems."
-tags: ["Manta", "Introduction", "Productivity"]
-categories: ["Development"]
-contributors: ["Manuel Sopena Ballesteros", "Miguel Gila", "Matteo Chesi"]
----
++++
+title = "Introducing Manta: A Cutting-Edge CLI for HPC Infrastructure Management"
+date = 2023-10-05T00:00:00Z
+draft = false
+weight = 12
+description = "Discover Manta, a CLI for CSM and OpenCHAMI based HPC systems."
+tags = ["Manta", "Introduction", "Productivity"]
+categories = ["Development"]
+contributors = ["Manuel Sopena Ballesteros", "Miguel Gila", "Matteo Chesi"]
+slug = "manta"
+lastmod = 2025-11-06
+canonical = "/blog/manta/"
++++
 
 # Introducing Manta: A Cutting-Edge CLI for HPC Infrastructure Management
 

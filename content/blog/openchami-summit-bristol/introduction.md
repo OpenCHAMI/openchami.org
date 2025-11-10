@@ -1,9 +1,9 @@
----
-title: "Re-Introducing OpenCHAMI"
-date: 2024-10-01
-draft: false
-contributors: ["Alex Lovell-Troy"]
----
++++
+title = "Re-Introducing OpenCHAMI"
+date = 2024-10-01
+draft = false
+contributors = ["Alex Lovell-Troy"]
++++
 
 The first presentation of the summit was Alex Lovell-Troy's review of what OpenCHAMI is and how it came to be.
 

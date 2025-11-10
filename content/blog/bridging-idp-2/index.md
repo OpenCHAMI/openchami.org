@@ -1,11 +1,18 @@
----
-title: 'Bridging the Gap between External Identity Provider and Self-Hosted Authorization Server (Part 2)'
-date: 2024-12-01T03:43:00-05:00
-draft: true
-weight: 13
-categories: ['LANL', 'Development']
-contributors: ["David J. Allen (LANL)"]
----
++++
+title = "Use an External IdP and Still Issue Your Own Tokens (Part 2: OPAAL)"
+description = "How OPAAL lets you accept an external IdP’s login and mint access tokens from your own auth server using a JWT bearer grant."
+summary = "A practical bridge: verify the IdP’s ID token, map claims, and exchange for an access token your services trust."
+slug = "bridging-idp-part-2"
+date = 2024-12-01T03:43:00-05:00
+draft = false
+weight = 13
+categories = ["HPC", "Operations"]
+tags = ["auth", "OIDC", "JWT", "LANL", "Development"]
+contributors = ["David J. Allen (LANL)"]
+lastmod = 2025-11-06
+canonical = "/blog/bridging-idp-2/"
++++
+
 
 # Bridging the Gap between Identity Provider and Authorization Server (Part 2)
 
@@ -61,3 +68,5 @@ Although there is an example IDP built into OPAAL, it only contains the bare min
 ## Conclusion
 
 As stated before, OPAAL is a tool created with a very pecific purpose in mind for a very specific use-case: to bridge the use of an external IDP with an internal authorization server for a specific use case. Keep in mind that this tool is not mandatory to use with the rest of the OpenCHAMI tools and services. Thanks to the modular design, you should be able to easily replace OPAAL with your own solution if you would like.
+
+{{< blog-cta >}}

@@ -1,10 +1,10 @@
----
-title: "Booting 640 HPC Nodes in 5 Minutes: Part 1 - An Introduction to OpenCHAMI"
-date: 2024-10-17
-draft: false
-categories: ["HPC", "OpenCHAMI", "Booting"]
-contributors: ["Alex Lovell-Troy"]
----
++++
+title = "Booting 640 HPC Nodes in 5 Minutes: Part 1 - An Introduction to OpenCHAMI"
+date = 2024-10-17
+draft = false
+categories = ["HPC", "OpenCHAMI", "Booting"]
+contributors = ["Alex Lovell-Troy"]
++++
 
 Managing HPC systems often means dealing with rigid tools and repetitive tasks. But what if you could approach your HPC clusters with the flexibility of modern cloud workflows? OpenCHAMI is designed to do just that—introduce cloud-like tooling to on-premise clusters in a way that aligns with both traditional HPC workflows and DevOps principles for emerging AI needs.
 

@@ -2,7 +2,7 @@
 title = 'Boot Script Service: Switching from Etcd to PostgreSQL for a Smaller Storage Backend'
 date = 2023-10-30T16:19:35-06:00
 draft = false
-categories = ['Development', 'LANL', 'SC23']
+categories = ['Development', 'LANL', 'SC23', 'Operations']
 summary = "As part of LANL's exploration of the CSM codebase, they replaced Etcd with PostgreSQL for BSS persistence and learned a lot about software boundaries along the way."
 include_toc = true
 contributors = ["Devon T. Bautista (LANL)"]
@@ -176,3 +176,5 @@ architectures and hardware, this addition to BSS will allow it to meet these
 diversity requirements. In the future, we would like to consider ways of making
 BSS function even better as a standalone boot script service with more
 composable storage options.
+
+{{< blog-cta >}}
