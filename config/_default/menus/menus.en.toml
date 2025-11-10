@@ -61,8 +61,13 @@
 
 [[main]]
   name = "Newsletters"
-  url = "/newsletters/"
-  weight = 65
+  url = "/news/newsletters/"
+  weight = 66
+
+[[main]]
+  name = "Weekly Updates"
+  url = "/news/weekly/"
+  weight = 67
 
 [[sidebar_docs]]
 name = "Tutorial"

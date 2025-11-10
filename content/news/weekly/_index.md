@@ -7,4 +7,4 @@ date = 2025-11-10T00:00:00Z
 draft = false
 +++
 
-Weekly engineering, roadmap, and ops updates aggregated from `content/posts/weekly/`.
+Weekly engineering, roadmap, and ops updates.
