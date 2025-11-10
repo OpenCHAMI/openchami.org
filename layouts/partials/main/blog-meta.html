@@ -1,7 +1,8 @@
-{{/* Local override to make contributors optional and avoid nil len errors. */}}
+{{/* Updated to make contributor matching case-insensitive and add reading time */}}
 {{ $categories := .Params.categories | default (slice) }}
 {{ $contributors := .Params.contributors | default (slice) }}
 {{ $date := .Date }}
+{{ $readingTime := .ReadingTime }}
 
 <div class="post-meta">
   {{ if $date }}
@@ -10,21 +11,22 @@
   {{ if gt (len $categories) 0 }}
     <span class="post-categories"> • {{ delimit $categories ", " }}</span>
   {{ end }}
-    {{ if gt (len $contributors) 0 }}
-      {{/* Build linked contributor list: try to match by Title under the contributors section; fallback to plain text. */}}
-      {{ $links := slice }}
-  {{/* Include list/section pages too, since contributor profiles are _index.md (branch bundles). */}}
-  {{ $contribPages := where site.Pages "Section" "contributors" }}
-      {{ range $contributors }}
-        {{ $name := . }}
-        {{ $match := where $contribPages "Title" $name }}
-        {{ if gt (len $match) 0 }}
-          {{ $page := index $match 0 }}
-          {{ $links = $links | append (printf "<a href=\"%s\">%s</a>" $page.RelPermalink $name) }}
-        {{ else }}
-          {{ $links = $links | append (printf "%s" $name) }}
-        {{ end }}
+  {{ if $readingTime }}
+    <span class="post-reading-time"> • {{ $readingTime }} min read</span>
+  {{ end }}
+  {{ if gt (len $contributors) 0 }}
+    {{ $links := slice }}
+    {{ $contribPages := where site.Pages "Section" "contributors" }}
+    {{ range $contributors }}
+      {{ $name := . }}
+      {{ $match := where $contribPages "Title" (lower $name) }}
+      {{ if gt (len $match) 0 }}
+        {{ $page := index $match 0 }}
+        {{ $links = $links | append (printf "<a href=\"%s\">%s</a>" $page.RelPermalink $name) }}
+      {{ else }}
+        {{ $links = $links | append (printf "%s" $name) }}
       {{ end }}
-      <span class="post-authors"> • by {{ delimit $links ", " | safeHTML }}</span>
     {{ end }}
+    <span class="post-authors"> • by {{ delimit $links ", " | safeHTML }}</span>
+  {{ end }}
 </div>

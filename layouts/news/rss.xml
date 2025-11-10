@@ -1,0 +1,23 @@
+{{- /* Combined RSS feed for newsletters and weekly updates */ -}}
+{{- $newsletters := where site.RegularPages "File.Dir" "in" "/news/newsletters/" -}}
+{{- $weekly := where site.RegularPages "File.Dir" "in" "/news/weekly/" -}}
+{{- $all := union $newsletters $weekly -}}
+{{- $sorted := sort $all "Date" "desc" -}}
+
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>OpenCHAMI News</title>
+    <link>{{ .Site.BaseURL }}/news/feed/</link>
+    <description>Combined feed of newsletters and weekly updates</description>
+    <language>en-us</language>
+    {{ range $sorted }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <description>{{ .Summary | plainify }}</description>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 MST" }}</pubDate>
+    </item>
+    {{ end }}
+  </channel>
+</rss>

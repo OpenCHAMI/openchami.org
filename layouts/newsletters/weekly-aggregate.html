@@ -1,0 +1,34 @@
+{{ define "main" }}
+<div class="row justify-content-center">
+  <div class="col-md-12 col-lg-9">
+    <header class="mb-4">
+      <h1>{{ .Title }}</h1>
+      {{ with .Content }}<div class="lead">{{ . }}</div>{{ end }}
+    </header>
+
+    {{/* Collect pages from content/posts/weekly */}}
+  {{ $weekly := where (where site.RegularPages "Section" "posts") "File.Dir" "in" "/posts/weekly/" }}
+
+    {{ if not (gt (len $weekly) 0) }}
+      <p>No weekly posts found yet.</p>
+    {{ else }}
+      {{ $sorted := sort $weekly "Date" "desc" }}
+      <div class="list-group list-group-flush">
+        {{ range $sorted }}
+          <article class="list-group-item px-0">
+            <h2 class="h5 mb-1"><a class="stretched-link text-decoration-none" href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+            <div class="post-meta small text-muted mb-2">
+              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+            </div>
+            {{ with .Params.summary }}
+              <p class="mb-0">{{ . }}</p>
+            {{ else }}
+              {{ with .Summary }}<p class="mb-0">{{ . }}</p>{{ end }}
+            {{ end }}
+          </article>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
