@@ -11,13 +11,6 @@ seo:
  canonical: "https://openchami.org"
  noindex: false
 ---
-## OpenCHAMI Developer Summit @ TACC 2025
-
-Join us **Sep 9th, 2025** at the Texas Advanced Computing Center (TACC) for the OpenCHAMI Developer Summit. Expect hands‑on sessions, live demos, and deep discussions with HPC and AI/ML infrastructure experts.
-
-- **[Register here](https://www.eventbrite.com/e/1384590971869)** 🎟️
-- **[Event Details](/tacc25)**
-
 
 ## Open Composable Heterogeneous Adaptable Management Infrastructure
 
