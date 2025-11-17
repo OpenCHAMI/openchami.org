@@ -35,3 +35,18 @@
 .section-features p {
     text-align: left; // Improve readability
 }
+
+// Fix SVG rendering issues in Chrome
+.svg-inline-custom {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
+}
+
+// Override any hardcoded SVG dimensions
+.svg-inline-custom svg {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
+}
