@@ -1,13 +1,13 @@
 +++
-title: "Using Fabrica to Generate a Hardware Inventory API"
-description: "Learn how Fabrica works, what it can do, and create a fully functional Hardware Inventory API in minutes."
-date: 2025-11-04T00:00:00+00:00
-lastmod: 2025-11-04T00:00:00+00:00
-draft: false
-weight: 10
-categories: ["HPC", "Hardware", "Inventory", "Operations"]
-tags: ["Fabrica", "Hardware", "Inventory"]
-contributors: ["Ben McDonald"]
+title = "Using Fabrica to Generate a Hardware Inventory API"
+description = "Learn how Fabrica works, what it can do, and create a fully functional Hardware Inventory API in minutes."
+date = 2025-11-04T00:00:00+00:00
+lastmod = 2025-11-04T00:00:00+00:00
+draft = false
+weight = 10
+categories = ["HPC", "Hardware", "Inventory", "Operations"]
+tags = ["Fabrica", "Hardware", "Inventory"]
+contributors = ["Ben McDonald"]
 +++
 
 ## What is Fabrica?
