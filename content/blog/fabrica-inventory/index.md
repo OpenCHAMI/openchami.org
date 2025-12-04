@@ -1,101 +1,300 @@
 +++
-title = "Inventory API in Minutes with Fabrica (OpenCHAMI‑compatible)"
-description = "Stand up a clean, OpenCHAMI‑compatible hardware inventory API in minutes using Fabrica’s code generator."
-summary = "A practical, ops‑friendly quick start: what you’ll build, how spec/status works, and four commands to get an API running."
-slug = "fabrica-inventory"
+title = "Using Fabrica to Generate a Hardware Inventory API"
+description = "Learn how Fabrica works, what it can do, and create a fully functional Hardware Inventory API in minutes."
 date = 2025-11-04T00:00:00+00:00
-lastmod = 2025-11-06T00:00:00+00:00
+lastmod = 2025-11-04T00:00:00+00:00
 draft = false
 weight = 10
-categories = ["HPC", "Operations"]
-tags = ["Fabrica", "Inventory", "API", "OpenCHAMI"]
+categories = ["HPC", "Hardware", "Inventory", "Operations"]
+tags = ["Fabrica", "Hardware", "Inventory"]
 contributors = ["Ben McDonald"]
-canonical = "/blog/fabrica-inventory/"
 +++
 
-You often need a small, reliable inventory API long before you need a full CMDB. You want CRUD, a stable schema, OpenAPI, and a storage backend you can swap later. Fabrica gives you that in minutes. It’s a code generator for Go that emits production‑ready HTTP handlers, storage, and OpenAPI. It also follows OpenCHAMI’s resource envelope, so services like SMD or Magellan can consume your data without glue code.
+## What is Fabrica?
 
-This post walks through a simple “Device” inventory API. You’ll see how the spec/status model works, why it helps operations, and how to get something running with four commands. No framework spelunking. No scaffolding clean‑up.
+Fabrica is a command-line tool designed to accelerate the development of production-ready REST APIs in Go.
 
-## What you’ll build
+At its core, Fabrica is a code generator. The primary workflow involves defining your API's resources as simple Go structs. Once you define these structs, Fabrica generates the complete, surrounding API infrastructure. This generated code includes:
 
-You’ll create a tiny service called inventory‑api that:
+* CRUD (Create, Read, Update, Delete) HTTP handlers.
+* A choice of multiple backends, including simple file-based storage (for development) and SQL databases for production.
+* Automatically generated OpenAPI 3.0 documentation, which also provides a usable Swagger UI.
+* A type-safe Go client for interacting with your new API.
 
-- Exposes CRUD for Device resources
-- Stores data in a simple backend you can replace later
-- Publishes OpenAPI and a Swagger UI
-- Uses the OpenCHAMI resource envelope (metadata/spec/status)
+Fabrica is designed to automatically conform to the OpenCHAMI specifications, decided upon by the OpenCHAMI Technical Steering Committee and members of the API working group, so that code will automatically be OpenCHAMI compliant.
 
-## Why spec/status is useful
+A key concept Fabrica uses is its Kubernetes-inspired resource structure. Every resource you create is wrapped in a standard "envelope" that separates the `spec` from the `status`.
 
-Fabrica uses a Kubernetes‑style split between desired state (spec) and observed state (status):
+* The `spec` is the *desired state* of the resource.
+  * e.g., "I want this node to be powered on"
+  * can be updated by the user
+* The `status` is the  observed state of the resource.
+  * e.g., "This node is powered off".
+  * this is updated by the system, not the user
+  * can be thought of representing what "actually is" at a moment in time
 
-- Spec: what you want. For inventory, you usually don’t “want” the device to change; it already exists.
-- Status: what is. This is what your discovery tools report: type, serial, properties.
+This separation provides a clear and consistent pattern for managing resource state, a pattern common in cloud-native tools.
 
-By keeping spec empty for Device, you signal that inventory is observational. Day‑2 tools can safely update status without worrying about intent. Your UIs and reports get a consistent shape, and you stay aligned with other OpenCHAMI services.
+---
 
-## Data shape at a glance
+## Let's give it a try... 
 
-Each Device is wrapped in common metadata (name, uid, labels, createdAt/updatedAt). The spec is empty. The status holds facts your scanners discover: deviceType, manufacturer, partNumber, serialNumber, parent relationships, and a free‑form properties map. Keep properties small and documented; promote stable fields to first‑class keys over time.
+To see how Fabrica works, let's build a real-world API. We'll use it to create an `inventory-api` for tracking hardware assets, based on the OpenCHAMI data model (see [RFD 112](https://github.com/OpenCHAMI/roadmap/issues/112)).
 
-Pre‑reqs you likely already have
-- Go toolchain and git
-- A shell on a dev box or laptop
+### 1. Understanding the Inventory Model
 
-## Quick start (≤4 commands)
+Our goal is to create a "Device" resource. This resource needs to capture a hardware asset's complete, observed state, including:
+* Core identifiers like `deviceType`, `manufacturer`, `partNumber`, and `serialNumber`.
+* Relational data, such as its `parentID`.
+* A flexible `properties` field for arbitrary key-value data.
 
-This gets you a local API listening on 8080. Replace names to taste.
+### 2. Mapping the Model to Fabrica
+
+To map this model to Fabrica's `spec` and `status` pattern, because our API represents the state of hardware as it actually exists, it all belongs in the `DeviceStatus`. The `DeviceSpec` (the desired state) remains empty, as a user never requests a change to these attributes directly.
+
+From the Fabrica root directory, run the commands to initialize your project:
 
 ```bash
-fabrica init inventory-api && cd inventory-api
+fabrica init inventory-api
+cd inventory-api
 fabrica add resource Device
+```
+
+This creates `pkg/resources/device/device.go`. We open it and edit the two generated structs.
+
+**`DeviceSpec`**
+
+We want this struct to be empty. The system, not the user, populates the device data.
+
+```go
+// DeviceSpec defines the desired state of a Device
+// This should be empty for our inventory-API, as all data
+// is observed state populated by the system.
+type DeviceSpec struct {
+}
+```
+
+**`DeviceStatus`**
+
+We fill the `status` struct with all the fields from our data model. This is the data our system will discover and report back to the user.
+
+```go
+// DeviceStatus represents the observed state of a Device
+type DeviceStatus struct {
+    // Core fields from our data model
+    DeviceType   string `json:"deviceType,omitempty"`
+    Manufacturer string `json:"manufacturer,omitempty"`
+    PartNumber   string `json:"partNumber,omitempty"`
+    SerialNumber string `json:"serialNumber,omitempty"`
+    ParentID     string `json:"parentID,omitempty"`
+
+    // The arbitrary key-value store
+    Properties   map[string]interface{} `json:"properties,omitempty"`
+    
+    // A read-only list calculated by the system
+    ChildrenDeviceIDs []string `json:"childrenDeviceIds,omitempty"`
+}
+```
+
+### 3. What About the Other Fields?
+
+You may have noticed the data model also requires standard fields like `id`, `apiVersion`, `kind`, `createdAt`, and `updatedAt`.
+
+In OpenCHAMI, these fields are considered part of the standard as decided by the TSC and API working group and Fabrica will automatically generate those for you as part of the "metdata" section of the device. This means that developers only have to think about the data they actually want to store, without needing to know what is required to conform with OpenCHAMI standards.
+
+### 4. Generating and Running the API
+
+Now that our `Device` resource is defined, we can generate and run the API.
+
+**Generate the code:**
+Run `fabrica generate` from the project root. Fabrica reads the structs we defined and generates all the handlers, storage, and client code.
+
+```bash
 fabrica generate
+```
+
+**Install dependencies:**
+Next, tidy the Go modules to pull in any new dependencies.
+
+```bash
+go mod tidy
+```
+
+**Run the server:**
+Finally, run the server. It will be live on `localhost:8080`.
+
+```bash
 go run ./cmd/server
 ```
 
-Open http://localhost:8080/swagger to explore endpoints and try requests in the browser. You’ll see standard CRUD routes for /devices. Create a resource by name; the server assigns a UID. Update status with facts discovered by your scanners. Retrieve devices with filters to drive reports.
+**Test the API:**
+**Step 1: Create the "Device" resource envelope.**
+A user or system registers a new device by name and the service generates the UID. 
 
-## Mapping the model, simply
+```bash
+# Create a new "Device" resource named "compute-node-01"
+curl -X POST http://localhost:8080/devices \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "compute-node-01",
+    "labels": {"role": "compute", "rack": "r10"}
+  }'
+```
 
-For a Device resource, keep spec empty and put facts in status:
+**Step 2: Simulate an external service updating the device's status.**
+An inventory tool discovers the device's properties and populates its `status` by making a `PUT` request to the `/status` endpoint.
 
-- deviceType, manufacturer, partNumber, serialNumber
-- parentID and children lists if you track hierarchy
-- properties map for small, evolving details (firmware, BIOS mode)
+```bash
+# Update the status for "compute-node-01"
+curl -X PUT http://localhost:8080/devices/<uid-from-last-cmd>/status \
+  -H "Content-Type: application/json" \
+  -d '{
+    "deviceType": "Node",
+    "manufacturer": "HPE",
+    "partNumber": "SYS-1234",
+    "serialNumber": "SN-ABC123",
+    "properties": {
+      "bios_boot_mode": "uefi",
+      "dns_domain": "cluster.local"
+    }
+  }'
+```
 
-Start with the minimal set you need today. Add fields as operational needs harden. Fabrica regenerates handlers and OpenAPI when you evolve the structs.
+**Step 3: Get the complete device resource.**
+Now, when we query the device, we'll see a device populated with the data from the previous steps:
 
-## Operational notes
+```bash
+curl http://localhost:8080/devices/<uid-from-last-cmd> | jq
+```
 
-- Source‑control the schema. Changes to fields are code reviews, not ad‑hoc DB edits.
-- Treat generated code as your starting point. You can add custom endpoints (e.g., /devices/summary) right next to the generated routes.
-- Keep generated OpenAPI in CI so clients and UIs stay in sync.
-- Begin with the file backend for local work. Switch to Postgres/MySQL when you need concurrency and durability.
+Output:
+```json
+{
+  "apiVersion": "v1",
+  "kind": "Device",
+  "schemaVersion": "v1",
+  "metadata": {
+    "name": "compute-node-01",
+    "uid": "dev-f63ead62",
+    "labels": {
+      "rack": "r10",
+      "role": "compute"
+    },
+    "createdAt": "2025-11-04T09:20:41.897902-08:00",
+    "updatedAt": "2025-11-04T09:27:50.092668-08:00"
+  },
+  "spec": {},
+  "status": {
+    "deviceType": "Node",
+    "manufacturer": "HPE",
+    "partNumber": "SYS-1234",
+    "serialNumber": "SN-ABC123",
+    "properties": {
+      "bios_boot_mode": "uefi",
+      "dns_domain": "cluster.local"
+    }
+  }
+}
+```
 
-## Integrating with OpenCHAMI
+---
 
-Because the resource envelope matches OpenCHAMI conventions, you can:
+## Extending Beyond CRUD Operations
 
-- Import devices into SMD later without reshaping everything
-- Feed discovery tools (like Magellan) into this API by writing status
-- Use labels in metadata for quick filtering (rack, role, owner)
+What if you need an endpoint that isn't simple CRUD? For example, what if we want a custom endpoint `/devices/summary` that returns a simple report, like `{"total_devices": 5, "types": {"Node": 3, "Rack": 2}}`?
 
-## Testing without more commands
+To make this change, we can modify the file that was generated at `cmd/server/main.go`.
 
-From the Swagger UI, POST a Device with a name and labels, then PUT its status with discovered facts. GET it back and confirm the envelope and fields look right. Use browser‑based tools here to keep this guide within four commands.
+### How it Works
 
-## Hardening next steps
+Inside your `main.go` file, the `runServer` function sets up the router. Fabrica's generated routes are plugged in with a single call to `RegisterGeneratedRoutes(r)`.
 
-- Add auth in front (reverse proxy or middleware) before exposing widely
-- Switch storage to your chosen SQL backend
-- Add summaries and reports as custom endpoints
-- Wire this into your discovery pipeline and nightly scans
+To add your custom endpoint, you just add your own route handler to the same router, right after Fabrica's routes are registered.
 
-## References
+Your `runServer` function already looks like this:
 
-- Fabrica: https://github.com/OpenCHAMI/fabrica
-- OpenCHAMI org: https://github.com/OpenCHAMI
-- OpenCHAMI roadmap RFDs: https://github.com/OpenCHAMI/roadmap
+```go
+func runServer(cmd *cobra.Command, args []string) error {
+    // ... setup logging and storage ...
+
+    // Setup router
+    r := chi.NewRouter()
+
+    // Add middleware
+    r.Use(middleware.Logger)
+    // ... other middleware ...
+
+    // Register routes - generated by 'fabrica generate'
+    RegisterGeneratedRoutes(r)
+    r.Get("/health", healthHandler)
+
+    // ... start server ...
+}
+```
+
+To add your new endpoint, you simply add one line and one new function:
+
+```go
+func runServer(cmd *cobra.Command, args []string) error {
+    // ... setup logging and storage ...
+
+    // Setup router
+    r := chi.NewRouter()
+
+    // Add middleware
+    r.Use(middleware.Logger)
+    // ... other middleware ...
+
+    // Register routes - generated by 'fabrica generate'
+    RegisterGeneratedRoutes(r)
+    r.Get("/health", healthHandler)
+
+    // === ADD YOUR CUSTOM ROUTE HERE ===
+    r.Get("/devices/summary", GetDeviceSummary)
+    // ==================================
+
+    // ... start server ...
+}
+
+// GetDeviceSummary is your new custom handler.
+// It can re-use the generated storage logic from the
+// "internal/storage" package, which is already initialized.
+func GetDeviceSummary(w http.ResponseWriter, r *http.Request) {
+    devices, err := storage.LoadAllDevices(r.Context())
+    if err != nil {
+        // 'respondError' is a helper in main.go
+        respondError(w, http.StatusInternalServerError, err)
+        return
+    }
+
+    summary := map[string]interface{}{}
+    types := map[string]int{}
+    for _, dev := range devices {
+        types[dev.Status.DeviceType]++
+    }
+
+    summary["total_devices"] = len(devices)
+    summary["types"] = types
+
+    // 'respondJSON' is a helper in main.go
+    respondJSON(w, http.StatusOK, summary)
+}
+```
+
+So, using Fabrica doesn't limit you to just CRUD operations; if you want to do something else, you just add new routes and handlers, re-using the generated storage and helper functions as needed.
+
+So, now time to test your new function by rerunning the server and hitting the endpoint!
+
+```bash
+curl http://localhost:8080/devices/summary | jq
+```
+
+---
+
+## What’s Next?
+
+Here we just highlighted the basic features of Fabrica and how you can extend it to do what you'd like. For more advanced features, such as reconciliation, event generation, and such, please see the main **[Fabrica Repository](https://github.com/OpenCHAMI/fabrica)**
+
+Your feedback is valuable! If you'd like to try out this workflow, contribute ideas, or report issues, we invite you to check out the inventory API repository with a complete population script on GitHub: **[https://github.com/bmcdonald3/inventory](https://github.com/bmcdonald3/inventory)**.
 
 {{< blog-cta >}}
