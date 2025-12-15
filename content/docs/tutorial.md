@@ -2317,7 +2317,7 @@ Setting the boot configuration with the `boot-service` backend is a little
 different than with the BSS backend. Instead of using the `ochami` client, we
 will be using the client generated for `boot-service` with `fabrica`.
 Unfortunately, the client command can only take a JSON value with the `--spec`
-flag and cannot be set using a file. However, for the purpose of this tutorial, 
+flag and cannot be set using a file. However, for the purpose of this tutorial,
 we will create a file to make comparing this method to the `ochami` easier.
 
 Edit the **/etc/openchami/data/boot/boot-service-compute-debug-rocky9.yaml** file.
@@ -2336,18 +2336,7 @@ be the same values from section 2.5.2.a but in JSON.
   "params": "nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
   "kernel": "http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64",
   "initrd": "http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img",
-  "cloud-init": {
-    "meta-data": null,
-    "user-data": null,
-    "phone-home": {
-      "pub_key_dsa": "",
-      "pub_key_rsa": "",
-      "pub_key_ecdsa": "",
-      "instance_id": "",
-      "hostname": "",
-      "fqdn": ""
-    }
-  }
+
 }
 ```
 

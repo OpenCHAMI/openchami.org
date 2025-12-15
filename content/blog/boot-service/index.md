@@ -20,9 +20,9 @@ This post will briefly cover how to set up and use boot-service in place of BSS.
 
 ## Setting up Boot-Service with Podman
 
-Swapping out the two services is simple and only require a few steps. You can also run both services side-by-side behind a gateway if you want to have some way to maintain compatibility with BSS, but it isn't necessary with the new boot-service's legacy API. The API lets you make requests to BSS-like endpoints under `/boot/v1` with similar enough behavior for boot-service to serve as a drop-in replacement (for the most part).
+Swapping out the two services is simple and only requires a few steps. You can also run both services side-by-side behind a gateway if you want to have some way to maintain compatibility with BSS, but it isn't necessary with the new boot-service's legacy API. The API lets you make requests to BSS-like endpoints under `/boot/v1` with similar enough behavior for boot-service to serve as a drop-in replacement (for the most part).
 
-First, let's start by creating a new quadlet file similar the BSS one. This would typically saved somewhere like `/etc/containers/systemd/boot-service.container`.
+First, let's start by creating a new INI file similar the BSS one. This would typically saved somewhere like `/etc/containers/systemd/boot-service.container`.
 
 ```bash
 [Unit]
@@ -72,6 +72,11 @@ Confirm that it was built. You should see an image with the tag you used in the 
 
 ```bash
 sudo podman images
+```
+
+And the output of the command.
+
+```bash
 REPOSITORY                         TAG            IMAGE ID      CREATED        SIZE
 ghcr.io/openchami/boot-service     v0.1.0         9fbb27a9d754  8 days ago     19.5 MB
 ```
@@ -139,18 +144,6 @@ Now, we just need to give boot-service a boot config to serve the nodes. Copy th
   "params": "nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
   "kernel": "http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64",
   "initrd": "http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img",
-  "cloud-init": {
-    "meta-data": null,
-    "user-data": null,
-    "phone-home": {
-      "pub_key_dsa": "",
-      "pub_key_rsa": "",
-      "pub_key_ecdsa": "",
-      "instance_id": "",
-      "hostname": "",
-      "fqdn": ""
-    }
-  }
 }
 ```
 
