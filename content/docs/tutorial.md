@@ -2244,6 +2244,11 @@ EOF
 
 Examine the `tee` output to make sure that the URIs got populated properly. For example:
 
+{{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
+The file will not look like the one below due to differences in kernel versions
+over time. Be sure to update with the output of `s3cmd ls` as stated above!
+{{< /callout >}}
+
 ```yaml
 kernel: 'http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64'
 initrd: 'http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img'
@@ -2256,24 +2261,19 @@ macs:
   - 52:54:00:be:ef:05
 ```
 
-{{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
-The file will not look like the one below due to differences in kernel versions
-over time. Be sure to update with the output of `s3cmd ls` as stated above!
-{{< /callout >}}
-
 ##### 2.5.2.a Set the Boot Configuration with BSS Backend
 
 Apply the boot parameters created above with:
-
-```bash
-ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/boot-compute-debug-rocky9.yaml
-```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 `ochami` supports both `add` and `set`.  The difference is idempotency.  If
 using the `add` command, `bss` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
+
+```bash
+ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/boot-compute-debug-rocky9.yaml
+```
 
 Verify that the parameters were set correctly with:
 
