@@ -6,7 +6,7 @@ slug: "tutorial"
 summary: ""
 date: 2025-10-06T15:34:25-06:00
 lastmod: 2025-10-06T15:34:25-06:00
-contributors: ["Devon Bautista"]
+contributors: ["Devon Bautista", "David Allen"]
 draft: false
 weight: 100
 toc: true
