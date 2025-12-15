@@ -1,8 +1,8 @@
 +++
 title = "Introduction to the New Boot Service"
 description = "A brief overview about the changes to the OpenCHAMI booting service"
-date = 2025-12-08T00:00:00+00:00
-lastmod = 2025-12-08T00:00:00+00:00
+date = 2025-12-15T00:00:00+00:00
+lastmod = 2025-12-15T00:00:00+00:00
 draft = true
 weight = 10
 categories = ["HPC", "Operations", "Services"]

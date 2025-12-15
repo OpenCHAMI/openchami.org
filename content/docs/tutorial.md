@@ -5,7 +5,7 @@ description: "Learn about OpenCHAMI by setting it up in a controlled environment
 slug: "tutorial"
 summary: ""
 date: 2025-10-06T15:34:25-06:00
-lastmod: 2025-10-06T15:34:25-06:00
+lastmod: 2025-12-15T10:09:00-06:00
 contributors: ["Devon Bautista", "David Allen"]
 draft: false
 weight: 100
