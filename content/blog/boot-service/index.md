@@ -24,7 +24,7 @@ Swapping out the two services is simple and only requires a few steps. You can a
 
 First, let's start by creating a new INI file similar the BSS one. This would typically saved somewhere like `/etc/containers/systemd/boot-service.container`.
 
-```bash
+```ini
 [Unit]
 Description=The boot-service container
 PartOf=openchami.target
@@ -122,7 +122,6 @@ Copy the contents of the JSON file below to `nodes.yaml` somewhere.
 ```
 
 Then, we can use the client to upload the node information to the server.
-
 
 ```bash
 cat nodes.yaml | boot-service-client node create --server https://demo.openchami.cluster:8443

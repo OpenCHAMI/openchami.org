@@ -2220,7 +2220,7 @@ sudo mkdir -p /etc/openchami/data/boot
 ```
 
 Then, create the payload for BSS,
-**/etc/openchami/data/boot/boot-bss-compute-debug-rocky9.yaml**, that contains the
+**/etc/openchami/data/boot/bss/compute-debug-rocky9.yaml**, that contains the
 URIs for the boot artifacts:
 
 ```bash
@@ -2272,7 +2272,7 @@ configuration.
 {{< /callout >}}
 
 ```bash
-ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/boot-compute-debug-rocky9.yaml
+ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
 ```
 
 Verify that the parameters were set correctly with:
@@ -2320,7 +2320,7 @@ Unfortunately, the client command can only take a JSON value with the `--spec`
 flag and cannot be set using a file. However, for the purpose of this tutorial,
 we will create a file to make comparing this method to the `ochami` easier.
 
-Edit the **/etc/openchami/data/boot/boot-service-compute-debug-rocky9.yaml** file.
+Edit the **/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml** file.
 Copy the contents below into the file. Notice that the values in this file should
 be the same values from section 2.5.2.a but in JSON.
 
@@ -2343,7 +2343,7 @@ be the same values from section 2.5.2.a but in JSON.
 Set the boot configuration with the client.
 
 ```bash
-boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service-compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
 ```
 
 Verify that the boot configuration was set.
