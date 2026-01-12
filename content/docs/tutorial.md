@@ -2216,7 +2216,7 @@ To set boot parameters using the BSS backend, it's necessary to pass:
 Create a directory for the boot configs:
 
 ```bash
-sudo mkdir -p /etc/openchami/data/boot
+sudo mkdir -p /etc/openchami/data/boot/bss
 ```
 
 Then, create the payload for BSS,
@@ -2228,7 +2228,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | s
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/boot-compute-debug-rocky9.yaml
+cat <<EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
@@ -2793,7 +2793,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/base | awk '{print $4}' | se
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/boot-compute-base-rocky9.yaml
+cat <<EOF | sudo tee /etc/openchami/data/boot/bss/compute-base-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
@@ -2813,7 +2813,7 @@ config.
 Then, these new parameters can be set with:
 
 ```bash
-ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/boot-compute-base-rocky9.yaml
+ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/compute-base-rocky9.yaml
 ```
 
 Double-check that the params were updated:
@@ -2878,7 +2878,7 @@ If the following error occurs:
 error: failed to get domain 'compute1'
 ```
 
-it may be that the VM is already undefined. Run the `virt-install` command from
+it may be that the VM is already undefined. Run the [`virt-install`](#26-boot-the-compute-node-with-the-debug-image) command from
 before to recreate it.
 {{< /callout >}}
 
