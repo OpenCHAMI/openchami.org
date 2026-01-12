@@ -2216,7 +2216,7 @@ To set boot parameters using the BSS backend, it's necessary to pass:
 Create a directory for the boot configs:
 
 ```bash
-sudo mkdir -p /etc/openchami/data/boot
+sudo mkdir -p /etc/openchami/data/boot/bss
 ```
 
 Then, create the payload for BSS,
