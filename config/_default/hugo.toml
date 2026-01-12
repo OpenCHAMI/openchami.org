@@ -1,7 +1,7 @@
 title = "OpenCHAMI"
 baseurl = "/"
 canonifyURLs = false
-disableAliases = true
+disableAliases = false
 disableHugoGeneratorInject = true
 # disableKinds = ["taxonomy", "term"]
 enableEmoji = true
@@ -14,7 +14,7 @@ rssLimit = 10
 summarylength = 20 # 70 (default)
 
 
-copyRight = "Copyright (c) 2023-2024 OpenCHAMI"
+copyRight = "Copyright (c) 2023-2026 OpenCHAMI"
 
 
 

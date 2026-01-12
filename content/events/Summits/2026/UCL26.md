@@ -1,23 +1,24 @@
 +++
 title = 'OpenCHAMI Developer Summit @ UCL 2026'
 date = 2026-01-09        # page publication date
-start_date = 2026-05-12
-end_date = 2026-05-14
+start_date = 2026-05-07
+end_date = 2026-05-08
 draft = false
 categories = ['Summit', 'Development', 'HPC']
 contributors = ["Alex Lovell-Troy",]
+aliases = ["/events/summits/ucl-2026/", "/ucl26/"]
 +++
 
 
-### University College London • London, UK • May 12 – 14 2025
+### University College London • London, UK • May 8th – 9th 2026
 **Event**: OpenCHAMI Developer Summit @ UCL 2026
-**Event Registration**: [Eventbrite Registration](https://www.eventbrite.com/e/1384590971869?aff=oddtdtcreator)
 
-**Date**: May 11–13, 2026
+
+**Date**: May 8–9, 2026
 
 **Location**: University College London, London, UK
 
-**Website**: [TACC25](https://openchami.org/ucl26/)
+**Website**: [UCL26](https://openchami.org/ucl26/)
 
 **Hosts**:  BriCS, UCL, Cambridge, OpenCHAMI Community
 
@@ -50,7 +51,7 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 ## Location & Directions
 
 
-**Venue:** Advanced Computing Building (ACB), Texas Advanced Computing Center, [10505 Exploration Way, Austin, TX 78758](https://maps.app.goo.gl/9Ydq5owUg1r4KVh57).
+**Venue:** .
 
 
 ---
