@@ -2878,7 +2878,7 @@ If the following error occurs:
 error: failed to get domain 'compute1'
 ```
 
-it may be that the VM is already undefined. Run the [`virt-install`](https://openchami.org/docs/tutorial/#26-boot-the-compute-node-with-the-debug-image) command from
+it may be that the VM is already undefined. Run the [`virt-install`](#26-boot-the-compute-node-with-the-debug-image) command from
 before to recreate it.
 {{< /callout >}}
 
