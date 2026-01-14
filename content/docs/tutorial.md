@@ -1297,6 +1297,30 @@ structures to boot nodes.
 lists node descriptions through a minimal set of node characteristics and a set
 of interface definitions.
 
+As of `ochami` v0.6.0, characteristics are split out into two arrays, `bmcs`
+and `nodes`, which allows more flexibility in certain cases, such as when there
+are multiple nodes per-BMC as is apparent in some HPE hardware.
+
+- **nodes:** An array of node definitions, each of which describe a node's
+  identification, group membership, network interfaces, and BMC device it is
+  attached to.
+- **bmcs:** An array of BMC definitions, each of which describe a management
+  controller's identification and networking information.
+
+For **bmcs:**
+
+- **name:** An optional human-readable name to assign the BMC that can be used
+  when mapping one or more nodes to it.
+- **xname:** The unique BMC identifier which follows HPE's [xname
+  format](https://cray-hpe.github.io/docs-csm/en-10/operations/component_names_xnames/)
+  (see the "Node Controller or BMC" entry in the table) and is supposed to encode
+  location data. The format is `x<cabinet>c<chassis>s<slot>b<bmc>` and must be
+  unique per-BMC.
+- **mac:** The BMC's MAC address.
+- **ip:** The IP address to be assigned to the BMC.
+
+For **nodes:**
+
 - **name:** User-friendly name of the node stored in SMD.
 - **nid:** *Node Identifier*. Unique number identifying node, used in the
   DHCP-given hostname. Mainly used as a default hostname that can be easily
@@ -1306,12 +1330,12 @@ of interface definitions.
   (see the "Node" entry in the table) and is supposed to encode location data.
   The format is `x<cabinet>c<chassis>s<slot>b<bmc>n<node>` and must be unique
   per-node.
-- **bmc_mac:** MAC address of node's BMC. This is required even if the node
-  does not have a BMC because SMD uses BMC MAC addresses in its discovery
-  process as the basis for node information. Thus, we need to emulate that here.
-- **bmc_ip:** Desired IP address for node's BMC.
-- **group:** An optional SMD group to add this node to. cloud-init reads SMD
-  groups when determining which meta-data and cloud-init config to give a node.
+- **bmc:** The BMC to assign this node to. It can either be the value of a
+  BMC's **xname** field or its **name** field. If omitted, the BMC's xname is
+  inferred from the value of the node's **xname** field.
+- **groups:** An optional list of SMD groups to add this node to. cloud-init
+  reads SMD groups when determining which meta-data and cloud-init config to
+  give a node.
 - **interfaces** is a list of network interfaces attached to the node. Each of
   these interfaces has the following keys:
   - **mac_addr:** Network interface's MAC address. Used by CoreDHCP/CoreSMD to
@@ -1320,13 +1344,19 @@ of interface definitions.
     - **name:** A human-readable name for this IP address for this interface.
     - **ip_addr:** An IP address for this interface.
 
-```yaml {title="Example static discovery file (DO NOT USE)"}
+```yaml {title="Example static discovery file containing one node and BMC (DO NOT USE)"}
+bmcs:
+- xname: x1000c1s7b0
+  mac: de:ca:fc:0f:ee:ee
+  ip: 172.16.0.101
+
+nodes:
 - name: node01
   nid: 1
   xname: x1000c1s7b0n0
-  bmc_mac: de:ca:fc:0f:ee:ee
-  bmc_ip: 172.16.0.101
-  group: compute
+  bmc: x1000c1s7b0
+  groups:
+  - compute
   interfaces:
   - mac_addr: de:ad:be:ee:ee:f1
     ip_addrs:
@@ -1355,14 +1385,30 @@ Then, create a static discovery file there.
 **Edit as root: `/etc/openchami/data/nodes.yaml`**
 
 ```yaml {title="/etc/openchami/data/nodes.yaml"}
+bmcs:
+- xname: x1000c0s0b0
+  mac: de:ca:fc:0f:fe:e1
+  ip: 172.16.0.101
+- xname: x1000c0s0b1
+  mac: de:ca:fc:0f:fe:e2
+  ip: 172.16.0.102
+- xname: x1000c0s0b2
+  mac: de:ca:fc:0f:fe:e3
+  ip: 172.16.0.103
+- xname: x1000c0s0b3
+  mac: de:ca:fc:0f:fe:e4
+  ip: 172.16.0.104
+- xname: x1000c0s0b4
+  mac: de:ca:fc:0f:fe:e5
+  ip: 172.16.0.105
+
 nodes:
 - name: compute1
   nid: 1
   xname: x1000c0s0b0n0
-  bmc_mac: de:ca:fc:0f:fe:e1
-  bmc_ip: 172.16.0.101
+  bmc: x1000c0s0b0
   groups:
-    - compute
+  - compute
   interfaces:
   - mac_addr: 52:54:00:be:ef:01
     ip_addrs:
@@ -1371,10 +1417,9 @@ nodes:
 - name: compute2
   nid: 2
   xname: x1000c0s0b1n0
-  bmc_mac: de:ca:fc:0f:fe:e2
-  bmc_ip: 172.16.0.102
+  bmc: x1000c0s0b1
   groups:
-    - compute
+  - compute
   interfaces:
   - mac_addr: 52:54:00:be:ef:02
     ip_addrs:
@@ -1383,10 +1428,9 @@ nodes:
 - name: compute3
   nid: 3
   xname: x1000c0s0b2n0
-  bmc_mac: de:ca:fc:0f:fe:e3
-  bmc_ip: 172.16.0.103
+  bmc: x1000c0s0b2
   groups:
-    - compute
+  - compute
   interfaces:
   - mac_addr: 52:54:00:be:ef:03
     ip_addrs:
@@ -1395,10 +1439,9 @@ nodes:
 - name: compute4
   nid: 4
   xname: x1000c0s0b3n0
-  bmc_mac: de:ca:fc:0f:fe:e4
-  bmc_ip: 172.16.0.104
+  bmc: x1000c0s0b3
   groups:
-    - compute
+  - compute
   interfaces:
   - mac_addr: 52:54:00:be:ef:04
     ip_addrs:
@@ -1407,10 +1450,9 @@ nodes:
 - name: compute5
   nid: 5
   xname: x1000c0s0b4n0
-  bmc_mac: de:ca:fc:0f:fe:e5
-  bmc_ip: 172.16.0.105
+  bmc: x1000c0s0b4
   groups:
-    - compute
+  - compute
   interfaces:
   - mac_addr: 52:54:00:be:ef:05
     ip_addrs:
