@@ -10,11 +10,11 @@ aliases = ["/events/summits/ucl-2026/", "/ucl26/"]
 +++
 
 
-### University College London • London, UK • May 8th – 9th 2026
+### University College London • London, UK • May 7th – 8th 2026
 **Event**: OpenCHAMI Developer Summit @ UCL 2026
 
 
-**Date**: May 8–9, 2026
+**Date**: May 7-8, 2026
 
 **Location**: University College London, London, UK
 
@@ -61,58 +61,41 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 
 | Day | Theme | Highlights |
 |---|---|---|
-| **Day 1 – Introductions & Current State** | *Setting the Stage* | Project history • Site reports • Needs & gaps workshop • Status review |
-| **Day 2 – Tutorials & Governance** | *Hands-On & Cleanup* |Deployment tutorial • Parallel TSC/governance refinement track |
-| **Day 3 – Hackathon & Road-Map** | *Building the Future* | Code, scripting, docs sprint • RFD drafting • Summit wrap-up & next steps |
+| **Day 1 – ** | *TBD* | TBD |
+| **Day 2 – ** | *TBD* | TBD |
 
 ## Schedule
-*(All times CST)*
+*(All times Local)*
 
-### Day 1 – Tuesday, May 12
+### Day 1 – Thursday, May 7th
 
 | Time | Session & Speakers | Room |
 | --- | --- | --- |
-| 09:00 – 10:00 | Registration and Coffee | Foyer |
-| 10:00 – 10:15 | Keynote Welcome — Alex / Dan | Roc 1.990 |
+
 
 
 ---
 
-### Day 2 – Wednesday, May 13
+### Day 2 – Friday, May 8th
 
 
 | Time | Session & Speakers | Room |
 | --- | --- | --- |
-| 09:00 – 10:00 | Registration and Coffee | Foyer |
-| 10:00 – 10:15 | Keynote Welcome — Alex / Dan | Roc 1.990 |
-
-
----
-
-### Day 3 – Thursday, May 14 Cambridge Hackathon
-
-| Time | Session & Speakers | Room |
-| --- | --- | --- |
-| 09:00 – 10:00 | Registration and Coffee | Foyer |
-| 10:00 – 10:15 | Keynote Welcome — Alex / Dan | Roc 1.990 |
 
 
 ---
 
 ## Tracks & Chairs
 - **Architecture:** Alex Lovell-Troy — [alovelltroy@lanl.gov](mailto:alovelltroy@lanl.gov)
-- **Introductory Topics:** 
-- **Tutorials:** Devon Bautista
-- **Partner Talks:** 
 
-- **Feedback (Governance, Gaps):**
-- **Hackathon:** 
 ---
 
 ## Registration
-Registration is required for attendance. Please secure your spot by visiting our [Eventbrite registration page](https://www.eventbrite.com/manage/events/1384590971869/details). Capacity is limited and on-site meals are provided based on registration.
+Registration is required for attendance. Please secure your spot by visiting our [Registration page](https://pretix.eu/ARC/ochami-ucl-2026/). Capacity is limited and on-site meals are provided based on registration.
 
+<!--
 👉 **Add to your calendar:** [Download .ics file](/calendar/tacc25_schedule.ics)
+-->
 
 ---
 
@@ -121,7 +104,7 @@ We’re grateful to our sponsors for supporting the OpenCHAMI Developer Summit. 
 
 ---
 
-> **We look forward to seeing you at TACC!**
+> **We look forward to seeing you at UCL!**
 > A formal invitation with hotel and travel details will follow shortly.
 > For questions or attendee suggestions, email **[contact@openchami.org](mailto:contact@openchami.org)**.
 
