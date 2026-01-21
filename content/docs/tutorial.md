@@ -103,7 +103,7 @@ packages:
 # Post-package installation commands
 runcmd:
   - dnf install -y epel-release
-  - dnf install -y s3cmd
+  - dnf install -y s3cmd awscli
   - systemctl enable --now libvirtd
   - newgrp libvirt
   - usermod -aG libvirt rocky
@@ -173,7 +173,7 @@ write_files:
 # Post-package installation commands
 runcmd:
   - dnf install -y epel-release
-  - dnf install -y s3cmd
+  - dnf install -y s3cmd awscli
   - systemctl enable --now libvirtd
   - newgrp libvirt
   - usermod -aG libvirt rocky
@@ -192,6 +192,7 @@ Setup is similar to the cloud instance setups above. Ensure the following
 packages are installed (Red Hat package names used):
 
 - ansible-core
+- awscli
 - buildah
 - dnsmasq
 - git
@@ -342,7 +343,7 @@ grubby --update-kernel=ALL --args='console=ttyS0,115200n8 systemd.unified_cgroup
 grub2-mkconfig -o /etc/grub2.cfg
 # Enable mounting /tmp as tmpfs
 systemctl enable tmp.mount
-dnf install -y vim s3cmd
+dnf install -y vim s3cmd awscli
 %end
 
 reboot
