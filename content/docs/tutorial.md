@@ -1957,8 +1957,8 @@ podman run \
   --rm \
   --device /dev/fuse \
   --network host \
-  -e S3_ACCESS=admin \
-  -e S3_SECRET=admin123 \
+  -e S3_ACCESS="${ROOT_ACCESS_KEY}" \
+  -e S3_SECRET="${ROOT_SECRET_KEY}" \
   -v /etc/openchami/data/images/compute-base-rocky9.yaml:/home/builder/config.yaml \
   ghcr.io/openchami/image-build-el9:v0.1.2 \
   image-build \
@@ -1967,7 +1967,16 @@ podman run \
 ```
 
 Note that this time, `S3_ACCESS` and `S3_SECRET` are set to authenticate to
-Minio. These are needed whenever pushing an image to S3.
+Versity S3 Gateway. These are needed whenever pushing an image to S3.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If you find yourself with the error "The AWS Access Key Id you provided does
+not exist in our records.", determine whether values have been set for
+environment variables `ROOT_ACCESS_KEY` and `ROOT_SECRET_KEY` by observing the
+output of `env | grep KEY`. If no definitions exist for these variables, re-run
+the following command to pull them back in: `source <(sudo cat
+/etc/versitygw/secrets.env)`.
+{{< /callout >}}
 
 This won't take as long as the base image since the only thing being done is
 installing packages on top of the already-built filesystem. This time, since
@@ -2111,8 +2120,8 @@ Build this image:
 podman run \
   --rm \
   --device /dev/fuse \
-  -e S3_ACCESS=admin \
-  -e S3_SECRET=admin123 \
+  -e S3_ACCESS="${ROOT_ACCESS_KEY}" \
+  -e S3_SECRET="${ROOT_SECRET_KEY}" \
   -v /etc/openchami/data/images/compute-debug-rocky9.yaml:/home/builder/config.yaml \
   ghcr.io/openchami/image-build-el9:v0.1.2 \
   image-build \
@@ -2181,11 +2190,12 @@ build-image-rh9()
         echo "$1 does not exist." 1>&2;
         return 1;
     fi;
+    source <(sudo cat /etc/versitygw/secrets.env);
     podman run \
             --rm \
             --device /dev/fuse \
-            -e S3_ACCESS=admin \
-            -e S3_SECRET=admin123 \
+            -e S3_ACCESS="${ROOT_ACCESS_KEY}" \
+            -e S3_SECRET="${ROOT_SECRET_KEY}" \
             -v "$(realpath $1)":/home/builder/config.yaml:Z \
             ${EXTRA_PODMAN_ARGS} \
             ghcr.io/openchami/image-build-el9:v0.1.2 \
@@ -2204,11 +2214,12 @@ build-image-rh8()
         echo "$1 does not exist." 1>&2;
         return 1;
     fi;
+    source <(sudo cat /etc/versitygw/secrets.env);
     podman run \
            --rm \
            --device /dev/fuse \
-           -e S3_ACCESS=admin \
-           -e S3_SECRET=admin123 \
+           -e S3_ACCESS="${ROOT_ACCESS_KEY}" \
+           -e S3_SECRET="${ROOT_SECRET_KEY}" \
            -v "$(realpath $1)":/home/builder/config.yaml:Z \
            ${EXTRA_PODMAN_ARGS} \
            ghcr.io/openchami/image-build:v0.1.2 \
@@ -2252,7 +2263,8 @@ alias build-image='build-image-rh9'
                 echo "$1 does not exist." 1>&2;
                 return 1;
             fi;
-            podman run --rm --device /dev/fuse -e S3_ACCESS=admin -e S3_SECRET=admin123 -v "$(realpath $1)":/home/builder/config.yaml:Z ${EXTRA_PODMAN_ARGS} ghcr.io/openchami/image-build-el9:v0.1.2 image-build --config config.yaml --log-level DEBUG
+            source <(sudo cat /etc/versitygw/secrets.env);
+            podman run --rm --device /dev/fuse -e S3_ACCESS="${ROOT_ACCESS_KEY}" -e S3_SECRET="${ROOT_SECRET_KEY}" -v "$(realpath $1)":/home/builder/config.yaml:Z ${EXTRA_PODMAN_ARGS} ghcr.io/openchami/image-build-el9:v0.1.2 image-build --config config.yaml --log-level DEBUG
         }
 ```
 
