@@ -557,23 +557,14 @@ will have some unintended side effects.
 
 ### 1.1 Set Up Storage Directories
 
-S3 will be used to serbve system images in SquashFS format for the diskless
-VMs. A container registry is also used to store system images in OCI format
-for reuse in other image layers (discussed later). These will need separate
-directories.
+Our tutorial uses a container registry to store system images (in OCI format)
+for reuse in other image layers (we'll go over this later).
 
 Create a local directory for storing the container images:
 
 ```bash
 sudo mkdir -p /data/oci
 sudo chown -R rocky: /data/oci
-```
-
-Create a local directory for S3 access to images:
-
-```bash
-sudo mkdir -p /data/s3
-sudo chown -R rocky: /data/s3
 ```
 
 SELinux treats home directories specially. To avoid cgroups conflicting with SELinux enforcement, we set up a working directory outside our home directory:
@@ -660,42 +651,16 @@ and you're using Vim, invoke (in Normal mode): `:w !sudo tee %`.
 
 #### 1.3.1 S3
 
-For the S3 gateway, this tutorial uses [Minio](https://github.com/minio/minio)
-which will be defined as a quadlet.
+For the S3 gateway, this tutorial uses a pre-built RPM to install and configure
+[versitygw](https://github.com/versity/versitygw) (Versity S3 Gateway) for
+deployment as a quadlet.
 
-Like all the OpenCHAMI services, a quadlet definition is created in
-`/etc/containers/systemd/` for the S3 service.
+```bash
+# Download the latest release RPM
+curl -LO $(curl -s https://api.github.com/repos/openchami/versitygw-quadlet/releases/latest | grep "browser_download_url.*\.rpm" | grep -v "\.src\.rpm" | cut -d '"' -f 4)
 
-**Edit as root: `/etc/containers/systemd/minio.container`**
-
-```ini {title="/etc/containers/systemd/minio.container"}
-[Unit]
-Description=Minio S3
-After=local-fs.target network-online.target
-Wants=local-fs.target network-online.target
-
-[Container]
-ContainerName=minio-server
-Image=docker.io/minio/minio:latest
-# Volumes
-Volume=/data/s3:/data:Z
-
-# Ports
-PublishPort=9000:9000
-PublishPort=9001:9001
-
-# Environemnt Variables
-Environment=MINIO_ROOT_USER=admin
-Environment=MINIO_ROOT_PASSWORD=admin123
-
-# Command to run in container
-Exec=server /data --console-address :9001
-
-[Service]
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
+# Install the RPM
+sudo dnf install ./versitygw-quadlet-*.noarch.rpm
 ```
 
 #### 1.3.2 Container Registry
@@ -732,31 +697,39 @@ Reload Systemd to update it with the new changes and then start the services:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl start minio.service
 sudo systemctl start registry.service
+
+# Enable and start secret generation (one-time)
+sudo systemctl enable --now versitygw-gensecrets.service
+
+# Start the versity gateway (generated from Quadlet - cannot be enabled directly)
+sudo systemctl start versitygw.service
+
+# Bootstrap users and buckets
+sudo systemctl enable --now versitygw-bootstrap.service
 ```
 
 #### 1.3.4 Checkpoint
 
-Make sure the S3 (`minio`) and OCI (`registry`) services are up and running.
+Make sure the S3 (`versitygw`) and OCI (`registry`) services are up and running.
 
 **Quickly:**
 
 ```bash
-for s in minio registry; do echo -n "$s: "; systemctl is-failed $s; done
+for s in versitygw registry; do echo -n "$s: "; systemctl is-failed $s; done
 ```
 
 The output should be:
 
 ```
-minio: active
+versitygw: active
 registry: active
 ```
 
 **More detail:**
 
 ```bash
-systemctl status minio
+systemctl status versitygw
 systemctl status registry
 ```
 
