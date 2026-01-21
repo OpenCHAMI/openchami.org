@@ -1537,8 +1537,10 @@ cd /etc/openchami/data/images
   containerized version will be used to build images.
 * [**regclient**](https://github.com/regclient/regclient/) -- will be used to
   interact with images organized in the OCI registry.
-* [**s3cmd**](https://s3tools.org/s3cmd) -- will be used to interact with Minio
-  for S3-compatible object storage.
+* [**s3cmd**](https://s3tools.org/s3cmd) -- will be used for general
+  interactions with the Versity S3 Gateway for S3-compatible object storage.
+* [**aws**](https://github.com/aws/aws-cli) -- will be used to configure S3
+  bucket level ACLs within the Versity S3 Gateway instance.
 
 #### 2.3.2 Install and Configure `regctl`
 
@@ -1573,7 +1575,7 @@ The output should be:
 }
 ```
 
-#### 2.3.3 Install and Configure S3 Client
+#### 2.3.3 Install and Configure S3 Clients
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
 Make sure that the below commands are run as the `rocky` user and not using
@@ -1581,24 +1583,41 @@ Make sure that the below commands are run as the `rocky` user and not using
 they live in the running user's home directory and are read _per-user_.
 {{< /callout >}}
 
-`s3cmd` was installed during the AWS setup, so a user config file needs to be
-created in the user's home directory.
+`s3cmd` was installed during the AWS setup, but we need to create a user-level
+config file to use it with our local S3 server. Since we'll need to specify
+access credentials, let's pull in the server environment file and generate
+`${HOME}/.s3cfg` with a heredoc:
 
-**Edit as normal user: `${HOME}/.s3cfg`**
+```bash
+# Add ROOT_ACCESS_KEY and ROOT_SECRET_KEY to the shell environment
+# for later use
+source <(sudo cat /etc/versitygw/secrets.env)
 
-```ini {title="~/.s3cfg"}
+# Create the s3cmd config file
+cat <<EOF | tee "${HOME}/.s3cfg"
 # Setup endpoint
-host_base = demo.openchami.cluster:9000
-host_bucket = demo.openchami.cluster:9000
+host_base = demo.openchami.cluster:7070
+host_bucket = demo.openchami.cluster:7070
 bucket_location = us-east-1
 use_https = False
 
 # Setup access keys
-access_key = admin
-secret_key = admin123
+access_key = ${ROOT_ACCESS_KEY}
+secret_key = ${ROOT_SECRET_KEY}
 
 # Enable S3 v4 signature APIs
 signature_v2 = False
+EOF
+```
+
+We also will briefly need to use the `aws` CLI to ensure proper configuration
+of ACLs for `versitygw` buckets as the XML schema used by `s3cmd` for this
+operation is not compatible.
+
+```bash
+aws configure set aws_access_key_id "${ROOT_ACCESS_KEY}"
+aws configure set aws_secret_access_key "${ROOT_SECRET_KEY}"
+aws configure set region us-east-1
 ```
 
 #### 2.3.4 Create and Configure S3 Buckets
