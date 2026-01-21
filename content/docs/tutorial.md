@@ -1626,14 +1626,15 @@ Create a `boot-images` bucket to store the images that are built:
 
 ```bash
 s3cmd mb s3://boot-images
-s3cmd setacl s3://boot-images --acl-public
+s3cmd setownership s3://boot-images BucketOwnerPreferred
+aws s3api put-bucket-acl --bucket boot-images --acl public-read --endpoint-url http://localhost:7070
 ```
 
 The output should be:
 
 ```
 Bucket 's3://boot-images/' created
-s3://boot-images/: ACL set to Public
+s3://boot-images/: Bucket Object Ownership updated
 ```
 
 Set the policy to allow public downloads from the `boot-images` bucket:
@@ -1658,8 +1659,8 @@ Apply the policy in S3:
 
 ```bash
 s3cmd setpolicy /opt/workdir/s3-public-read-boot.json s3://boot-images \
-    --host=172.16.0.254:9000 \
-    --host-bucket=172.16.0.254:9000
+    --host=172.16.0.254:7070 \
+    --host-bucket=172.16.0.254:7070
 ```
 
 The output should be:
