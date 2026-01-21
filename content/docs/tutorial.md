@@ -1675,10 +1675,39 @@ List the S3 buckets (removing the timestamps):
 s3cmd ls | cut -d' ' -f 4-
 ```
 
-The output should be:
+In addition to the default buckets created when we installed the RPM for
+`versitygw`, the output should include:
 
 ```
 s3://boot-images
+```
+
+You can obtain more information using `s3cmd info <bucket-name>`. For example,
+with `s3cmd info s3://boot-images`:
+
+```
+s3://boot-images/ (bucket):
+   Location:  us-east-1
+   Payer:     none
+   Ownership: BucketOwnerPreferred
+   Versioning:none
+   Expiration rule: none
+   Block Public Access: none
+   Policy:    {
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Effect":"Allow",
+      "Principal":"*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::boot-images/*"]
+    }
+  ]
+}
+
+   CORS:      none
+   ACL:       1b835f0cce711c0ab5668c05afaff93d: FULL_CONTROL
+   ACL:       all-users: READ
 ```
 
 ### 2.4 Building System Images
