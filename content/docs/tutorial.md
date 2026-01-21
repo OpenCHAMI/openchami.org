@@ -1060,15 +1060,15 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.5.5
-Tag:        v0.5.5
+Version:    0.6.0
+Tag:        v0.6.0
 Branch:     HEAD
-Commit:     459036212f075fdac417715797843ba21fda6238
+Commit:     2243fa5a8b1b47667b0e2c662397fbc5c1761627
 Git State:  clean
-Date:       2025-10-09T17:11:23Z
-Go:         go1.25.2
+Date:       2025-11-25T16:13:22Z
+Go:         go1.25.4
 Compiler:   gc
-Build Host: runnervmwhb2z
+Build Host: runnervmg1sw1
 Build User: runner
 ```
 
