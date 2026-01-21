@@ -1915,7 +1915,7 @@ options:
     - '--tls-verify=false'
 
   # Publish SquashFS image to local S3
-  publish_s3: 'http://demo.openchami.cluster:9000'
+  publish_s3: 'http://demo.openchami.cluster:7070'
   s3_prefix: 'compute/base/'
   s3_bucket: 'boot-images'
 
@@ -2061,7 +2061,7 @@ options:
     - '--tls-verify=false'
 
   # Publish to local S3
-  publish_s3: 'http://172.16.0.254:9000'
+  publish_s3: 'http://172.16.0.254:7070'
   s3_prefix: 'compute/debug/'
   s3_bucket: 'boot-images'
 
@@ -2083,10 +2083,10 @@ The debug image uses a few different directives that are worth drawing attention
     - '--tls-verify=false'
   ```
 
-- Push the image to `http://172.16.0.254:9000/boot-images/compute/debug/` in S3:
+- Push the image to `http://172.16.0.254:7070/boot-images/compute/debug/` in S3:
 
   ```yaml
-  publish_s3: 'http://172.16.0.254:9000'
+  publish_s3: 'http://172.16.0.254:7070'
   s3_prefix: 'compute/debug/'
   s3_bucket: 'boot-images'
   ```
@@ -2157,7 +2157,7 @@ For the debug boot artifacts, the URLs (everthing after `s3://`) for the
 print the actual URLs:
 
 ```bash
-s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:9000/-'
+s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-'
 ```
 
 In a following section, these will be programmatically used to set boot
@@ -2297,7 +2297,7 @@ Then, create the payload for BSS,
 URIs for the boot artifacts:
 
 ```bash
-URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:9000/-' | xargs)
+URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
@@ -2323,9 +2323,9 @@ over time. Be sure to update with the output of `s3cmd ls` as stated above!
 {{< /callout >}}
 
 ```yaml
-kernel: 'http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64'
-initrd: 'http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img'
-params: 'nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64'
+initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img'
+params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
 macs:
   - 52:54:00:be:ef:01
   - 52:54:00:be:ef:02
@@ -2367,15 +2367,15 @@ The output should be akin to:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  kernel: http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
   macs:
     - 52:54:00:be:ef:01
     - 52:54:00:be:ef:02
     - 52:54:00:be:ef:03
     - 52:54:00:be:ef:04
     - 52:54:00:be:ef:05
-  params: nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 The things to check are:
@@ -2406,9 +2406,9 @@ be the same values from section 2.5.2.a but in JSON.
     "52:54:00:be:ef:04",
     "52:54:00:be:ef:05"
   ],
-  "params": "nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
-  "kernel": "http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64",
-  "initrd": "http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img",
+  "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
+  "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64",
+  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img",
 
 }
 ```
@@ -2538,8 +2538,8 @@ Configuring (net0 52:54:00:be:ef:01)...... ok
 tftp://172.16.0.254:69/config.ipxe... ok
 Booting from http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01
 http://172.16.0.254:8081/boot/v1/bootscript... ok
-http://172.16.0.254:9000/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64... ok
-http://172.16.0.254:9000/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img... ok
 ```
 
 During Linux boot, output should indicate that the SquashFS image gets downloaded and loaded.
@@ -2862,7 +2862,7 @@ Create `boot-compute-rocky9.yaml` with these values, using the same method used
 before to create the debug boot parameters.
 
 ```bash
-URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/base | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:9000/-' | xargs)
+URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/base | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
@@ -2908,15 +2908,15 @@ They should match the file above:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.16.0.254:9000/boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  kernel: http://172.16.0.254:9000/boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
   macs:
     - 52:54:00:be:ef:01
     - 52:54:00:be:ef:02
     - 52:54:00:be:ef:03
     - 52:54:00:be:ef:04
     - 52:54:00:be:ef:05
-  params: nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/base/rocky9.6-compute-base-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/base/rocky9.6-compute-base-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 #### 2.8.2 Booting the Compute Node
@@ -2986,8 +2986,8 @@ Configuring (net0 52:54:00:be:ef:01)...... ok
 tftp://172.16.0.254:69/config.ipxe... ok
 Booting from http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01
 http://172.16.0.254:8081/boot/v1/bootscript... ok
-http://172.16.0.254:9000/boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64... ok
-http://172.16.0.254:9000/boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img... ok
 ```
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
