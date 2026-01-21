@@ -1471,6 +1471,7 @@ The output should be:
   "ID": "x1000c0s0b0n0",
   "NID": 1,
   "Role": "Compute",
+  "State": "On",
   "Type": "Node"
 }
 {
@@ -1478,6 +1479,7 @@ The output should be:
   "ID": "x1000c0s0b1n0",
   "NID": 2,
   "Role": "Compute",
+  "State": "On",
   "Type": "Node"
 }
 {
@@ -1485,6 +1487,7 @@ The output should be:
   "ID": "x1000c0s0b2n0",
   "NID": 3,
   "Role": "Compute",
+  "State": "On",
   "Type": "Node"
 }
 {
@@ -1492,6 +1495,7 @@ The output should be:
   "ID": "x1000c0s0b3n0",
   "NID": 4,
   "Role": "Compute",
+  "State": "On",
   "Type": "Node"
 }
 {
@@ -1499,6 +1503,7 @@ The output should be:
   "ID": "x1000c0s0b4n0",
   "NID": 5,
   "Role": "Compute",
+  "State": "On",
   "Type": "Node"
 }
 ```
