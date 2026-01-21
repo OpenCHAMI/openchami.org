@@ -845,7 +845,7 @@ Update the CoreDNS config as well:
 
 ```bash
 cat <<EOF | sudo tee /etc/openchami/configs/Corefile
-.:53 {
+.:1053 {
     # Enable readiness endpoint.
     ready
 
@@ -890,6 +890,14 @@ EOF
 ```
 
 This will allow the resolution of node hostnames, e.g. `de01.openchami.cluster`.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+The default `Corefile` provided with the installation serves primarily as a
+template and without these changes, the `coredns` service will fail to start. In
+summary, above we reconfigure the port assignment to avoid conflicts with
+`dnsmasq` and `aardvark` while also ensuring an endpoint has been configured for
+`smd_url`.
+{{< /callout >}}
 
 ### 1.5 Configure Cluster FQDN for Certificates
 
