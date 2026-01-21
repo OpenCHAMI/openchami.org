@@ -3072,10 +3072,10 @@ OpenCHAMI to fit one's own needs.
 
 ### 3.1 Serve Images Using NFS Instead of HTTP
 
-For this tutorial, images were served via HTTP using a local S3 bucket (MinIO)
-and OCI registry. Instead, images could be mounted over NFS by setting up and
-running a NFS server on the head node, including NFS tools in the base image,
-and configuring the nodes to work with NFS.
+For this tutorial, images were served via HTTP using a local S3 bucket (Versity
+S3 Gateway) and OCI registry. Instead, images could be mounted over NFS by
+setting up and running a NFS server on the head node, including NFS tools in
+the base image, and configuring the nodes to work with NFS.
 
 ### 3.2 Customize Boot Image and Operating System
 
