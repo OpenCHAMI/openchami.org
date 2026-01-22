@@ -1981,8 +1981,10 @@ If you find yourself with the error "The AWS Access Key Id you provided does
 not exist in our records.", determine whether values have been set for
 environment variables `ROOT_ACCESS_KEY` and `ROOT_SECRET_KEY` by observing the
 output of `env | grep KEY`. If no definitions exist for these variables, re-run
-the following command to pull them back in: `source <(sudo cat
-/etc/versitygw/secrets.env)`.
+the following command to pull them back in:
+```bash
+source <(sudo cat /etc/versitygw/secrets.env)
+```
 {{< /callout >}}
 
 This won't take as long as the base image since the only thing being done is
