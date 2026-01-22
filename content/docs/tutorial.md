@@ -1666,8 +1666,8 @@ Apply the policy in S3:
 
 ```bash
 s3cmd setpolicy /opt/workdir/s3-public-read-boot.json s3://boot-images \
-    --host=172.16.0.254:7070 \
-    --host-bucket=172.16.0.254:7070
+    --host=demo.openchami.cluster:7070 \
+    --host-bucket=demo.openchami.cluster:7070
 ```
 
 The output should be:
@@ -2074,12 +2074,12 @@ options:
   publish_tags:
     - 'rocky9'
   pkg_manager: dnf
-  parent: '172.16.0.254:5000/demo/compute-base:rocky9'
+  parent: 'demo.openchami.cluster:5000/demo/compute-base:rocky9'
   registry_opts_pull:
     - '--tls-verify=false'
 
   # Publish to local S3
-  publish_s3: 'http://172.16.0.254:7070'
+  publish_s3: 'http://demo.openchami.cluster:7070'
   s3_prefix: 'compute/debug/'
   s3_bucket: 'boot-images'
 
@@ -2096,15 +2096,15 @@ The debug image uses a few different directives that are worth drawing attention
 
   ```yaml
   name: 'compute-debug'
-  parent: '172.16.0.254:5000/demo/compute-base:rocky9'
+  parent: 'demo.openchami.cluster:5000/demo/compute-base:rocky9'
   registry_opts_pull:
     - '--tls-verify=false'
   ```
 
-- Push the image to `http://172.16.0.254:7070/boot-images/compute/debug/` in S3:
+- Push the image to `http://demo.openchami.cluster:7070/boot-images/compute/debug/` in S3:
 
   ```yaml
-  publish_s3: 'http://172.16.0.254:7070'
+  publish_s3: 'http://demo.openchami.cluster:7070'
   s3_prefix: 'compute/debug/'
   s3_bucket: 'boot-images'
   ```
@@ -2175,7 +2175,7 @@ For the debug boot artifacts, the URLs (everthing after `s3://`) for the
 print the actual URLs:
 
 ```bash
-s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-'
+s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://demo.openchami.cluster:7070/-'
 ```
 
 In a following section, these will be programmatically used to set boot
