@@ -895,8 +895,10 @@ This will allow the resolution of node hostnames, e.g. `de01.openchami.cluster`.
 The default `Corefile` provided with the installation serves primarily as a
 template and without these changes, the `coredns` service will fail to start. In
 summary, above we reconfigure the port assignment to avoid conflicts with
-`dnsmasq` and `aardvark` while also ensuring an endpoint has been configured for
-`smd_url`.
+existing services like `dnsmasq` and `aardvark` while also ensuring an endpoint
+has been configured for `smd_url`. Understand that `coredns` may also be
+configured to forward requests to existing servers, but that is outside of the
+scope of this tutorial.
 {{< /callout >}}
 
 ### 1.5 Configure Cluster FQDN for Certificates
