@@ -699,7 +699,7 @@ Reload Systemd to update it with the new changes and then start the services:
 sudo systemctl daemon-reload
 sudo systemctl start registry.service
 
-# Enable and start secret generation (one-time)
+# Enable and start secret generation for authentication with versity gateway(one-time)
 sudo systemctl enable --now versitygw-gensecrets.service
 
 # Start the versity gateway (generated from Quadlet - cannot be enabled directly)
