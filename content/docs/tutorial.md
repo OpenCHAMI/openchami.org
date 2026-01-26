@@ -2202,7 +2202,16 @@ build-image-rh9()
         echo "$1 does not exist." 1>&2;
         return 1;
     fi;
-    source <(sudo cat /etc/versitygw/secrets.env);
+    if [ -z "${ROOT_ACCESS_KEY:-}" ]; then
+      echo "ROOT_ACCESS_KEY is not set" 1>&2;
+      echo "S3 credentials not loaded. Run: source <path-to-credentials>" 1>&2;
+      return 1;
+    fi
+    if [ -z "${ROOT_SECRET_KEY:-}" ]; then
+      echo "ROOT_SECRET_KEY is not set" 1>&2;
+      echo "S3 credentials not loaded. Run: source <path-to-credentials>" 1>&2;
+      return 1;
+    fi
     podman run \
             --rm \
             --device /dev/fuse \
@@ -2226,7 +2235,16 @@ build-image-rh8()
         echo "$1 does not exist." 1>&2;
         return 1;
     fi;
-    source <(sudo cat /etc/versitygw/secrets.env);
+    if [ -z "${ROOT_ACCESS_KEY:-}" ]; then
+      echo "ROOT_ACCESS_KEY is not set" 1>&2;
+      echo "S3 credentials not loaded. Run: source <path-to-credentials>" 1>&2;
+      return 1;
+    fi
+    if [ -z "${ROOT_SECRET_KEY:-}" ]; then
+      echo "ROOT_SECRET_KEY is not set" 1>&2;
+      echo "S3 credentials not loaded. Run: source <path-to-credentials>" 1>&2;
+      return 1;
+    fi
     podman run \
            --rm \
            --device /dev/fuse \
@@ -2275,7 +2293,16 @@ alias build-image='build-image-rh9'
                 echo "$1 does not exist." 1>&2;
                 return 1;
             fi;
-            source <(sudo cat /etc/versitygw/secrets.env);
+            if [ -z "${ROOT_ACCESS_KEY:-}" ]; then
+              echo "ROOT_ACCESS_KEY is not set" 1>&2;
+              echo "S3 credentials not loaded. Run: source <path-to-credentials>" 1>&2;
+              return 1;
+            fi
+            if [ -z "${ROOT_SECRET_KEY:-}" ]; then
+              echo "ROOT_SECRET_KEY is not set" 1>&2;
+              echo "S3 credentials not loaded. Run: source <path-to-credentials>" 1>&2;
+              return 1;
+            fi
             podman run --rm --device /dev/fuse -e S3_ACCESS="${ROOT_ACCESS_KEY}" -e S3_SECRET="${ROOT_SECRET_KEY}" -v "$(realpath $1)":/home/builder/config.yaml:Z ${EXTRA_PODMAN_ARGS} ghcr.io/openchami/image-build-el9:v0.1.2 image-build --config config.yaml --log-level DEBUG
         }
 ```
