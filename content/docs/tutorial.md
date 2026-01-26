@@ -615,8 +615,9 @@ cat <<EOF > openchami-net.xml
   <name>openchami-net</name>
   <bridge name="virbr-openchami" />
   <forward mode='route'/>
-   <ip address="172.16.0.254" netmask="255.255.255.0">
-   </ip>
+  <dns enable='no'/>
+  <ip address="172.16.0.254" netmask="255.255.255.0">
+  </ip>
 </network>
 EOF
 
@@ -845,7 +846,7 @@ Update the CoreDNS config as well:
 
 ```bash
 cat <<EOF | sudo tee /etc/openchami/configs/Corefile
-.:1053 {
+.:53 {
     # Enable readiness endpoint.
     ready
 
