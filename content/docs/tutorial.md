@@ -893,8 +893,8 @@ EOF
 This will allow the resolution of node hostnames, e.g. `de01.openchami.cluster`.
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
-Users should be aware of potential port conflicts if the installation target is
-already running similar network services. Although, CoreDNS cannot bind to
+**If running an existing DNS server, be aware of potential port conflicts for port 53!**
+Although, CoreDNS cannot bind to
 in-use IP/port combinations, it may be configured to forward queries to the
 existing DNS server instead. If you encounter a port conflict, CoreDNS is not a
 required service dependency and can be safely disabled; however, doing so means
