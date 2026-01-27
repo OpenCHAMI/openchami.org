@@ -898,7 +898,7 @@ already running similar network services. Although, CoreDNS cannot bind to
 in-use IP/port combinations, it may be configured to forward queries to the
 existing DNS server instead. If you encounter a port conflict, CoreDNS is not a
 required service dependency and can be safely disabled; however, doing so means
-name resolution will not function and you will need to manage node hostnames
+name resolution for nodes/BMCs will not function and you will need to manage node hostnames
 manually. A lower-friction alternative that preserves DNS functionality is to
 change the CoreDNS configuration to use an unused port like `1053` and manually
 specify that port to any DNS dependent CLI tools.
