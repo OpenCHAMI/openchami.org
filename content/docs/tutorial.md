@@ -893,15 +893,15 @@ EOF
 This will allow the resolution of node hostnames, e.g. `de01.openchami.cluster`.
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
-**If running an existing DNS server, be aware of potential port conflicts for port 53!**
-Although, CoreDNS cannot bind to
-in-use IP/port combinations, it may be configured to forward queries to the
-existing DNS server instead. If you encounter a port conflict, CoreDNS is not a
-required service dependency and can be safely disabled; however, doing so means
-name resolution for nodes/BMCs will not function and you will need to manage
-node hostnames manually. A lower-friction alternative that preserves DNS
-functionality is to change the CoreDNS configuration to use an unused port like
-`1053` and manually specify that port to any DNS dependent CLI tools.
+**If running an existing DNS server, be aware of potential port conflicts for
+port 53!** Although, CoreDNS cannot bind to in-use IP/port combinations, it may
+be configured to forward queries to the existing DNS server instead. If you
+encounter a port conflict, CoreDNS is not a required service dependency and can
+be safely disabled; however, doing so means name resolution for nodes/BMCs will
+not function and you will need to manage node hostnames manually. A
+lower-friction alternative that preserves DNS functionality is to change the
+CoreDNS configuration to use an unused port like `1053` and manually specify
+that port to any DNS dependent CLI tools.
 {{< /callout >}}
 
 ### 1.5 Configure Cluster FQDN for Certificates
