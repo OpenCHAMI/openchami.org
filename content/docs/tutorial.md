@@ -892,7 +892,7 @@ EOF
 
 This will allow the resolution of node hostnames, e.g. `de01.openchami.cluster`.
 
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+{{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
 Users should be aware of potential port conflicts if the installation target is
 already running similar network services. Although, CoreDNS cannot bind to
 in-use IP/port combinations, it may be configured to forward queries to the
