@@ -657,11 +657,12 @@ For the S3 gateway, this tutorial uses a pre-built RPM to install and configure
 deployment as a quadlet.
 
 ```bash
-# Download the latest release RPM
-curl -LO $(curl -s https://api.github.com/repos/openchami/versitygw-quadlet/releases/latest | grep "browser_download_url.*\.rpm" | grep -v "\.src\.rpm" | cut -d '"' -f 4)
-
+# Get latest release RPM URL
+latest_versity_url=$(curl -s https://api.github.com/repos/openchami/versitygw-quadlet/releases/latest | jq -r '.assets[] | select(.name | endswith("'"$(rpm --eval '%dist')"'.noarch.rpm")) | .browser_download_url')
+# Download RPM
+curl -L "${latest_versity_url}" -o versitygw.rpm
 # Install the RPM
-sudo dnf install ./versitygw-quadlet-*.noarch.rpm
+sudo dnf install ./versitygw.rpm
 ```
 
 #### 1.3.2 Container Registry
