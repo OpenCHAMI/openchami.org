@@ -2373,8 +2373,8 @@ over time. Be sure to update with the output of `s3cmd ls` as stated above!
 {{< /callout >}}
 
 ```yaml
-kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64'
-initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img'
+kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
+initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
 params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
 macs:
   - 52:54:00:be:ef:01
@@ -2417,8 +2417,8 @@ The output should be akin to:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
   macs:
     - 52:54:00:be:ef:01
     - 52:54:00:be:ef:02
@@ -2457,8 +2457,8 @@ be the same values from section 2.5.2.a but in JSON.
     "52:54:00:be:ef:05"
   ],
   "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
-  "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64",
-  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img",
+  "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64",
+  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img",
 
 }
 ```
@@ -2588,8 +2588,8 @@ Configuring (net0 52:54:00:be:ef:01)...... ok
 tftp://172.16.0.254:69/config.ipxe... ok
 Booting from http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01
 http://172.16.0.254:8081/boot/v1/bootscript... ok
-http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64... ok
-http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img... ok
 ```
 
 During Linux boot, output should indicate that the SquashFS image gets downloaded and loaded.
@@ -2958,8 +2958,8 @@ They should match the file above:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
+  initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
+  kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
   macs:
     - 52:54:00:be:ef:01
     - 52:54:00:be:ef:02
@@ -3036,8 +3036,8 @@ Configuring (net0 52:54:00:be:ef:01)...... ok
 tftp://172.16.0.254:69/config.ipxe... ok
 Booting from http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01
 http://172.16.0.254:8081/boot/v1/bootscript... ok
-http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64... ok
-http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img... ok
 ```
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
