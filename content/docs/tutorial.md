@@ -2962,8 +2962,8 @@ They should match the file above:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
-  kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
   macs:
     - 52:54:00:be:ef:01
     - 52:54:00:be:ef:02
