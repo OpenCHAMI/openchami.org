@@ -1999,7 +1999,7 @@ the image is being pushed to S3 (and `--log-level DEBUG` was passed) _a lot_ of
 S3 output will be seen. The following should appear:
 
 ```
-Pushing /var/tmp/tmpda2ddyh0/rootfs as compute/base/rocky9.6-compute-base-rocky9 to boot-images
+Pushing /var/tmp/tmpda2ddyh0/rootfs as compute/base/rocky9.7-compute-base-rocky9 to boot-images
 pushing layer compute-base to demo.openchami.cluster:5000/demo/compute-base:rocky9
 ```
 
@@ -2012,9 +2012,9 @@ Note that the format of the image name being pushed to S3 is:
 In this case:
 
 - `<distro>` is `rocky`
-- `<version>` is `9.6`
+- `<version>` is `9.7`
 - `<name>` is `compute-base` (from `name` field in image config file)
-- `<tag>` is `rocky9.6` (from `publish_tags` in image config file, there can be multiple)
+- `<tag>` is `rocky9.7` (from `publish_tags` in image config file, there can be multiple)
 
 Verify that the image has been created and stored in the registry:
 
@@ -2050,16 +2050,16 @@ s3cmd ls -Hr s3://boot-images | cut -d' ' -f 4- | grep compute/base
 The output should be akin to:
 
 ```
-1436M  s3://boot-images/compute/base/rocky9.6-compute-base-rocky9
-  82M  s3://boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  14M  s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
+1557M  s3://boot-images/compute/base/rocky9.7-compute-base-rocky9
+  84M  s3://boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  14M  s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
 ```
 
 Note the following:
 
-- SquashFS image: `s3://boot-images/compute/base/rocky9.6-compute-base-rocky9`
-- Initramfs: `s3://boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img`
-- Kernel: `s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64`
+- SquashFS image: `s3://boot-images/compute/base/rocky9.7-compute-base-rocky9`
+- Initramfs: `s3://boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img`
+- Kernel: `s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64`
 
 #### 2.4.5 Configure the Debug Image
 
@@ -2156,12 +2156,12 @@ The output should be akin to (note that the base image is not here because it
 wasn't pushed to S3, only the registry):
 
 ```
-1436M  s3://boot-images/compute/base/rocky9.6-compute-base-rocky9
-1437M  s3://boot-images/compute/debug/rocky9.6-compute-debug-rocky9
-  82M  s3://boot-images/efi-images/compute/base/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  14M  s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
-  82M  s3://boot-images/efi-images/compute/debug/initramfs-5.14.0-570.26.1.el9_6.x86_64.img
-  14M  s3://boot-images/efi-images/compute/debug/vmlinuz-5.14.0-570.26.1.el9_6.x86_64
+1557M  s3://boot-images/compute/base/rocky9.7-compute-base-rocky9
+1557M  s3://boot-images/compute/debug/rocky9.7-compute-debug-rocky9
+  84M  s3://boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  14M  s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
+  84M  s3://boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  14M  s3://boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
 ```
 
 A kernel, initramfs, and SquashFS should be visible for each image that was built.
@@ -2379,7 +2379,7 @@ over time. Be sure to update with the output of `s3cmd ls` as stated above!
 ```yaml
 kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
 initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
-params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
 macs:
   - 52:54:00:be:ef:01
   - 52:54:00:be:ef:02
@@ -2429,7 +2429,7 @@ The output should be akin to:
     - 52:54:00:be:ef:03
     - 52:54:00:be:ef:04
     - 52:54:00:be:ef:05
-  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 The things to check are:
@@ -2460,7 +2460,7 @@ be the same values from section 2.5.2.a but in JSON.
     "52:54:00:be:ef:04",
     "52:54:00:be:ef:05"
   ],
-  "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.6-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
+  "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
   "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64",
   "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img",
 
@@ -2625,8 +2625,8 @@ BdsDxe: failed to load Boot0001 "UEFI PXEv4 (MAC:525400BEEF01)" from PciRoot(0x0
 Once the login prompt appears:
 
 ```
-Rocky Linux 9.6 (Blue Onyx)
-Kernel 5.14.0-570.21.1.el9_6.x86_64 on x86_64
+Rocky Linux 9.7 (Blue Onyx)
+Kernel 5.14.0-611.24.1.el9_7.x86_64 on x86_64
 
 nid0001 login:
 ```
@@ -2907,9 +2907,9 @@ s3cmd ls -Hr s3://boot-images/ | awk '{print $4}' | grep compute/base
 The output should look something like (versions will likely be different):
 
 ```
-s3://boot-images/compute/base/rocky9.6-compute-base-rocky9
-s3://boot-images/efi-images/compute/base/initramfs-5.14.0-570.21.1.el9_6.x86_64.img
-s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-570.21.1.el9_6.x86_64
+s3://boot-images/compute/base/rocky9.7-compute-base-rocky9
+s3://boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+s3://boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
 ```
 
 Create `boot-compute-rocky9.yaml` with these values, using the same method used
@@ -2970,7 +2970,7 @@ They should match the file above:
     - 52:54:00:be:ef:03
     - 52:54:00:be:ef:04
     - 52:54:00:be:ef:05
-  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/base/rocky9.6-compute-base-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/base/rocky9.7-compute-base-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 #### 2.8.2 Booting the Compute Node
