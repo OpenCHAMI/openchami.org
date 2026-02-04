@@ -2388,7 +2388,10 @@ macs:
   - 52:54:00:be:ef:05
 ```
 
-##### 2.5.2.a Set the Boot Configuration with BSS Backend
+Now, we set the boot configuration using one of the backends below.
+
+{{< tabs "Set boot configuration" >}}
+{{< tab "BSS Backend" >}}
 
 Apply the boot parameters created above with:
 
@@ -2438,7 +2441,8 @@ The things to check are:
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
 
-##### 2.5.2.b Set the Boot Configuration with the `boot-service` Backend
+{{< /tab >}}
+{{< tab "Boot-service Backend" >}}
 
 Setting the boot configuration with the `boot-service` backend is a little
 different than with the BSS backend. Instead of using the `ochami` client, we
@@ -2481,6 +2485,17 @@ boot-service-client bootconfiguration list --server https://demo.openchami.clust
 
 You should see output that is similar to the input JSON. At this point, you should
 be ready to boot the compute node.
+
+{{< /tab >}}
+{{< /tabs >}}
+
+##### 2.5.2.a Set the Boot Configuration with BSS Backend
+
+
+
+##### 2.5.2.b Set the Boot Configuration with the `boot-service` Backend
+
+
 
 ### 2.6 Boot the Compute Node with the Debug Image
 
