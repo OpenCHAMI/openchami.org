@@ -46,7 +46,7 @@ Steps in this section occur on the head node created in the OpenCHAMI tutorial (
 
 Download Slurm pre-requisite sources compatible with Rocky 9 OS:
 
-```
+```bash
 sudo dnf -y update && \
 sudo dnf clean all && \
 sudo dnf -y install epel-release && \
@@ -70,8 +70,8 @@ Create build script to install Slurm 24.05.5 and PMIX 4.2.9-1:
 This guide installs Slurm 24.05.5 and PMIX 4.2.9-1 to ensure compatibility. Other versions can be installed instead, but make sure to check version compatibility first. 
 {{< /callout >}}
 
-```
-cat <<EOF > /home/rocky/build.sh
+**Create file as rocky user: 'home/rocky/build.sh'**
+```bash
 SLURMVERSION=${1:-24.05.5}
 PMIXVERSION=${2:-4.2.9-1}
 ELRELEASE=${3:-el9} #Rocky 9
@@ -115,19 +115,18 @@ else
         cd ${CDIR}
         mv /root/rpmbuild/RPMS/x86_64/slurm*-${SLURMVERSION}-*.rpm ${SDIR}
 fi
-EOF
 ```
 
 Adjust permissions for build script so that it is executable, and execute it with **root** privileges:
 
-```
+```bash
 chmod 755 /home/rocky/build.sh
 sudo ./build.sh
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 The following warnings are normal:
-```
+```bash
 configure: WARNING: unable to locate libnvidia-ml.so and/or nvml.h
 configure: WARNING: unable to locate librocm_smi64.so and/or rocm_smi.h
 configure: WARNING: unable to locate libze_loader.so and/or ze_api.h
@@ -138,14 +137,14 @@ configure: WARNING: unable to build man page html files without man2html
 
 Copy the Slurm packages to the desired location to create the local repository:
 
-```
+```bash
 sudo mkdir -p /install/osupdates/rocky9/x86_64/
 sudo cp -r slurm/9.7/24.05.5 /install/osupdates/rocky9/x86_64/slurm-24.05.5
 ```
 
 Create the local repository (this will be used for installation and images later):
 
-```
+```bash
 sudo createrepo /install/osupdates/rocky9/x86_64/slurm-24.05.5
 ```
 
@@ -153,7 +152,7 @@ sudo createrepo /install/osupdates/rocky9/x86_64/slurm-24.05.5
 
 Create user and group ‘slurm’ with specified UID/GID:
 
-```
+```bash
 SLURMID=666
 sudo groupadd -g $SLURMID slurm
 sudo useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u $SLURMID -g slurm -s /sbin/nologin slurm
@@ -161,7 +160,7 @@ sudo useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u $SLURMID -g slu
 
 Update the UID and GID of ‘munge’ user and group to 616, update directory ownership, create munge key and restart the munge service:
 
-```
+```bash
 # Update UID and GID
 sudo usermod -u 616 munge
 sudo groupmod -g 616 munge
@@ -180,13 +179,13 @@ sudo systemctl enable --now munge
 
 Install mariaDB:
 
-```
+```bash
 sudo dnf -y install mariadb-server
 ```
 
 Tune mariaDB with the Slurm recommended options for the compute node where mariaDB will be running:
 
-```
+```bash
 cat <<EOF | sudo tee /etc/my.cnf.d/innodb.cnf
 [mysqld]
 innodb_buffer_pool_size=5120M
@@ -202,13 +201,13 @@ We are assigning 5GB to the `innodb_buffer_pool_size`. The pool size should be 5
 
 Enable and start the mariaDB service as this is a single node cluster (so we aren't enabling High Availability):
 
-```
+```bash
 sudo systemctl enable --now mariadb
 ```
 
 Secure the mariaDB installation with a strong root password. Use ‘pwgen’ to generate a password and store this password securely:
 
-```
+```bash
 sudo dnf -y install pwgen
 pwgen 20 1 # generates 1 password of length 20 characters
 
@@ -236,7 +235,7 @@ Reload privilege tables now? [Y/n] Y
 
 Create the database and grant access to localhost, the head node and the compute node: 
 
-```
+```bash
 mysql -u root -p # enter the password from pwgen
 
 create database slurm_acct_db;
@@ -249,13 +248,13 @@ exit
 
 Install a few more dependencies that are required:
 
-```
+```bash
 sudo dnf -y install jq libconfuse numactl parallel perl-DBI perl-Switch
 ```
 
 Setup directory structure for the Slurm database and controller daemon services:
 
-```
+```bash
 sudo mkdir -p /var/spool/slurmctld /var/log/slurm /run/slurm
 sudo chown -R slurm. /var/spool/slurmctld /var/log/slurm /run/slurm
 echo "d /run/slurm 0755 slurm slurm -" | sudo tee /usr/lib/tmpfiles.d/slurm.conf
@@ -265,7 +264,7 @@ echo "d /run/slurm 0755 slurm slurm -" | sudo tee /usr/lib/tmpfiles.d/slurm.conf
 
 Add the Slurm repo created earlier to install from it (will ensure we get the correct package versions):
 
-```
+```bash
 # Create local repo file
 SLURMVERSION=24.05.5
 RELEASE=rocky9
@@ -283,7 +282,7 @@ sudo dnf -y install slurm slurm-contribs slurm-example-configs slurm-libpmi slur
 
 Create configuration files by copying the example files, and then modify the directory and file ownership:
 
-```
+```bash
 # Copy configuration files
 sudo cp -p /etc/slurm/slurmdbd.conf.example /etc/slurm/slurmdbd.conf
 sudo cp -p /etc/slurm/cgroup.conf.example /etc/slurm/cgroup.conf
@@ -294,7 +293,7 @@ sudo chown -R slurm. /etc/slurm/
 
 Modify the SlurmDB config:
 
-```
+```bash
 DBHOST=head
 DBPASSWORD=<pwgen password>   # EDIT TO THE PASSWORD SET IN THE MARIADB CONFIGURATION SECTION
 SLURMDBHOST1=head
@@ -314,7 +313,7 @@ sudo sed -i "s|#StorageLoc.*|StorageLoc=slurm_acct_db|g" /etc/slurm/slurmdbd.con
 
 Create the Slurm config file, which will be used by SlurmCTL:
 
-```
+```bash
 cat <<EOF | sudo tee /etc/slurm/slurm.conf
 #
 ClusterName=test
@@ -474,7 +473,7 @@ EOF
 
 Add job container config file to Slurm config directory:
 
-```
+```bash
 SLURMTMPDIR=/lscratch
 
 echo "# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
@@ -486,7 +485,7 @@ Shared=true" | sudo tee /etc/slurm/job_container.conf
 
 Configure the hosts file with addresses for both the head node and the compute node:
 
-```
+```bash
 cat <<EOF | sudo tee -a /etc/hosts
 172.16.0.254   master.openchami.cluster master head
 172.16.0.1     de01.openchami.cluster de01
@@ -497,7 +496,7 @@ EOF
 
 Use Podman to run Nginx in a container that has the local Slurm repository mounted into it:
 
-```
+```bash
 podman run --name serve-slurm \
     --mount type=bind,source=/install/osupdates/rocky9/x86_64/slurm-24.05.5,target=/usr/share/nginx/html/slurm-24.05.5,readonly \
     -p 8080:80 -d nginx
@@ -505,26 +504,24 @@ podman run --name serve-slurm \
 
 Access the container:
 
-```
+```bash
 podman exec -it serve-slurm /bin/bash
 ```
 
 Install vim into the container so you can edit the Nginx config file:
 
-```
+```bash
 apt-get update && apt-get install -y vim
 ```
 
 Get location of Nginx configuration file (nginx.conf) - it should be in /etc/nginx/ but this is to make sure. Look for '--conf-path=…':
 
-```
+```bash
 nginx -V 2>&1 | awk -F: '/configure arguments/ {print $2}' | xargs -n1
 ```
 
-Edit the Nginx config file:
-
-```
-cat <<EOF | tee /etc/nginx/nginx.conf
+**Edit the Nginx config file as the rocky user: `/etc/nginx/nginx.conf`**
+```bash {title="/etc/nginx/nginx.conf"}
 user  nginx;
 worker_processes  auto;
 
@@ -566,21 +563,20 @@ http {
         }
     }
 }
-EOF
 ```
 
 Detach from the container with: `ctrl-P, then ctrl-Q`.
 
 Check everything is working by grabbing the repodata file from the head node:
 
-```
+```bash
 curl http://localhost:8080/slurm-24.05.5/repodata/repomd.xml
 ```
 
 Create the compute Slurm image config file (uses the base image created in the tutorial as the parent layer):
 
-```yaml
-cat <<EOF | sudo tee /etc/openchami/data/images/compute-slurm-rocky9.yaml
+**Edit as root: `/etc/openchami/data/images/compute-slurm-rocky9.yaml`**
+```yaml {title="/etc/openchami/data/images/compute-slurm-rocky9.yaml"}
 options:
   layer_type: base
   name: compute-slurm
@@ -632,12 +628,11 @@ packages:
   - slurm-slurmdbd-24.05.5
   - slurm-slurmrestd-24.05.5
   - slurm-torque-24.05.5
-EOF
 ```
 
 Run podman container to run image build command.
 
-```
+```bash
 podman run \
   --rm \
   --device /dev/fuse \
@@ -653,14 +648,14 @@ podman run \
 
 Check that the images built.
 
-```
+```bash
 s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4-
 ```
 
 Simplify the image build command for future image building if desired:
 
-```
-cat <<EOF | sudo tee /etc/profile.d/build-image.sh
+**Edit as root: `/etc/profile.d/build-image.sh`**
+```bash {title="/etc/profile.d/build-image.sh"}
 build-image-rh9()
 {
     if [ -z "$1" ]; then
@@ -707,24 +702,23 @@ build-image-rh8()
                 --log-level DEBUG
 }
 alias build-image=build-image-rh9
-EOF
 ```
 
 Apply simplified command to current session. Note that the command will be automatically applied during later logins, so you will not need to source it again:
 
-```
+```bash
 source /etc/profile.d/build-image.sh
 ```
 
 Note: For future, you will be able to build images in the following way:
 
-```
+```bash
 build-image /path/to/image/config.yaml
 ```
 
 Check that the alias is being used:
 
-```
+```bash
 which build-image
 ```
 
@@ -750,13 +744,13 @@ alias build-image='build-image-rh9'
 
 Get a fresh access token for ochami:
 
-```
+```bash
 export TEST_ACCESS_TOKEN=$(sudo bash -lc 'gen_access_token')
 ```
 
 Create payload for boot script service with URIs for slurm compute boot artefacts:
 
-```yaml
+```bash
 sudo mkdir /etc/openchami/data/boot/
 
 URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/slurm | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:9000/-' | xargs)
@@ -775,33 +769,33 @@ EOF
 
 Set BSS parameters:
 
-```
+```bash
 ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/boot-compute-slurm-rocky9.yaml
 ```
 
 Check the BSS boot parameters were added:
 
-```
+```bash
 ochami bss boot params get -F yaml
 ```
 
 Create new directory for setting up cloud-init configuration:
 
-```
+```bash
 sudo mkdir -p /etc/openchami/data/cloud-init
 cd /etc/openchami/data/cloud-init
 ```
 
 Create new ssh key:
 
-```
+```bash
 ssh-keygen -t ed25519
 ```
 Note: press `Enter` for all prompts to make ssh straightforward.
 
 Setup the cloud-init configuration:
 
-```yaml
+```bash
 cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
 ---
 base-url: "http://172.16.0.254:8081/cloud-init"
@@ -815,7 +809,7 @@ EOF
 
 Set the cloud-init defaults with ochami and check they are set:
 
-```
+```bash
 # Set defaults using ochami
 ochami cloud-init defaults set -f yaml -d @/etc/openchami/data/cloud-init/ci-defaults.yaml
 
@@ -825,7 +819,9 @@ ochami cloud-init defaults get -F json-pretty
 
 Configure cloud-init for compute group:
 
-```yaml
+**Edit as root: `/etc/openchami/data/cloud-init/ci-group-compute.yaml`**
+
+```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
 cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml
 - name: compute
   description: "compute config"
@@ -843,12 +839,11 @@ cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml
         - name: root
           ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
       disable_root: false      
-EOF
 ```
 
 Set config for compute group with ochami and check they are set:
 
-```
+```bash
 # Set compute group config with ochami
 ochami cloud-init group set -f yaml -d @/etc/openchami/data/cloud-init/ci-group-compute.yaml
 
@@ -861,7 +856,7 @@ ochami cloud-init group render compute x1000c0s0b0n0
 
 **In another window inside the VM host**, create compute1 compute node VM. Do NOT run the below command from inside the head node VM:
 
-```
+```bash
 sudo virt-install \
   --name compute1 \
   --memory 4096 \
@@ -896,19 +891,19 @@ Attach to the console to watch compute1 boot again.
 
 **From inside the head node VM**, log into the compute node:
 
-```
+```bash
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@172.16.0.1 
 ```
 
 Check all of the required packages were installed and from the correct sources:
 
-```
+```bash
 dnf list installed 
 ```
 
 Create slurm config file that is identical to that of the head node VM:
 
-```
+```bash
 cat <<EOF | sudo tee /etc/slurm/slurm.conf
 #
 ClusterName=test
@@ -1068,7 +1063,7 @@ EOF
 
 Configure the hosts file with addresses for both the head node and the compute node:
 
-```
+```bash
 cat <<EOF | tee -a /etc/hosts
 172.16.0.254   master.openchami.cluster master head
 172.16.0.1     de01.openchami.cluster de01
@@ -1077,7 +1072,7 @@ EOF
 
 Create the Slurm user on the compute node:
 
-```
+```bash
 SLURMID=666
 groupadd -g $SLURMID slurm
 useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u $SLURMID -g slurm -s /sbin/nologin slurm
@@ -1085,7 +1080,7 @@ useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u $SLURMID -g slurm -s
 
 Update Slurm file and directory ownership:
 
-```
+```bash
 chown -R slurm:slurm /etc/slurm/
 chown -R slurm:slurm /var/lib/slurm
 ```
@@ -1096,14 +1091,14 @@ Use `find / -name "slurm"` to make sure everything that needs to be changed is i
 
 Create the directory /var/log/slurm as it doesn't exist yet, and set ownership to Slurm:
 
-```
+```bash
 mkdir /var/log/slurm
 chown slurm:slurm /var/log/slurm
 ```
 
 Creating job_container.conf file that matches the one in the head node VM:
 
-```
+```bash
 cat <<EOF | tee /etc/slurm/job_container.conf
 # Job /tmp on a local volume mounted on /lscratch
 # /dev/shm has special handling, and instead of a bind mount is always a fresh tmpfs filesystem.
@@ -1115,13 +1110,13 @@ EOF
 
 Update ownership of the job container config file:
 
-```
+```bash
 chown slurm:slurm /etc/slurm/job_container.conf
 ```
 
 Munge UID is 991 and GID is 990, so change them both to 616 (to match head node UID/GID):
 
-```
+```bash
 usermod -u 616 munge
 groupmod -g 616 munge
 ```
@@ -1136,7 +1131,7 @@ Kill the process and repeat above two commands:
 
 Update munge file/directory ownership:
 
-```
+```bash
 chown -R munge:munge /var/log/munge/
 chown -R munge:munge /var/lib/munge/
 chown -R munge:munge /etc/munge/
@@ -1149,7 +1144,7 @@ Find all directories owned by old munge UID/GID with the following command:
 
 Copy munge key from the head node VM to the compute node VM:
 
-```
+```bash
 # Inside the head node VM
 cd ~
 sudo cp /etc/munge/munge.key ./
@@ -1168,7 +1163,7 @@ In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hos
 
 Enable and start munge service:
 
-```
+```bsah
 systemctl enable munge.service
 systemctl start munge.service
 systemctl status munge.service
@@ -1176,7 +1171,7 @@ systemctl status munge.service
 
 Enable and start slurmd:
 
-```
+```bash
 systemctl enable slurmd
 systemctl start slurmd
 systemctl status slurmd
@@ -1184,7 +1179,7 @@ systemctl status slurmd
 
 Disable the firewall in the compute node:
 
-```
+```bash
 systemctl stop firewalld
 systemctl disable firewalld
 
@@ -1194,7 +1189,7 @@ nft list ruleset
 
 Restart Slurm service daemons to ensure changes are applied:
 
-```
+```bash
 # In the compute node:
 systemctl restart slurmd
 
@@ -1205,7 +1200,7 @@ sudo systemctl restart slurmdbd
 
 Test munge on the **head node VM**:
 
-```
+```bash
 # Try to munge and unmunge to access the compute node
 munge -n | ssh root@172.16.0.1 unmunge
 ```
@@ -1217,7 +1212,7 @@ In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hos
 
 Quickly test that you can submit a job from the head node VM:
 
-```
+```bash
 # Check that node is present and idle
 sinfo
 
