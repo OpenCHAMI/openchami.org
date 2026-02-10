@@ -233,15 +233,14 @@ Remove test database and access to it? [Y/n] n
 Reload privilege tables now? [Y/n] Y
 ```
 
-Create the database and grant access to localhost, the head node and the compute node: 
+Create the database and grant access to localhost and the head node: 
 
 ```bash
 mysql -u root -p # enter the password from pwgen
 
 create database slurm_acct_db;
 grant all on slurm_acct_db.* to slurm@'localhost' identified by '<pwgen password>';
-grant all on slurm_acct_db.* to slurm@'master' identified by '<pwgen password>';
-grant all on slurm_acct_db.* to slurm@'compute1' identified by '<pwgen password>';
+grant all on slurm_acct_db.* to slurm@'demo.openchami.cluster' identified by '<pwgen password>';
 grant all on slurm_acct_db.* to slurm@'head' identified by '<pwgen password>';
 exit
 ```
@@ -316,9 +315,8 @@ Create the Slurm config file, which will be used by SlurmCTL:
 ```bash
 cat <<EOF | sudo tee /etc/slurm/slurm.conf
 #
-ClusterName=test
-SlurmctldHost=master.openchami.cluster
-#SlurmctldHost=head
+ClusterName=demo
+SlurmctldHost=demo.openchami.cluster
 #
 #DisableRootJobs=NO
 EnforcePartLimits=ALL
@@ -487,7 +485,7 @@ Configure the hosts file with addresses for both the head node and the compute n
 
 ```bash
 cat <<EOF | sudo tee -a /etc/hosts
-172.16.0.254   master.openchami.cluster master head
+172.16.0.254   demo.openchami.cluster head
 172.16.0.1     de01.openchami.cluster de01
 EOF
 ```
@@ -745,7 +743,7 @@ alias build-image='build-image-rh9'
 Get a fresh access token for ochami:
 
 ```bash
-export TEST_ACCESS_TOKEN=$(sudo bash -lc 'gen_access_token')
+export DEMO_ACCESS_TOKEN=$(sudo bash -lc 'gen_access_token')
 ```
 
 Create payload for boot script service with URIs for slurm compute boot artefacts:
@@ -799,7 +797,7 @@ Setup the cloud-init configuration:
 cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
 ---
 base-url: "http://172.16.0.254:8081/cloud-init"
-cluster-name: "test"
+cluster-name: "demo"
 nid-length: 2
 public-keys:
   - "$(cat ~/.ssh/id_ed25519.pub)"
@@ -906,9 +904,8 @@ Create slurm config file that is identical to that of the head node VM:
 ```bash
 cat <<EOF | sudo tee /etc/slurm/slurm.conf
 #
-ClusterName=test
-SlurmctldHost=master.openchami.cluster
-#SlurmctldHost=head
+ClusterName=demo
+SlurmctldHost=demo.openchami.cluster
 #
 #DisableRootJobs=NO
 EnforcePartLimits=ALL
@@ -1065,7 +1062,7 @@ Configure the hosts file with addresses for both the head node and the compute n
 
 ```bash
 cat <<EOF | tee -a /etc/hosts
-172.16.0.254   master.openchami.cluster master head
+172.16.0.254   demo.openchami.cluster head
 172.16.0.1     de01.openchami.cluster de01
 EOF
 ```
