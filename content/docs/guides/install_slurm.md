@@ -71,7 +71,7 @@ This guide installs Slurm 24.05.5 and PMIX 4.2.9-1 to ensure compatibility. Othe
 {{< /callout >}}
 
 **Create file as rocky user: 'home/rocky/build.sh'**
-```bash
+```bash {title="home/rocky/build.sh"}
 SLURMVERSION=${1:-24.05.5}
 PMIXVERSION=${2:-4.2.9-1}
 ELRELEASE=${3:-el9} #Rocky 9
@@ -214,7 +214,7 @@ pwgen 20 1 # generates 1 password of length 20 characters
 sudo mysql_secure_installation
 ```
 
-**MariaDB setup/settings should be done as follows**
+**MariaDB setup/settings should be done as follows:**
 ```
 Enter current password for root (enter for none): # enter rocky password: 'rocky'
 
@@ -820,7 +820,6 @@ Configure cloud-init for compute group:
 **Edit as root: `/etc/openchami/data/cloud-init/ci-group-compute.yaml`**
 
 ```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
-cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml
 - name: compute
   description: "compute config"
   file:
@@ -1160,7 +1159,7 @@ In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hos
 
 Enable and start munge service:
 
-```bsah
+```bash
 systemctl enable munge.service
 systemctl start munge.service
 systemctl status munge.service
