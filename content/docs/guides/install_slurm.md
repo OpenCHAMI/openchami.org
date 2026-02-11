@@ -16,12 +16,12 @@ seo:
 
 # 0 Overview
 
-This guide walks through setting up Slurm on a OpenCHAMI cluster. This guide will assume you have already setup an OpenCHAMI cluster per Sections 1-2.4.2 in the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/). The only other requirement is to run a webserver to serve a Slurm repo for the image builder to use, and this guide assumes Podman is present to use. This guide will only walk through Slurm setup for a cluster with one head node and one compute node, but is easily expanded to multiple compute nodes by updating the node list with ochami.
+This guide walks through setting up Slurm on a OpenCHAMI cluster. This guide will assume you have already setup an OpenCHAMI cluster per Sections 1-2.6 in the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/). The only other requirement is to run a webserver to serve a Slurm repo for the image builder to use, and this guide assumes Podman is present to use. This guide will only walk through Slurm setup for a cluster with one head node and one compute node, but is easily expanded to multiple compute nodes by updating the node list with ochami.
 
 ## 0.1 Prerequisites
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
-This guide assumes you have setup an OpenCHAMI cluster per Sections 1-2.4.2 in the OpenCHAMI tutorial.
+This guide assumes you have setup an OpenCHAMI cluster per Sections 1-2.6 in the OpenCHAMI tutorial.
 {{< /callout >}}
 
 ## 0.2 Contents
@@ -205,7 +205,7 @@ Enable and start the mariaDB service as this is a single node cluster (so we are
 sudo systemctl enable --now mariadb
 ```
 
-Secure the mariaDB installation with a strong root password. Use ‘pwgen’ to generate a password and store this password securely:
+Secure the mariaDB installation with a strong root password. Use `pwgen` to generate a password and store this password securely. You will use the `pwgen` password to setup and configure MariaDB, as well as to create a database for Slurm to access the head node:
 
 ```bash
 sudo dnf -y install pwgen
@@ -233,10 +233,10 @@ Remove test database and access to it? [Y/n] n
 Reload privilege tables now? [Y/n] Y
 ```
 
-Create the database and grant access to localhost and the head node: 
+Create the database and grant access to localhost and the head node. You will need the password you generated with `pwgen` in the above step. Make sure you edit the bash code provided below to replace `<pwgen password>` with the actual password: 
 
 ```bash
-mysql -u root -p # enter the password from pwgen
+mysql -u root -p # when prompted, enter the password from pwgen
 
 create database slurm_acct_db;
 grant all on slurm_acct_db.* to slurm@'localhost' identified by '<pwgen password>';
@@ -290,7 +290,7 @@ sudo cp -p /etc/slurm/cgroup.conf.example /etc/slurm/cgroup.conf
 sudo chown -R slurm. /etc/slurm/
 ```
 
-Modify the SlurmDB config:
+Modify the SlurmDB config. You will need the `pwgen` generated password generated earlier when setting up MariaDB for this section:
 
 ```bash
 DBHOST=head
@@ -310,10 +310,10 @@ sudo sed -i "s|PidFile.*|PidFile=/var/run/slurm/slurmdbd.pid|g" /etc/slurm/slurm
 sudo sed -i "s|#StorageLoc.*|StorageLoc=slurm_acct_db|g" /etc/slurm/slurmdbd.conf
 ```
 
-Create the Slurm config file, which will be used by SlurmCTL:
+Create the Slurm config file, which will be used by SlurmCTL. Note that you may need to update the `NodeName` info depending on the configuration of your compute node.
 
-```bash
-cat <<EOF | sudo tee /etc/slurm/slurm.conf
+**Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
+```bash {title="/etc/slurm/slurm.conf"}
 #
 ClusterName=demo
 SlurmctldHost=demo.openchami.cluster
@@ -466,7 +466,6 @@ LaunchParameters=use_interactive_step
 NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
 
 PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
-EOF
 ```
 
 Add job container config file to Slurm config directory:
@@ -512,13 +511,13 @@ Install vim into the container so you can edit the Nginx config file:
 apt-get update && apt-get install -y vim
 ```
 
-Get location of Nginx configuration file (nginx.conf) - it should be in /etc/nginx/ but this is to make sure. Look for '--conf-path=…':
+Get location of Nginx configuration file (nginx.conf) - it should be in /etc/nginx/ but this is to make sure:
 
 ```bash
-nginx -V 2>&1 | awk -F: '/configure arguments/ {print $2}' | xargs -n1
+nginx -V 2>&1 | awk -F: '/configure arguments/ {print $2}' | xargs -n1 | grep conf-path
 ```
 
-**Edit the Nginx config file as the rocky user: `/etc/nginx/nginx.conf`**
+**Edit the Nginx config file as root: `/etc/nginx/nginx.conf`**
 ```bash {title="/etc/nginx/nginx.conf"}
 user  nginx;
 worker_processes  auto;
@@ -582,11 +581,11 @@ options:
     - 'rocky9'
   pkg_manager: dnf
   gpgcheck: False
-  parent: '172.16.0.254:5000/demo/rocky-base:9'
+  parent: 'demo.openchami.cluster:5000/demo/rocky-base:9'
   registry_opts_pull:
     - '--tls-verify=false'
 
-  publish_s3: 'http://172.16.0.254:9000'
+  publish_s3: 'http://demo.openchami.cluster:7070'
   s3_prefix: 'compute/slurm/'
   s3_bucket: 'boot-images'
 
@@ -628,15 +627,15 @@ packages:
   - slurm-torque-24.05.5
 ```
 
-Run podman container to run image build command.
+Run podman container to run image build command. The S3_ACCESS and S3_SECRET tokens are set in the tutorial [here](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients).
 
 ```bash
 podman run \
   --rm \
   --device /dev/fuse \
   --network host \
-  -e S3_ACCESS=admin \
-  -e S3_SECRET=admin123 \
+  -e S3_ACCESS=${ROOT_ACCESS_KEY} \
+  -e S3_SECRET=${ROOT_SECRET_KEY} \
   -v /etc/openchami/data/images/compute-slurm-rocky9.yaml:/home/builder/config.yaml \
   ghcr.io/openchami/image-build-el9:v0.1.2 \
   image-build \
@@ -644,98 +643,17 @@ podman run \
     --log-level DEBUG
 ```
 
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If you have already aliased the image build command per the [tutorial](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients), you can instead run:
+
+`build-image /etc/openchami/data/images/compute-slurm-rocky9.yaml`
+{{< /callout >}}
+
+
 Check that the images built.
 
 ```bash
 s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4-
-```
-
-Simplify the image build command for future image building if desired:
-
-**Edit as root: `/etc/profile.d/build-image.sh`**
-```bash {title="/etc/profile.d/build-image.sh"}
-build-image-rh9()
-{
-    if [ -z "$1" ]; then
-        echo 'Path to image config file required.' 1>&2;
-        return 1;
-    fi;
-    if [ ! -f "$1" ]; then
-        echo "$1 does not exist." 1>&2;
-        return 1;
-    fi;
-    podman run \
-            --rm \
-            --device /dev/fuse \
-            -e S3_ACCESS=admin \
-            -e S3_SECRET=admin123 \
-            -v "$(realpath $1)":/home/builder/config.yaml:Z \
-            ${EXTRA_PODMAN_ARGS} \
-            ghcr.io/openchami/image-build-el9:v0.1.2 \
-            image-build \
-                --config config.yaml \
-                --log-level DEBUG
-}
-
-build-image-rh8()
-{
-    if [ -z "$1" ]; then
-        echo 'Path to image config file required.' 1>&2;
-        return 1;
-    fi;
-    if [ ! -f "$1" ]; then
-        echo "$1 does not exist." 1>&2;
-        return 1;
-    fi;
-    podman run \
-           --rm \
-           --device /dev/fuse \
-           -e S3_ACCESS=admin \
-           -e S3_SECRET=admin123 \
-           -v "$(realpath $1)":/home/builder/config.yaml:Z \
-           ${EXTRA_PODMAN_ARGS} \
-           ghcr.io/openchami/image-build:v0.1.2 \
-           image-build \
-                --config config.yaml \
-                --log-level DEBUG
-}
-alias build-image=build-image-rh9
-```
-
-Apply simplified command to current session. Note that the command will be automatically applied during later logins, so you will not need to source it again:
-
-```bash
-source /etc/profile.d/build-image.sh
-```
-
-Note: For future, you will be able to build images in the following way:
-
-```bash
-build-image /path/to/image/config.yaml
-```
-
-Check that the alias is being used:
-
-```bash
-which build-image
-```
-
-Output should look like the following:
-
-```
-alias build-image='build-image-rh9'
-	build-image-rh9 ()
-	{ 
-	    if [ -z "$1" ]; then
-	        echo 'Path to image config file required.' 1>&2;
-	        return 1;
-	    fi;
-	    if [ ! -f "$1" ]; then
-	        echo "$1 does not exist." 1>&2;
-	        return 1;
-	    fi;
-	    podman run --rm --device /dev/fuse -e S3_ACCESS=admin -e S3_SECRET=admin123 -v "$(realpath $1)":/home/builder/config.yaml:Z ${EXTRA_PODMAN_ARGS} ghcr.io/openchami/image-build-el9:v0.1.2 image-build --config config.yaml --log-level DEBUG
-	}
 ```
 
 ## 1.5 Configure the Boot Script Service and Cloud-Init.
@@ -898,10 +816,10 @@ Check all of the required packages were installed and from the correct sources:
 dnf list installed 
 ```
 
-Create slurm config file that is identical to that of the head node VM:
+Create slurm config file that is identical to that of the head node VM. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
 
-```bash
-cat <<EOF | sudo tee /etc/slurm/slurm.conf
+**Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
+```bash {title="/etc/slurm/slurm.conf"}
 #
 ClusterName=demo
 SlurmctldHost=demo.openchami.cluster
@@ -1054,7 +972,6 @@ LaunchParameters=use_interactive_step
 NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
 
 PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
-EOF
 ```
 
 Configure the hosts file with addresses for both the head node and the compute node:
