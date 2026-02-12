@@ -669,7 +669,7 @@ Create payload for boot script service with URIs for slurm compute boot artefact
 ```bash
 sudo mkdir /etc/openchami/data/boot/
 
-URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/slurm | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:9000/-' | xargs)
+URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/slurm | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
@@ -1055,16 +1055,20 @@ Find all directories owned by old munge UID/GID with the following command:
 `find / -uid 991 -type d`
 {{< /callout >}}
 
-Copy munge key from the head node VM to the compute node VM:
+Copy the munge key from the head node to the compute node.
+
+**Inside the head node:**
 
 ```bash
-# Inside the head node VM
 cd ~
 sudo cp /etc/munge/munge.key ./
 sudo chown rocky:rocky munge.key
 scp ./munge.key root@172.16.0.1:~/
+```
 
-# Inside the compute node VM
+**Inside the compute node:**
+
+```bash
 mv munge.key /etc/munge/munge.key
 chown munge:munge /etc/munge/munge.key
 ```
@@ -1073,6 +1077,8 @@ chown munge:munge /etc/munge/munge.key
 In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hosts:3", wipe the contents of the known hosts file and try the 'scp' command again:
 `> /home/rocky/.ssh/known_hosts`
 {{< /callout >}}
+
+Continuing **inside the compute node**, setup and start the services for Slurm.
 
 Enable and start munge service:
 
