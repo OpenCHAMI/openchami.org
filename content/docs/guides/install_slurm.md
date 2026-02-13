@@ -572,6 +572,14 @@ curl http://localhost:8080/slurm-24.05.5/repodata/repomd.xml
 
 Create the compute Slurm image config file (uses the base image created in the tutorial as the parent layer):
 
+{{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
+When writing YAML, it's important to be consistent with spacing. **It is
+recommended to use spaces for all indentation instead of tabs.**
+
+When pasting, you may have to configure your editor to not apply indentation
+rules (`:set paste` in Vim, `:set nopaste` to switch back).
+{{< /callout >}}
+
 **Edit as root: `/etc/openchami/data/images/compute-slurm-rocky9.yaml`**
 ```yaml {title="/etc/openchami/data/images/compute-slurm-rocky9.yaml"}
 options:
@@ -769,8 +777,51 @@ ochami cloud-init group get config compute
 ochami cloud-init group render compute x1000c0s0b0n0
 ```
 
-**In another window inside the VM host**, create compute1 compute node VM. Do NOT run the below command from inside the head node VM:
+Boot the compute1 compute node VM from the compute Slurm image:
 
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If the head node is in a VM (see [**Head Node: Using Virtual
+Machine**](https://openchami.org/docs/tutorial/#05-head-node-using-virtual-machine)), make sure to run the
+`virt-install` command on the host!
+{{< /callout >}}
+
+{{< tabs "install-compute-vm" >}}
+{{< tab "Bare Metal Head" >}}
+
+```bash
+sudo virt-install \
+  --name compute1 \
+  --memory 4096 \
+  --vcpus 1 \
+  --disk none \
+  --pxe \
+  --os-variant rocky9 \
+  --network network=openchami-net,model=virtio,mac=52:54:00:be:ef:01 \
+  --graphics none \
+  --console pty,target_type=serial \
+  --boot network,hd \
+  --boot loader=/usr/share/OVMF/OVMF_CODE.secboot.fd,loader.readonly=yes,loader.type=pflash,nvram.template=/usr/share/OVMF/OVMF_VARS.fd,loader_secure=no \
+  --virt-type kvm
+```
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+```bash
+sudo virt-install \
+  --name compute1 \
+  --memory 4096 \
+  --vcpus 1 \
+  --disk none \
+  --pxe \
+  --os-variant rocky9 \
+  --network network=openchami-net,model=virtio,mac=52:54:00:be:ef:01 \
+  --graphics none \
+  --console pty,target_type=serial \
+  --boot network,hd \
+  --boot loader=/usr/share/OVMF/OVMF_CODE.secboot.fd,loader.readonly=yes,loader.type=pflash,nvram.template=/usr/share/OVMF/OVMF_VARS.fd,loader_secure=no \
+  --virt-type kvm
+```
+{{< /tab >}}
+{{< tab "VM Head" >}}
 ```bash
 sudo virt-install \
   --name compute1 \
@@ -783,28 +834,98 @@ sudo virt-install \
   --graphics none \
   --console pty,target_type=serial \
   --boot network,hd \
-  --boot loader=/usr/share/OVMF/OVMF_CODE_4M.secboot.fd,loader.readonly=yes,loader.type=pflash,nvram.template=/usr/share/OVMF/OVMF_VARS_4M.fd,loader_secure=no \
+  --boot loader=/usr/share/OVMF/OVMF_CODE.secboot.fd,loader.readonly=yes,loader.type=pflash,nvram.template=/usr/share/OVMF/OVMF_VARS.fd,loader_secure=no \
   --virt-type kvm
+```
+{{< /tab >}}
+{{< /tabs >}}
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If you recieve following error:
+
+`ERROR    Failed to open file '/usr/share/OVMF/OVMF_VARS.fd': No such file or directory`
+
+Repeat the command, but replace `OVMF_VARS.fd` with `OVMF_VARS_4M.fd` and replace `OVMF_CODE.secboot.fd` with `OVMF_CODE_4M.secboot.fd`.
+
+If this still fails, check the path under **/usr/share/OVMF** to check the name of the files there, as some distros store them under varient names.
+{{< /callout >}}
+
+
+Watch it boot. First, it should PXE:
+
+```
+>>Start PXE over IPv4.
+  Station IP address is 172.16.0.1
+
+  Server IP address is 172.16.0.254
+  NBP filename is ipxe-x86_64.efi
+  NBP filesize is 1079296 Bytes
+ Downloading NBP file...
+
+  NBP file downloaded successfully.
+BdsDxe: loading Boot0001 "UEFI PXEv4 (MAC:525400BEEF01)" from PciRoot(0x0)/Pci(0x1,0x0)/Pci(0x0,0x0)/MAC(525400BEEF01,0x1)/IPv4(0.0.0.0,0x0,DHCP,0.0.0.0,0.0.0.0,0.0.0.0)
+BdsDxe: starting Boot0001 "UEFI PXEv4 (MAC:525400BEEF01)" from PciRoot(0x0)/Pci(0x1,0x0)/Pci(0x0,0x0)/MAC(525400BEEF01,0x1)/IPv4(0.0.0.0,0x0,DHCP,0.0.0.0,0.0.0.0,0.0.0.0)
+iPXE initialising devices...
+autoexec.ipxe... Not found (https://ipxe.org/2d12618e)
+
+
+
+iPXE 1.21.1+ (ge9a2) -- Open Source Network Boot Firmware -- https://ipxe.org
+Features: DNS HTTP HTTPS iSCSI TFTP VLAN SRP AoE EFI Menu
+```
+
+Then, we should see it get it's boot script from TFTP, then BSS (the `/boot/v1` URL), then download it's kernel/initramfs and boot into Linux.
+
+```
+Configuring (net0 52:54:00:be:ef:01)...... ok
+tftp://172.16.0.254:69/config.ipxe... ok
+Booting from http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01
+http://172.16.0.254:8081/boot/v1/bootscript... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img... ok
+```
+
+During Linux boot, output should indicate that the SquashFS image gets downloaded and loaded.
+
+```
+[    2.169210] dracut-initqueue[545]:   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[    2.170532] dracut-initqueue[545]:                                  Dload  Upload   Total   Spent    Left  Speed
+100 1356M  100 1356M    0     0  1037M      0  0:00:01  0:00:01 --:--:-- 1038M
+[    3.627908] squashfs: version 4.0 (2009/01/31) Phillip Lougher
 ```
 
 Once PXE boot process is done, detach from the VM with `ctrl+]`. Log back into the virsh console if desired with `virsh console compute1`.
 
+{{< callout context="tip" title="Tip" icon="outline/bulb" >}}
+If the VM installation fails for any reason, it can be destroyed and undefined so that the install command can be run again.
 
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-If you make a mistake and need to reboot the compute node VM with an updated image, do the following:
+1. Shut down ("destroy") the VM:
+   ```bash
+   sudo virsh destroy compute1
+   ```
+1. Undefine the VM:
+   ```bash
+   sudo virsh undefine --nvram compute1
+   ```
+1. Rerun the `virt-install` command above.
 
-In another window in the host, destroy existing compute node VM.
 
-`sudo virsh destroy compute1`
+**Alternatively**, if you want to reboot the compute node VM with an updated image, do the following:
 
-Attach to the console to watch compute1 boot again.
-
-`sudo virsh start --console compute1`
+```bash
+sudo virsh destroy compute1
+sudo virsh start --console compute1
+```
 {{< /callout >}}
+
 
 ## 1.6 Configure and Start Slurm in the Compute Node
 
-**From inside the head node VM**, log into the compute node:
+Login as root to the compute node, ignoring its host key:
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If using a VM head node, login from there. Else, login from host.
+{{< /callout >}}
 
 ```bash
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@172.16.0.1 
@@ -816,7 +937,7 @@ Check all of the required packages were installed and from the correct sources:
 dnf list installed 
 ```
 
-Create slurm config file that is identical to that of the head node VM. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
+Create slurm config file that is identical to that of the head node. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
 
 **Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
 ```bash {title="/etc/slurm/slurm.conf"}
@@ -1009,7 +1130,7 @@ mkdir /var/log/slurm
 chown slurm:slurm /var/log/slurm
 ```
 
-Creating job_container.conf file that matches the one in the head node VM:
+Creating job_container.conf file that matches the one in the head node:
 
 ```bash
 cat <<EOF | tee /etc/slurm/job_container.conf
@@ -1121,7 +1242,7 @@ sudo systemctl restart slurmdbd
 systemctl restart slurmd
 ```
 
-Test munge on the **head node VM**:
+Test munge on the **head node**:
 
 ```bash
 # Try to munge and unmunge to access the compute node
@@ -1133,7 +1254,7 @@ In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hos
 `> /home/rocky/.ssh/known_hosts`
 {{< /callout >}}
 
-Quickly test that you can submit a job from the head node VM:
+Quickly test that you can submit a job from the head node:
 
 ```bash
 # Check that node is present and idle
