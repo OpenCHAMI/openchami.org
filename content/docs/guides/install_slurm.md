@@ -35,9 +35,11 @@ This guide assumes you have setup an OpenCHAMI cluster per Sections 1-2.6 in the
   - [1.3 Install Slurm and Setup Configuration Files](#13-install-slurm-and-setup-configuration-files)
   - [1.4 Make a Local Slurm Repository and Serve it with Nginx](#14-make-a-local-slurm-repository-and-serve-it-with-nginx)
   - [1.5 Configure the Boot Script Service and Cloud-Init](#15-configure-the-boot-script-service-and-cloud-init)
-  - [1.6 Configure and Start Slurm in the Compute Node](#16-configure-and-start-slurm-in-the-compute-node)
+  - [1.6 Boot the Compute Node with the Slurm Compute Image](#16-boot-the-compute-node-with-the-slurm-compute-image)
+  - [1.7 Configure and Start Slurm in the Compute Node](#17-configure-and-start-slurm-in-the-compute-node)
+  - [1.8 Test Munge and Slurm](#18-test-munge-and-slurm)
 
-
+ 
 # 1 Setup and Configure Slurm
 
 Steps in this section occur on the head node created in the OpenCHAMI tutorial (or otherwise).
@@ -146,6 +148,17 @@ Create the local repository (this will be used for installation and images later
 
 ```bash
 sudo createrepo /install/osupdates/rocky9/x86_64/slurm-24.05.5
+```
+
+The output should be:
+
+```
+Directory walk started
+Directory walk done - 15 packages
+Temporary output repo path: /install/osupdates/rocky9/x86_64/slurm-24.05.5/.repodata/
+Preparing sqlite DBs
+Pool started (with 5 workers)
+Pool finished
 ```
 
 ## 1.2 Configure Slurm and Slurm Services
@@ -564,10 +577,70 @@ http {
 
 Detach from the container with: `ctrl-P, then ctrl-Q`.
 
-Check everything is working by grabbing the repodata file from the head node:
+Check everything is working by grabbing the repodata file from inside the head node:
 
 ```bash
 curl http://localhost:8080/slurm-24.05.5/repodata/repomd.xml
+```
+
+The output should be:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
+  <revision>1770960915</revision>
+  <data type="primary">
+    <checksum type="sha256">4670c00aed4cc64e542e8b76f4f59ec4dd333a2e02258ddab5b7604874915dff</checksum>
+    <open-checksum type="sha256">04f66940b8479413f57cf15aa66d56624aede301f064356ee667ccf4594470ef</open-checksum>
+    <location href="repodata/4670c00aed4cc64e542e8b76f4f59ec4dd333a2e02258ddab5b7604874915dff-primary.xml.gz"/>
+    <timestamp>1770960914</timestamp>
+    <size>5336</size>
+    <open-size>33064</open-size>
+  </data>
+  <data type="filelists">
+    <checksum type="sha256">11b43e8e70d418dbe78a8c064ca42e18d63397729ba0710323034597f681d0a4</checksum>
+    <open-checksum type="sha256">1f2b8e754a2db5c26557ad2a7b9c8b6a210115a4263fb153bc0445dc8210b59c</open-checksum>
+    <location href="repodata/11b43e8e70d418dbe78a8c064ca42e18d63397729ba0710323034597f681d0a4-filelists.xml.gz"/>
+    <timestamp>1770960914</timestamp>
+    <size>11154</size>
+    <open-size>68224</open-size>
+  </data>
+  <data type="other">
+    <checksum type="sha256">a7f25375920bf5d30d9de42a6f4aeaa8105b1150bc9bef1440e700369bcdcf53</checksum>
+    <open-checksum type="sha256">da1da29e2d02a626986c3647032c175e0cb768d4d643c9020e2ccc343ced93e4</open-checksum>
+    <location href="repodata/a7f25375920bf5d30d9de42a6f4aeaa8105b1150bc9bef1440e700369bcdcf53-other.xml.gz"/>
+    <timestamp>1770960914</timestamp>
+    <size>1229</size>
+    <open-size>3354</open-size>
+  </data>
+  <data type="primary_db">
+    <checksum type="sha256">34f7acb86f91ab845250ed939181b88acb0be454e9c42eb99cb871e3241f75e4</checksum>
+    <open-checksum type="sha256">038901ed7c43b991becd931370b539c29ad5c7abffefc1ce6fc20cb8e1c1b7c7</open-checksum>
+    <location href="repodata/34f7acb86f91ab845250ed939181b88acb0be454e9c42eb99cb871e3241f75e4-primary.sqlite.bz2"/>
+    <timestamp>1770960915</timestamp>
+    <size>12132</size>
+    <open-size>131072</open-size>
+    <database_version>10</database_version>
+  </data>
+  <data type="filelists_db">
+    <checksum type="sha256">1912b17f136f28e892c9591e34abc1c8ef5b466df8eed7d6d1c5adadb200c6ad</checksum>
+    <open-checksum type="sha256">9eb023458e4570a8c3d9407e24ee52a94befc93785e71b1f72a5d90f314762e2</open-checksum>
+    <location href="repodata/1912b17f136f28e892c9591e34abc1c8ef5b466df8eed7d6d1c5adadb200c6ad-filelists.sqlite.bz2"/>
+    <timestamp>1770960915</timestamp>
+    <size>15917</size>
+    <open-size>73728</open-size>
+    <database_version>10</database_version>
+  </data>
+  <data type="other_db">
+    <checksum type="sha256">2872ebc347c2e5fe166907ba8341dc10ef9d0419261fac253cb6bab0d1eb046f</checksum>
+    <open-checksum type="sha256">5db7c12e76bde1a6b5739ad5c52481633d1dd87599e86ce4d84bae8fe4504db1</open-checksum>
+    <location href="repodata/2872ebc347c2e5fe166907ba8341dc10ef9d0419261fac253cb6bab0d1eb046f-other.sqlite.bz2"/>
+    <timestamp>1770960915</timestamp>
+    <size>1940</size>
+    <open-size>24576</open-size>
+    <database_version>10</database_version>
+  </data>
+</repomd>
 ```
 
 Create the compute Slurm image config file (uses the base image created in the tutorial as the parent layer):
@@ -664,6 +737,14 @@ Check that the images built.
 s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4-
 ```
 
+The output should be:
+
+```
+1615M  s3://boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9
+  84M  s3://boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.20.1.el9_7.x86_64.img
+  14M  s3://boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
+```
+
 ## 1.5 Configure the Boot Script Service and Cloud-Init.
 
 Get a fresh access token for ochami:
@@ -703,6 +784,26 @@ Check the BSS boot parameters were added:
 ochami bss boot params get -F yaml
 ```
 
+The output should be:
+
+```
+- cloud-init:
+    meta-data: null
+    phone-home:
+        fqdn: ""
+        hostname: ""
+        instance_id: ""
+        pub_key_dsa: ""
+        pub_key_ecdsa: ""
+        pub_key_rsa: ""
+    user-data: null
+  initrd: http://172.16.0.254:9000/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.20.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:9000/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
+  macs:
+    - 52:54:00:be:ef:01
+  params: nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+```
+
 Create new directory for setting up cloud-init configuration:
 
 ```bash
@@ -710,14 +811,15 @@ sudo mkdir -p /etc/openchami/data/cloud-init
 cd /etc/openchami/data/cloud-init
 ```
 
-Create new ssh key:
+Create new ssh key on the head node and press **Enter** for all of the prompts:
 
 ```bash
 ssh-keygen -t ed25519
 ```
-Note: press `Enter` for all prompts to make ssh straightforward.
 
-Setup the cloud-init configuration:
+The new key that was generated can be found in `~/.ssh/id_ed25519.pub`. This key will need to be used in the cloud-init meta-data configured below.
+
+Setup the cloud-init configuration by creating `ci-defaults.yaml`:
 
 ```bash
 cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
@@ -731,14 +833,30 @@ short-name: "de"
 EOF
 ```
 
-Set the cloud-init defaults with ochami and check they are set:
+Then, set the cloud-init defaults using the `ochami` CLI:
 
 ```bash
-# Set defaults using ochami
 ochami cloud-init defaults set -f yaml -d @/etc/openchami/data/cloud-init/ci-defaults.yaml
+```
 
-# Check defaults are set
+Verify that these values were set with:
+
+```bash
 ochami cloud-init defaults get -F json-pretty
+```
+
+The output should be:
+
+```json
+{
+  "base-url": "http://172.16.0.254:8081/cloud-init",
+  "cluster-name": "demo",
+  "nid-length": 2,
+  "public-keys": [
+    "<YOUR SSH KEY>"
+  ],
+  "short-name": "nid"
+}
 ```
 
 Configure cloud-init for compute group:
@@ -764,18 +882,64 @@ Configure cloud-init for compute group:
       disable_root: false      
 ```
 
-Set config for compute group with ochami and check they are set:
+Now, set this configuration for the compute group:
 
 ```bash
-# Set compute group config with ochami
 ochami cloud-init group set -f yaml -d @/etc/openchami/data/cloud-init/ci-group-compute.yaml
+```
 
-# Check compute group config set
+Check that it got added with:
+
+```bash
 ochami cloud-init group get config compute
+```
 
-# Check jinja2 rendering properly for the compute node
+The cloud-config file created within the YAML above should get print out:
+
+```yaml
+## template: jinja
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+disable_root: false
+```
+
+`ochami` has basic per-group template rendering available that can be used to
+check that the Jinja2 is rendering properly for a node. Check if for the first
+compute node (x1000c0s0b0n0):
+
+```bash
 ochami cloud-init group render compute x1000c0s0b0n0
 ```
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+This feature requires that impersonation is enabled with cloud-init. Check and
+make sure that the `IMPERSONATION` environment variable is set in
+`/etc/openchami/configs/openchami.env`.
+{{< /callout >}}
+
+The SSH key that was created above should appear in the config:
+
+```yaml
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: ['<SSH_KEY>']
+```
+
+
+## 1.6 Boot the Compute Node with the Slurm Compute Image
 
 Boot the compute1 compute node VM from the compute Slurm image:
 
@@ -919,7 +1083,7 @@ sudo virsh start --console compute1
 {{< /callout >}}
 
 
-## 1.6 Configure and Start Slurm in the Compute Node
+## 1.7 Configure and Start Slurm in the Compute Node
 
 Login as root to the compute node, ignoring its host key:
 
@@ -931,7 +1095,7 @@ If using a VM head node, login from there. Else, login from host.
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@172.16.0.1 
 ```
 
-Check all of the required packages were installed and from the correct sources:
+Check all of the required packages were installed and from the correct sources (e.g. slurm packages should be installed from `@slurm-local` repo):
 
 ```bash
 dnf list installed 
@@ -1120,7 +1284,7 @@ chown -R slurm:slurm /var/lib/slurm
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
-Use `find / -name "slurm"` to make sure everything that needs to be changed is identified (note that not all results need ownership modified though!!)
+Use `find / -name "slurm"` to make sure everything that needs to be changed is identified. Note that not all results need ownership modified though, such as directories under `/run/`, `/usr/` or `/var/`!
 {{< /callout >}}
 
 Create the directory /var/log/slurm as it doesn't exist yet, and set ownership to Slurm:
@@ -1173,6 +1337,7 @@ chown -R munge:munge /etc/munge/
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 Find all directories owned by old munge UID/GID with the following command:
+
 `find / -uid 991 -type d`
 {{< /callout >}}
 
@@ -1196,6 +1361,7 @@ chown munge:munge /etc/munge/munge.key
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hosts:3", wipe the contents of the known hosts file and try the 'scp' command again:
+
 `> /home/rocky/.ssh/known_hosts`
 {{< /callout >}}
 
@@ -1209,6 +1375,23 @@ systemctl start munge.service
 systemctl status munge.service
 ```
 
+The output should be:
+
+```
+● munge.service - MUNGE authentication service
+     Loaded: loaded (/usr/lib/systemd/system/munge.service; enabled; preset: disabled)
+     Active: active (running) since Wed 2026-02-04 00:55:55 UTC; 1 week 2 days ago
+       Docs: man:munged(8)
+   Main PID: 1451 (munged)
+      Tasks: 4 (limit: 24335)
+     Memory: 2.2M (peak: 2.5M)
+        CPU: 4.710s
+     CGroup: /system.slice/munge.service
+             └─1451 /usr/sbin/munged
+
+Feb 04 00:55:55 de01 systemd[1]: Started MUNGE authentication service.
+```
+
 Enable and start slurmd:
 
 ```bash
@@ -1217,7 +1400,32 @@ systemctl start slurmd
 systemctl status slurmd
 ```
 
-Disable the firewall in the compute node:
+The output should be:
+
+```
+● slurmd.service - Slurm node daemon
+     Loaded: loaded (/usr/lib/systemd/system/slurmd.service; enabled; preset: disabled)
+     Active: active (running) since Fri 2026-02-13 05:59:32 UTC; 4s ago
+   Main PID: 30727 (slurmd)
+      Tasks: 1
+     Memory: 1.3M (peak: 1.5M)
+        CPU: 16ms
+     CGroup: /system.slice/slurmd.service
+             └─30727 /usr/sbin/slurmd --systemd
+
+Feb 13 05:59:32 de01.openchami.cluster systemd[1]: Stopped Slurm node daemon.
+Feb 13 05:59:32 de01.openchami.cluster systemd[1]: slurmd.service: Consumed 3.533s CPU time, 3.0M memory peak.
+Feb 13 05:59:32 de01.openchami.cluster systemd[1]: Starting Slurm node daemon...
+Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: _read_slurm_cgroup_conf: No cgroup.conf file (/etc/slurm/cgroup.conf), using defaults
+Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: _read_slurm_cgroup_conf: No cgroup.conf file (/etc/slurm/cgroup.conf), using defaults
+Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: CPU frequency setting not configured for this node
+Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: slurmd version 24.05.5 started
+Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: slurmd started on Fri, 13 Feb 2026 05:59:32 +0000
+Feb 13 05:59:32 de01.openchami.cluster systemd[1]: Started Slurm node daemon.
+Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: CPUs=1 Boards=1 Sockets=1 Cores=1 Threads=1 Memory=3892 TmpDisk=778 Uptime=796812 CPUSpecList=(null) FeaturesAvail=(null) FeaturesActive=(null) 
+```
+
+Disable the firewall and reset the nft ruleset in the compute node:
 
 ```bash
 systemctl stop firewalld
@@ -1242,6 +1450,8 @@ sudo systemctl restart slurmdbd
 systemctl restart slurmd
 ```
 
+## 1.8 Test Munge and Slurm
+
 Test munge on the **head node**:
 
 ```bash
@@ -1249,27 +1459,68 @@ Test munge on the **head node**:
 munge -n | ssh root@172.16.0.1 unmunge
 ```
 
+The output should be:
+
+```
+STATUS:           Success (0)
+ENCODE_HOST:      ??? (192.168.200.2)
+ENCODE_TIME:      2026-02-13 05:33:34 +0000 (1770960814)
+DECODE_TIME:      2026-02-13 05:33:34 +0000 (1770960814)
+TTL:              300
+CIPHER:           aes128 (4)
+MAC:              sha256 (5)
+ZIP:              none (0)
+UID:              ??? (1000)
+GID:              ??? (1000)
+LENGTH:           0
+```
+
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hosts:3", wipe the contents of the known hosts file and try the 'munge' command again:
+
 `> /home/rocky/.ssh/known_hosts`
 {{< /callout >}}
 
-Quickly test that you can submit a job from the head node:
+Test that you can submit a job from the **head node**.
+
+Check that the node is present and idle:
 
 ```bash
-# Check that node is present and idle
 sinfo
+```
 
-# Create user with Slurm account
+The output should be:
+
+```
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+main*        up   infinite      1   idle de01
+```
+
+Create user with a Slurm account:
+
+```bash
 sudo useradd -m -s /bin/bash testuser
 sudo usermod -aG wheel testuser
 sudo sacctmgr create user testuser defaultaccount=root
 sudo su - testuser
+```
 
-# Run a test job as the user 'testuser'
+Run a test job as the user 'testuser':
+
+```bash
 srun hostname
 ```
 
+The output should be:
+
+```
+de01
+```
+
 If something goes wrong and your compute node goes down, restart it with this command:
-`sudo scontrol update NodeName=de01 State=RESUME`
+
+```bash
+sudo scontrol update NodeName=de01 State=RESUME
+```
+
 
