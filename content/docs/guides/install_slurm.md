@@ -1108,13 +1108,17 @@ nft list ruleset
 
 Restart Slurm service daemons to ensure changes are applied:
 
-```bash
-# In the compute node:
-systemctl restart slurmd
+**Inside the head node:**
 
-# In the head node:
+```bash
 sudo systemctl restart slurmctld
 sudo systemctl restart slurmdbd
+```
+
+**Inside the compute node:**
+
+```bash
+systemctl restart slurmd
 ```
 
 Test munge on the **head node VM**:
