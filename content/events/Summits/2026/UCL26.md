@@ -61,8 +61,16 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 
 | Day | Theme | Highlights |
 |---|---|---|
-| **Day 1 – ** | *TBD* | TBD |
-| **Day 2 – ** | *TBD* | TBD |
+| **Day 1 –** | Operations and Community Development |  |
+|  | Introductions and Project Status | Get to know the project and the participants |
+|  | Current Usage Overview | Deployments and Vendor Roadmaps that include OpenCHAMI |
+|  | Operating OpenCHAMI | Learn about switching system images in seconds, advanced authentication and authorization, cloud patterns with cloud-init|
+|  | UK/EU Community Growth | Discuss sovereignty and Open-Source, Enabling EU/UK use cases |
+|  | HPSF and the Linux Foundation | Benefits and resources of larger communities | 
+| **Day 2 –** | Deployment and Scaling |  |
+|  | Converting Cray-HPE Ex systems from CSM to OpenCHAMI |  |
+|  | Deploying for multitenancy with UK TREs and more |  |
+|  | Arranging OpenCHAMI components | Deploying with Kubernetes, quadlets and/or other systems  |
 
 ## Schedule
 *(All times Local)*
