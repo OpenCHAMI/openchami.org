@@ -69,7 +69,7 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 |  | HPSF and the Linux Foundation | Benefits and resources of larger communities | 
 | **Day 2 –** | Deployment and Scaling |  |
 |  | Converting Cray-HPE EX systems from CSM to OpenCHAMI |  |
-|  | Deploying for multitenancy with UK TREs and more |  |
+|  | Deploying for multitenancy with UK Trusted Research Environments (TREs) and more |  |
 |  | Arranging OpenCHAMI components | Deploying with Kubernetes, quadlets and/or other systems  |
 
 ## Schedule
