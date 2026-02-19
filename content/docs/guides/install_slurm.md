@@ -46,6 +46,51 @@ Steps in this section occur on the head node created in the OpenCHAMI tutorial (
 
 ## 1.1 Setup Slurm Build/Installation as a Local Repository
 
+Install version 0.5.18 of munge. Versions 0.5-0.5.17 have a significant security vulnerability, so it is important that version 0.5.18 is used instead of 0.5.13 which is available through dnf for Rocky Linux 9. For more information see: [https://nvd.nist.gov/vuln/detail/CVE-2026-25506](https://nvd.nist.gov/vuln/detail/CVE-2026-25506) 
+
+
+Grab munge version 0.5.18 release tarball from GitHub:
+
+```bash
+curl -sL https://github.com/dun/munge/releases/download/munge-0.5.18/munge-0.5.18.tar.xz -o munge-0.5.18.tar.xz
+```
+
+Convert tarball to rpm package, build dependencies and build binary package:
+
+```bash
+rpmbuild -ts munge-0.5.18.tar.xz
+
+sudo dnf builddep /home/rocky/rpmbuild/SRPMS/munge-0.5.18-1.el9.src.rpm
+
+rpmbuild -tb munge-0.5.18.tar.xz
+```
+
+Install rpms created by rpmbuild:
+
+```bash
+cd ~/rpmbuild
+
+sudo rpm --install --verbose --force \
+    RPMS/x86_64/munge-0.5.18-1.el9.x86_64.rpm \
+    RPMS/x86_64/munge-debuginfo-0.5.18-1.el9.x86_64.rpm \
+    RPMS/x86_64/munge-debugsource-0.5.18-1.el9.x86_64.rpm \
+    RPMS/x86_64/munge-devel-0.5.18-1.el9.x86_64.rpm \
+    RPMS/x86_64/munge-libs-0.5.18-1.el9.x86_64.rpm \
+    RPMS/x86_64/munge-libs-debuginfo-0.5.18-1.el9.x86_64.rpm
+```
+
+Check that munge was installed correctly:
+
+```bash
+munge --version
+```
+
+The output should be:
+
+```
+munge-0.5.18 (2026-02-10)
+```
+
 Download Slurm pre-requisite sources compatible with Rocky 9 OS:
 
 ```bash
@@ -59,7 +104,7 @@ sudo dnf groupinstall -y 'Development Tools' && \
 sudo dnf install -y createrepo freeipmi freeipmi-devel dbus-devel gtk2-devel hdf5 hdf5-devel http-parser-devel \
                hwloc hwloc-devel jq json-c-devel libaec libconfuse libcurl-devel libevent-devel \
                libyaml libyaml-devel lua-devel lua-filesystem lua-json lua-lpeg lua-posix lua-term mariadb mariadb-devel \
-               munge munge-devel munge-libs ncurses-devel numactl numactl-devel oniguruma openssl-devel pam-devel \
+               ncurses-devel numactl numactl-devel oniguruma openssl-devel pam-devel \
                perl-DBI perl-ExtUtils-MakeMaker perl-Switch pigz python3 python3-devel readline-devel \
                lsb_release rrdtool rrdtool-devel tcl tcl-devel ucx ucx-cma ucx-devel ucx-ib wget \
                lz4-devel s2n-tls-devel libjwt-devel librdkafka-devel && \
@@ -184,7 +229,7 @@ sudo chown munge:munge /var/lib/munge/
 sudo chown munge:munge /etc/munge/
 
 # Create munge key
-sudo create-munge-key
+sudo -u munge /usr/sbin/mungekey -v
 
 # Start munge again
 sudo systemctl enable --now munge
