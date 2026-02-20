@@ -374,7 +374,7 @@ Create the Slurm config file, which will be used by SlurmCTL. Note that you may 
 ```bash {title="/etc/slurm/slurm.conf"}
 #
 ClusterName=demo
-SlurmctldHost=demo.openchami.cluster
+SlurmctldHost=demo
 #
 #DisableRootJobs=NO
 EnforcePartLimits=ALL
@@ -707,11 +707,11 @@ options:
     - 'rocky9'
   pkg_manager: dnf
   gpgcheck: False
-  parent: 'demo.openchami.cluster:5000/demo/rocky-base:9'
+  parent: 'master.openchami.cluster:5000/demo/rocky-base:9'
   registry_opts_pull:
     - '--tls-verify=false'
 
-  publish_s3: 'http://demo.openchami.cluster:7070'
+  publish_s3: 'http://master.openchami.cluster:7070'
   s3_prefix: 'compute/slurm/'
   s3_bucket: 'boot-images'
 
@@ -722,6 +722,7 @@ repos:
   - alias: 'Slurm'
     url: 'http://localhost:8080/slurm-24.05.5'
             
+
 packages:
   - boxes
   - figlet
@@ -730,6 +731,8 @@ packages:
   - tcpdump
   - traceroute
   - vim
+  - curl
+  - rpm-build
   - shadow-utils
   - pwgen
   - jq
@@ -751,6 +754,15 @@ packages:
   - slurm-slurmdbd-24.05.5
   - slurm-slurmrestd-24.05.5
   - slurm-torque-24.05.5
+
+cmds:
+  - cmd: 'curl -sL https://github.com/dun/munge/releases/download/munge-0.5.18/munge-0.5.18.tar.xz -o munge-0.5.18.tar.xz'
+  - cmd: 'rpmbuild -ts munge-0.5.18.tar.xz'
+  - cmd: 'dnf builddep -y /root/rpmbuild/SRPMS/munge-0.5.18-1.el9.src.rpm'
+  - cmd: 'rpmbuild -tb munge-0.5.18.tar.xz'
+  - cmd: 'cd /root/rpmbuild'
+  - cmd: 'rpm --install --verbose --force /root/rpmbuild/RPMS/x86_64/munge-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-debuginfo-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-debugsource-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-devel-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-libs-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-libs-debuginfo-0.5.18-1.el9.x86_64.rpm'
+  - cmd: 'dnf remove -y munge-libs-0.5.13-13.el9 munge-0.5.13-13.el9'
 ```
 
 Run podman container to run image build command. The S3_ACCESS and S3_SECRET tokens are set in the tutorial [here](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients).
@@ -1152,7 +1164,7 @@ Create slurm config file that is identical to that of the head node. Note that y
 ```bash {title="/etc/slurm/slurm.conf"}
 #
 ClusterName=demo
-SlurmctldHost=demo.openchami.cluster
+SlurmctldHost=demo
 #
 #DisableRootJobs=NO
 EnforcePartLimits=ALL
@@ -1342,13 +1354,13 @@ chown slurm:slurm /var/log/slurm
 Creating job_container.conf file that matches the one in the head node:
 
 ```bash
-cat <<EOF | tee /etc/slurm/job_container.conf
-# Job /tmp on a local volume mounted on /lscratch
+SLURMTMPDIR=/lscratch
+
+echo "# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
 # /dev/shm has special handling, and instead of a bind mount is always a fresh tmpfs filesystem.
-BasePath=/lscratch
+BasePath=${SLURMTMPDIR}
 AutoBasePath=true
-Shared=true
-EOF
+Shared=true" | tee /etc/slurm/job_container.conf
 ```
 
 Update ownership of the job container config file:
@@ -1480,16 +1492,14 @@ nft flush ruleset
 nft list ruleset
 ```
 
-Restart Slurm service daemons to ensure changes are applied:
-
-**Inside the head node:**
+Start Slurm service daemons in the **head node**: 
 
 ```bash
-sudo systemctl restart slurmctld
-sudo systemctl restart slurmdbd
+sudo systemctl start slurmdbd
+sudo systemctl start slurmctld
 ```
 
-**Inside the compute node:**
+Restart Slurm service daemons in the **compute node** to ensure changes are applied:
 
 ```bash
 systemctl restart slurmd
@@ -1559,6 +1569,10 @@ srun hostname
 The output should be:
 
 ```
+srun: job 1 queued and waiting for resources
+srun: job 1 has been allocated resources
+slurmstepd: error: couldn't chdir to `/home/lmorrow': No such file or directory: going to /tmp instead
+slurmstepd: error: couldn't chdir to `/home/lmorrow': No such file or directory: going to /tmp instead
 de01
 ```
 
