@@ -299,7 +299,7 @@ mysql -u root -p # when prompted, enter the password from pwgen
 create database slurm_acct_db;
 grant all on slurm_acct_db.* to slurm@'localhost' identified by '<pwgen password>';
 grant all on slurm_acct_db.* to slurm@'demo.openchami.cluster' identified by '<pwgen password>';
-grant all on slurm_acct_db.* to slurm@'head' identified by '<pwgen password>';
+grant all on slurm_acct_db.* to slurm@'demo' identified by '<pwgen password>';
 exit
 ```
 
@@ -351,9 +351,9 @@ sudo chown -R slurm. /etc/slurm/
 Modify the SlurmDB config. You will need the `pwgen` generated password generated earlier when setting up MariaDB for this section:
 
 ```bash
-DBHOST=head
+DBHOST=demo
 DBPASSWORD=<pwgen password>   # EDIT TO THE PASSWORD SET IN THE MARIADB CONFIGURATION SECTION
-SLURMDBHOST1=head
+SLURMDBHOST1=demo
 
 sudo sed -i "s|DbdAddr.*|DbdAddr=${SLURMDBHOST1}|g" /etc/slurm/slurmdbd.conf
 sudo sed -i "s|DbdHost.*|DbdHost=${SLURMDBHOST1}|g" /etc/slurm/slurmdbd.conf
@@ -542,7 +542,7 @@ Configure the hosts file with addresses for both the head node and the compute n
 
 ```bash
 cat <<EOF | sudo tee -a /etc/hosts
-172.16.0.254   demo.openchami.cluster head
+172.16.0.254   demo.openchami.cluster demo
 172.16.0.1     de01.openchami.cluster de01
 EOF
 ```
@@ -1320,7 +1320,7 @@ Configure the hosts file with addresses for both the head node and the compute n
 
 ```bash
 cat <<EOF | tee -a /etc/hosts
-172.16.0.254   demo.openchami.cluster head
+172.16.0.254   demo.openchami.cluster demo
 172.16.0.1     de01.openchami.cluster de01
 EOF
 ```
