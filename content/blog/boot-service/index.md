@@ -16,7 +16,7 @@ contributors = ["David J. Allen"]
 
 Before diving into how boot-service works itself, I would recommend taking a look at the blog post about [Fabrica](https://openchami.org/blog/2025/11/using-fabrica-to-generate-a-hardware-inventory-api/) and explore [the Fabrica repository on GitHub](https://github.com/OpenCHAMI/fabrica) first. It isn't critical, but the basic idea is that Fabrica is a new API service generator which is used to generate new services. Understanding this should help to understand a bit more about how boot-service works internally and where some issues may occur when troubleshooting.
 
-This post will briefly cover how to set up and use boot-service in place of BSS.
+This post will briefly cover how to set up and use boot-service in place of BSS. It assumes that you have `go` and its build tools installed to build `boot-service` from source.
 
 ## Setting up Boot-Service with Podman
 
@@ -70,6 +70,7 @@ Then, if you need to make changes and test out a custom image, you can clone the
 
 git clone https://github.com/OpenCHAMI/boot-service
 cd boot-service
+go mod tidy
 
 # build new podman image
 sudo podman build \
