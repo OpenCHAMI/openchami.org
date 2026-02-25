@@ -50,9 +50,24 @@ Restart=always
 
 This file defines the quadlet that generates a Systemd unit file. The dependency on SMD is not necessary here since boot-service has another mechanism for adding nodes with a file. However, we want to use SMD to pull node information like we're currently doing with BSS.
 
-Then, if you need to make changes and test out a custom image, you can clone the respository and build with `podman build` using the `Dockerfile.standalone` file.
+First, let's set up a couple of things. 
 
 ```bash
+mkdir -p /opt/workdir/
+cd /opt/workdir/
+```
+
+We will need both `tokensmith` and `fabrica` to get things to work using the source code for `boot-service`. Let's clone both repositories in the `/opt/workdir` directory we just created.
+
+```bash
+git clone https://github.com/OpenCHAMI/tokensmith
+git clone https://github.com/OpenCHAMI/fabrica
+```
+
+Then, if you need to make changes and test out a custom image, you can clone the ``boot-service` respository and build with `podman build` using the `Dockerfile.standalone` file.
+
+```bash
+
 git clone https://github.com/OpenCHAMI/boot-service
 cd boot-service
 
