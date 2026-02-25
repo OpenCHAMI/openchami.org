@@ -97,7 +97,9 @@ REPOSITORY                         TAG            IMAGE ID      CREATED        S
 ghcr.io/openchami/boot-service     v0.1.0         9fbb27a9d754  8 days ago     19.5 MB
 ```
 
-> [!]
+{{< callout context="tip" title="Tip" icon="outline/info-circle" >}}
+Make sure that the `REPOSITORY` and `TAG` matches the `Container.Image` as in `/etc/containers/systemd/boot-service.container` file.
+{{< /callout >}}
 
 Reload the Systemd daemon and start the service.
 
