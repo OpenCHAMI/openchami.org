@@ -97,11 +97,13 @@ REPOSITORY                         TAG            IMAGE ID      CREATED        S
 ghcr.io/openchami/boot-service     v0.1.0         9fbb27a9d754  8 days ago     19.5 MB
 ```
 
+> [!]
+
 Reload the Systemd daemon and start the service.
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl start --enable boot-service
+sudo systemctl start boot-service
 ```
 
 You can view the logs to make sure the container is running with `podman`.
