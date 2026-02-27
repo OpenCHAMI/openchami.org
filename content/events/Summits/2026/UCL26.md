@@ -51,7 +51,8 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 ## Location & Directions
 
 
-**Venue:** .
+**Venue:** University College London, Gower Street, London, WC1E 6BT
+
 
 
 ---
@@ -61,8 +62,16 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 
 | Day | Theme | Highlights |
 |---|---|---|
-| **Day 1 – ** | *TBD* | TBD |
-| **Day 2 – ** | *TBD* | TBD |
+| **Day 1 –** | Operations and Community Development |  |
+|  | Introductions and Project Status | Get to know the project and the participants |
+|  | Current Usage Overview | Deployments and Vendor Roadmaps that include OpenCHAMI |
+|  | Operating OpenCHAMI | Learn about switching system images in seconds, advanced authentication and authorization, cloud patterns with cloud-init|
+|  | UK/EU Community Growth | Discuss sovereignty and Open-Source, Enabling EU/UK use cases |
+|  | HPSF and the Linux Foundation | Benefits and resources of larger communities | 
+| **Day 2 –** | Deployment and Scaling |  |
+|  | Converting Cray-HPE EX systems from CSM to OpenCHAMI |  |
+|  | Deploying for multitenancy with UK Trusted Research Environments (TREs) and more |  |
+|  | Arranging OpenCHAMI components | Deploying with Kubernetes, quadlets and/or other systems  |
 
 ## Schedule
 *(All times Local)*
@@ -86,16 +95,15 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 ---
 
 ## Tracks & Chairs
-- **Architecture:** Alex Lovell-Troy — [alovelltroy@lanl.gov](mailto:alovelltroy@lanl.gov)
+- **Architecture:** Alex Lovell-Troy (LANL) — [alovelltroy@lanl.gov](mailto:alovelltroy@lanl.gov)
+- **UK/EU Community Growth** Tom Green (BriCS) - [thomas.green@bristol.ac.uk](mailto:thomas.green@bristol.ac.uk)
+- **UK Trusted Research Environments** Camilla Harris - [camilla.harris@ucl.ac.uk](mailto:camilla.harris@ucl.ac.uk)
 
 ---
 
 ## Registration
-Registration is required for attendance. Please secure your spot by visiting our [Registration page](https://pretix.eu/ARC/ochami-ucl-2026/). Capacity is limited and on-site meals are provided based on registration.
+Registration is required for attendance. Please secure your spot by visiting our [Registration page](https://pretix.eu/ARC/ochami-ucl-2026/). Capacity is limited.
 
-<!--
-👉 **Add to your calendar:** [Download .ics file](/calendar/tacc25_schedule.ics)
--->
 
 ---
 
