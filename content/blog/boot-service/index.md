@@ -16,7 +16,7 @@ contributors = ["David J. Allen"]
 
 Before diving into how boot-service works itself, I would recommend taking a look at the blog post about [Fabrica](https://openchami.org/blog/2025/11/using-fabrica-to-generate-a-hardware-inventory-api/) and explore [the Fabrica repository on GitHub](https://github.com/OpenCHAMI/fabrica) first. It isn't critical, but the basic idea is that Fabrica is a new API service generator which is used to generate new services. Understanding this should help to understand a bit more about how boot-service works internally and where some issues may occur when troubleshooting.
 
-This post will briefly cover how to set up and use boot-service in place of BSS.
+This post will briefly cover how to set up and use boot-service in place of BSS. It assumes that you have `go` and its build tools installed to build `boot-service` from source.
 
 ## Setting up Boot-Service with Podman
 
@@ -50,11 +50,27 @@ Restart=always
 
 This file defines the quadlet that generates a Systemd unit file. The dependency on SMD is not necessary here since boot-service has another mechanism for adding nodes with a file. However, we want to use SMD to pull node information like we're currently doing with BSS.
 
-Then, if you need to make changes and test out a custom image, you can clone the respository and build with `podman build` using the `Dockerfile.standalone` file.
+First, let's set up a couple of things. 
 
 ```bash
+mkdir -p /opt/workdir/
+cd /opt/workdir/
+```
+
+We will need both `tokensmith` and `fabrica` to get things to work using the source code for `boot-service`. Let's clone both repositories in the `/opt/workdir` directory we just created.
+
+```bash
+git clone https://github.com/OpenCHAMI/tokensmith
+git clone https://github.com/OpenCHAMI/fabrica
+```
+
+Then, if you need to make changes and test out a custom image, you can clone the ``boot-service` respository and build with `podman build` using the `Dockerfile.standalone` file.
+
+```bash
+
 git clone https://github.com/OpenCHAMI/boot-service
 cd boot-service
+go mod tidy
 
 # build new podman image
 sudo podman build \
@@ -81,11 +97,15 @@ REPOSITORY                         TAG            IMAGE ID      CREATED        S
 ghcr.io/openchami/boot-service     v0.1.0         9fbb27a9d754  8 days ago     19.5 MB
 ```
 
+{{< callout context="tip" title="Tip" icon="outline/info-circle" >}}
+Make sure that the `REPOSITORY` and `TAG` matches the `Container.Image` as in `/etc/containers/systemd/boot-service.container` file.
+{{< /callout >}}
+
 Reload the Systemd daemon and start the service.
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl start --enable boot-service
+sudo systemctl start boot-service
 ```
 
 You can view the logs to make sure the container is running with `podman`.
