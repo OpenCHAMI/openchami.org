@@ -16,7 +16,7 @@ seo:
 
 # 0 Overview
 
-This guide walks through setting up Slurm on a OpenCHAMI cluster. This guide will assume you have already setup an OpenCHAMI cluster per Sections 1-2.6 in the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/). The only other requirement is to run a webserver to serve a Slurm repo for the image builder to use, and this guide assumes Podman is present to use. This guide will only walk through Slurm setup for a cluster with one head node and one compute node, but is easily expanded to multiple compute nodes by updating the node list with ochami.
+This guide walks through setting up Slurm on an OpenCHAMI cluster. This guide will assume you have already setup an OpenCHAMI cluster per Sections 1-2.6 in the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/), therefore this guide will assume the rocky user on a Rocky Linux 9 system. Please substitute the rocky user with your normal user if you have setup an OpenCHAMI cluster outside of the tutorial. The only other requirement is to run a webserver to serve a Slurm repo for the image builder to use, and this guide assumes Podman is present to use. This guide will only walk through Slurm setup for a cluster with one head node and one compute node, but is easily expanded to multiple compute nodes by updating the node list with ochami.
 
 ## 0.1 Prerequisites
 
@@ -48,6 +48,11 @@ Steps in this section occur on the head node created in the OpenCHAMI tutorial (
 
 Install version 0.5.18 of munge. Versions 0.5-0.5.17 have a significant security vulnerability, so it is important that version 0.5.18 is used instead of 0.5.13 which is available through dnf for Rocky Linux 9. For more information see: [https://nvd.nist.gov/vuln/detail/CVE-2026-25506](https://nvd.nist.gov/vuln/detail/CVE-2026-25506) 
 
+Change into working directory (created in [Section 1.1](https://openchami.org/docs/tutorial/#11-set-up-storage-directories) of the Tutorial), so that any files that are created are put here.
+
+```bash
+cd /opt/workdir
+```
 
 Grab munge version 0.5.18 release tarball from GitHub:
 
@@ -58,9 +63,11 @@ curl -sL https://github.com/dun/munge/releases/download/munge-0.5.18/munge-0.5.1
 Convert tarball to rpm package, build dependencies and build binary package:
 
 ```bash
+sudo dnf install -y rpm-build rpmdevtools
+
 rpmbuild -ts munge-0.5.18.tar.xz
 
-sudo dnf builddep /home/rocky/rpmbuild/SRPMS/munge-0.5.18-1.el9.src.rpm
+sudo dnf builddep /opt/workdir/rpmbuild/SRPMS/munge-0.5.18-1.el9.src.rpm
 
 rpmbuild -tb munge-0.5.18.tar.xz
 ```
@@ -68,15 +75,13 @@ rpmbuild -tb munge-0.5.18.tar.xz
 Install rpms created by rpmbuild:
 
 ```bash
-cd ~/rpmbuild
-
 sudo rpm --install --verbose --force \
-    RPMS/x86_64/munge-0.5.18-1.el9.x86_64.rpm \
-    RPMS/x86_64/munge-debuginfo-0.5.18-1.el9.x86_64.rpm \
-    RPMS/x86_64/munge-debugsource-0.5.18-1.el9.x86_64.rpm \
-    RPMS/x86_64/munge-devel-0.5.18-1.el9.x86_64.rpm \
-    RPMS/x86_64/munge-libs-0.5.18-1.el9.x86_64.rpm \
-    RPMS/x86_64/munge-libs-debuginfo-0.5.18-1.el9.x86_64.rpm
+    rpmbuild/RPMS/x86_64/munge-0.5.18-1.el9.x86_64.rpm \
+    rpmbuild/RPMS/x86_64/munge-debuginfo-0.5.18-1.el9.x86_64.rpm \
+    rpmbuild/RPMS/x86_64/munge-debugsource-0.5.18-1.el9.x86_64.rpm \
+    rpmbuild/RPMS/x86_64/munge-devel-0.5.18-1.el9.x86_64.rpm \
+    rpmbuild/RPMS/x86_64/munge-libs-0.5.18-1.el9.x86_64.rpm \
+    rpmbuild/RPMS/x86_64/munge-libs-debuginfo-0.5.18-1.el9.x86_64.rpm
 ```
 
 Check that munge was installed correctly:
@@ -117,8 +122,9 @@ Create build script to install Slurm 24.05.5 and PMIX 4.2.9-1:
 This guide installs Slurm 24.05.5 and PMIX 4.2.9-1 to ensure compatibility. Other versions can be installed instead, but make sure to check version compatibility first. 
 {{< /callout >}}
 
-**Create file as rocky user: 'home/rocky/build.sh'**
-```bash {title="home/rocky/build.sh"}
+**Edit as normal user: `/opt/workdir/build.sh`**
+
+```bash {title="/opt/workdir/build.sh"}
 SLURMVERSION=${1:-24.05.5}
 PMIXVERSION=${2:-4.2.9-1}
 ELRELEASE=${3:-el9} #Rocky 9
@@ -167,8 +173,8 @@ fi
 Adjust permissions for build script so that it is executable, and execute it with **root** privileges:
 
 ```bash
-chmod 755 /home/rocky/build.sh
-sudo ./build.sh
+chmod 755 /opt/workdir/build.sh
+sudo /opt/workdir/build.sh
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
@@ -185,14 +191,14 @@ configure: WARNING: unable to build man page html files without man2html
 Copy the Slurm packages to the desired location to create the local repository:
 
 ```bash
-sudo mkdir -p /install/osupdates/rocky9/x86_64/
-sudo cp -r slurm/9.7/24.05.5 /install/osupdates/rocky9/x86_64/slurm-24.05.5
+sudo mkdir -p /srv/repo/rocky/9/x86_64/
+sudo cp -r /opt/workdir/slurm/9.7/24.05.5 /srv/repo/rocky/9/x86_64/slurm-24.05.5
 ```
 
 Create the local repository (this will be used for installation and images later):
 
 ```bash
-sudo createrepo /install/osupdates/rocky9/x86_64/slurm-24.05.5
+sudo createrepo /srv/repo/rocky/9/x86_64/slurm-24.05.5
 ```
 
 The output should be:
@@ -200,7 +206,7 @@ The output should be:
 ```
 Directory walk started
 Directory walk done - 15 packages
-Temporary output repo path: /install/osupdates/rocky9/x86_64/slurm-24.05.5/.repodata/
+Temporary output repo path: /srv/repo/rocky/9/x86_64/slurm-24.05.5/.repodata/
 Preparing sqlite DBs
 Pool started (with 5 workers)
 Pool finished
@@ -215,6 +221,14 @@ SLURMID=666
 sudo groupadd -g $SLURMID slurm
 sudo useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u $SLURMID -g slurm -s /sbin/nologin slurm
 ```
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+The following warning is expected and can be ignored, as the 'slurm' user is a system service account so can have a UID below 1000.
+
+```
+useradd warning: slurm's uid 666 outside of the UID_MIN 1000 and UID_MAX 60000 range.
+```
+{{< /callout >}}
 
 Update the UID and GID of ‘munge’ user and group to 616, update directory ownership, create munge key and restart the munge service:
 
@@ -263,18 +277,19 @@ Enable and start the mariaDB service as this is a single node cluster (so we are
 sudo systemctl enable --now mariadb
 ```
 
-Secure the mariaDB installation with a strong root password. Use `pwgen` to generate a password and store this password securely. You will use the `pwgen` password to setup and configure MariaDB, as well as to create a database for Slurm to access the head node:
+Secure the mariaDB installation with a strong root password. Use `pwgen` to generate a password, and make sure to store this password securely. You will use the `pwgen` password to setup and configure MariaDB, as well as to create a database for Slurm to access the head node:
 
 ```bash
 sudo dnf -y install pwgen
-pwgen 20 1 # generates 1 password of length 20 characters
+export SQL_PWORD="$(pwgen 20 1)"
+echo "${SQL_PWORD}" # copy output for interactive prompts and so you can store it somewhere securely
 
 sudo mysql_secure_installation
 ```
 
 **MariaDB setup/settings should be done as follows:**
 ```
-Enter current password for root (enter for none): # enter rocky password: 'rocky'
+Enter current password for root (enter for none): # enter user password (e.g. "rocky" if following tutorial)
 
 Switch to unix_socket authentication [Y/n] Y
 
@@ -291,16 +306,16 @@ Remove test database and access to it? [Y/n] n
 Reload privilege tables now? [Y/n] Y
 ```
 
-Create the database and grant access to localhost and the head node. You will need the password you generated with `pwgen` in the above step. Make sure you edit the bash code provided below to replace `<pwgen password>` with the actual password: 
+Create the database and grant access to localhost and the head node. You will need the password you generated with `pwgen` in the above step when prompted to "Enter password:": 
 
 ```bash
-mysql -u root -p # when prompted, enter the password from pwgen
-
+cat <<EOF | mysql -u root -p
 create database slurm_acct_db;
-grant all on slurm_acct_db.* to slurm@'localhost' identified by '<pwgen password>';
-grant all on slurm_acct_db.* to slurm@'demo.openchami.cluster' identified by '<pwgen password>';
-grant all on slurm_acct_db.* to slurm@'demo' identified by '<pwgen password>';
+grant all on slurm_acct_db.* to slurm@'localhost' identified by "${SQL_PWORD}";
+grant all on slurm_acct_db.* to slurm@'demo.openchami.cluster' identified by "${SQL_PWORD}";
+grant all on slurm_acct_db.* to slurm@'demo' identified by "${SQL_PWORD}";
 exit
+EOF
 ```
 
 Install a few more dependencies that are required:
@@ -326,12 +341,14 @@ Add the Slurm repo created earlier to install from it (will ensure we get the co
 SLURMVERSION=24.05.5
 RELEASE=rocky9
 
-echo "[slurm-local]
+cat <<EOF | sudo tee /etc/yum.repos.d/slurm-local.repo
+[slurm-local]
 name=Slurm ${SLURMVERSION} - Local
 baseurl=file:///install/osupdates/${RELEASE}/x86_64/slurm-${SLURMVERSION}
 gpgcheck=0
 enabled=1
-countme=1" | sudo tee /etc/yum.repos.d/slurm-local.repo
+countme=1
+EOF
 
 # Install from local repo file
 sudo dnf -y install slurm slurm-contribs slurm-example-configs slurm-libpmi slurm-pam_slurm slurm-perlapi slurm-slurmctld slurm-slurmdbd pmix
@@ -352,7 +369,7 @@ Modify the SlurmDB config. You will need the `pwgen` generated password generate
 
 ```bash
 DBHOST=demo
-DBPASSWORD=<pwgen password>   # EDIT TO THE PASSWORD SET IN THE MARIADB CONFIGURATION SECTION
+DBPASSWORD="${SQL_PWORD}"   # EDIT TO THE PASSWORD SET IN THE MARIADB CONFIGURATION SECTION
 SLURMDBHOST1=demo
 
 sudo sed -i "s|DbdAddr.*|DbdAddr=${SLURMDBHOST1}|g" /etc/slurm/slurmdbd.conf
@@ -366,6 +383,12 @@ sudo sed -i "s|SlurmUser.*|SlurmUser=slurm|g" /etc/slurm/slurmdbd.conf
 sudo sed -i "s|PidFile.*|PidFile=/var/run/slurm/slurmdbd.pid|g" /etc/slurm/slurmdbd.conf
 
 sudo sed -i "s|#StorageLoc.*|StorageLoc=slurm_acct_db|g" /etc/slurm/slurmdbd.conf
+```
+
+The environment variable we set earlier to store the password for SQL should not be unset for security:
+
+```bash
+unset SQL_PWORD
 ```
 
 Create the Slurm config file, which will be used by SlurmCTL. Note that you may need to update the `NodeName` info depending on the configuration of your compute node.
@@ -531,11 +554,13 @@ Add job container config file to Slurm config directory:
 ```bash
 SLURMTMPDIR=/lscratch
 
-echo "# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
+cat <<EOF | sudo tee /etc/slurm/job_container.conf
+# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
 # /dev/shm has special handling, and instead of a bind mount is always a fresh tmpfs filesystem.
 BasePath=${SLURMTMPDIR}
 AutoBasePath=true
-Shared=true" | sudo tee /etc/slurm/job_container.conf
+Shared=true
+EOF
 ```
 
 Configure the hosts file with addresses for both the head node and the compute node:
@@ -549,34 +574,10 @@ EOF
 
 ## 1.4 Make a Local Slurm Repository and Serve it with Nginx
 
-Use Podman to run Nginx in a container that has the local Slurm repository mounted into it:
+Create configuration file to mount into Nginx container:
 
-```bash
-podman run --name serve-slurm \
-    --mount type=bind,source=/install/osupdates/rocky9/x86_64/slurm-24.05.5,target=/usr/share/nginx/html/slurm-24.05.5,readonly \
-    -p 8080:80 -d nginx
-```
-
-Access the container:
-
-```bash
-podman exec -it serve-slurm /bin/bash
-```
-
-Install vim into the container so you can edit the Nginx config file:
-
-```bash
-apt-get update && apt-get install -y vim
-```
-
-Get location of Nginx configuration file (nginx.conf) - it should be in /etc/nginx/ but this is to make sure:
-
-```bash
-nginx -V 2>&1 | awk -F: '/configure arguments/ {print $2}' | xargs -n1 | grep conf-path
-```
-
-**Edit the Nginx config file as root: `/etc/nginx/nginx.conf`**
-```bash {title="/etc/nginx/nginx.conf"}
+**Edit as normal user: `/opt/workdir/nginx.conf`**
+```bash {title="/opt/workdir/nginx.conf"}
 user  nginx;
 worker_processes  auto;
 
@@ -614,13 +615,20 @@ http {
             # configuration for processing URIs for local Slurm repo
             # serve static files from this path 
             # such that a request for /slurm-24.05.5/repodata/repomd.xml will be served /usr/share/nginx/html/slurm-24.05.5/repodata/repomd.xml
-            root /usr/share/nginx/html
+            root /usr/share/nginx/html;
         }
     }
 }
 ```
 
-Detach from the container with: `ctrl-P, then ctrl-Q`.
+Use Podman to run Nginx in a container that has the local Slurm repository and the Nginx configuration file mounted into it:
+
+```bash
+podman run --name serve-slurm \
+    -v /opt/workdir/nginx.conf:/etc/nginx/nginx.conf \
+    --mount type=bind,source=/install/osupdates/rocky9/x86_64/slurm-24.05.5,target=/usr/share/nginx/html/slurm-24.05.5,readonly \
+    -p 8080:80 -d nginx
+```
 
 Check everything is working by grabbing the repodata file from inside the head node:
 
@@ -630,7 +638,7 @@ curl http://localhost:8080/slurm-24.05.5/repodata/repomd.xml
 
 The output should be:
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <repomd xmlns="http://linux.duke.edu/metadata/repo" xmlns:rpm="http://linux.duke.edu/metadata/rpm">
   <revision>1770960915</revision>
@@ -699,6 +707,7 @@ rules (`:set paste` in Vim, `:set nopaste` to switch back).
 {{< /callout >}}
 
 **Edit as root: `/etc/openchami/data/images/compute-slurm-rocky9.yaml`**
+
 ```yaml {title="/etc/openchami/data/images/compute-slurm-rocky9.yaml"}
 options:
   layer_type: base
@@ -707,11 +716,11 @@ options:
     - 'rocky9'
   pkg_manager: dnf
   gpgcheck: False
-  parent: 'master.openchami.cluster:5000/demo/rocky-base:9'
+  parent: 'demo.openchami.cluster:5000/demo/rocky-base:9'
   registry_opts_pull:
     - '--tls-verify=false'
 
-  publish_s3: 'http://master.openchami.cluster:7070'
+  publish_s3: 'http://demo.openchami.cluster:7070'
   s3_prefix: 'compute/slurm/'
   s3_bucket: 'boot-images'
 
@@ -791,7 +800,7 @@ If you have already aliased the image build command per the [tutorial](https://o
 Check that the images built.
 
 ```bash
-s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4-
+s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4- | grep slurm
 ```
 
 The output should be:
@@ -802,7 +811,7 @@ The output should be:
   14M  s3://boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
 ```
 
-## 1.5 Configure the Boot Script Service and Cloud-Init.
+## 1.5 Configure the Boot Script Service and Cloud-Init
 
 Get a fresh access token for ochami:
 
@@ -813,7 +822,7 @@ export DEMO_ACCESS_TOKEN=$(sudo bash -lc 'gen_access_token')
 Create payload for boot script service with URIs for slurm compute boot artefacts:
 
 ```bash
-sudo mkdir /etc/openchami/data/boot/
+sudo mkdir -p /etc/openchami/data/boot/bss
 
 URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/slurm | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
@@ -1102,8 +1111,8 @@ Configuring (net0 52:54:00:be:ef:01)...... ok
 tftp://172.16.0.254:69/config.ipxe... ok
 Booting from http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01
 http://172.16.0.254:8081/boot/v1/bootscript... ok
-http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64... ok
-http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.24.1.el9_7.x86_64... ok
+http://172.16.0.254:7070/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.24.1.el9_7.x86_64.img... ok
 ```
 
 During Linux boot, output should indicate that the SquashFS image gets downloaded and loaded.
@@ -1152,11 +1161,36 @@ If using a VM head node, login from there. Else, login from host.
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@172.16.0.1 
 ```
 
-Check all of the required packages were installed and from the correct sources (e.g. slurm packages should be installed from `@slurm-local` repo):
+Check that the munge and slurm packages were installed from the correct sources (e.g. slurm packages should be installed from `@slurm-local` repo):
 
 ```bash
-dnf list installed 
+dnf list installed | grep -e munge -e slurm
 ```
+
+The output should be:
+
+```
+munge.x86_64                                   0.5.18-1.el9                     @System                                            
+munge-debuginfo.x86_64                         0.5.18-1.el9                     @System                                            
+munge-debugsource.x86_64                       0.5.18-1.el9                     @System                                            
+munge-devel.x86_64                             0.5.18-1.el9                     @System                                            
+munge-libs.x86_64                              0.5.18-1.el9                     @System                                            
+munge-libs-debuginfo.x86_64                    0.5.18-1.el9                     @System                                            
+pmix.x86_64                                    4.2.9-1.el9                      @8080_slurm-24.05.5                                
+slurm.x86_64                                   24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-contribs.x86_64                          24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-devel.x86_64                             24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-example-configs.x86_64                   24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-libpmi.x86_64                            24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-pam_slurm.x86_64                         24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-perlapi.x86_64                           24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-sackd.x86_64                             24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-slurmctld.x86_64                         24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-slurmd.x86_64                            24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-slurmdbd.x86_64                          24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-slurmrestd.x86_64                        24.05.5-1.el9                    @8080_slurm-24.05.5                                
+slurm-torque.x86_64                            24.05.5-1.el9                    @8080_slurm-24.05.5 
+``` 
 
 Create slurm config file that is identical to that of the head node. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
 
@@ -1356,11 +1390,13 @@ Creating job_container.conf file that matches the one in the head node:
 ```bash
 SLURMTMPDIR=/lscratch
 
-echo "# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
+cat <<EOF | sudo tee /etc/slurm/job_container.conf
+# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
 # /dev/shm has special handling, and instead of a bind mount is always a fresh tmpfs filesystem.
 BasePath=${SLURMTMPDIR}
 AutoBasePath=true
-Shared=true" | tee /etc/slurm/job_container.conf
+Shared=true
+EOF
 ```
 
 Update ownership of the job container config file:
@@ -1387,16 +1423,8 @@ Kill the process and repeat above two commands:
 Update munge file/directory ownership:
 
 ```bash
-chown -R munge:munge /var/log/munge/
-chown -R munge:munge /var/lib/munge/
-chown -R munge:munge /etc/munge/
+find / -uid 991 -type d -mount -writable -exec chown -R munge:munge \{\} \;
 ```
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-Find all directories owned by old munge UID/GID with the following command:
-
-`find / -uid 991 -type d`
-{{< /callout >}}
 
 Copy the munge key from the head node to the compute node.
 
@@ -1405,7 +1433,7 @@ Copy the munge key from the head node to the compute node.
 ```bash
 cd ~
 sudo cp /etc/munge/munge.key ./
-sudo chown rocky:rocky munge.key
+sudo chown "$(id -u):$(id -u)" munge.key
 scp ./munge.key root@172.16.0.1:~/
 ```
 
@@ -1417,9 +1445,11 @@ chown munge:munge /etc/munge/munge.key
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
-In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hosts:3", wipe the contents of the known hosts file and try the 'scp' command again:
+In the case of an error about "Offending ECDSA key in ~/.ssh/known_hosts:3", remove the compute node from the known hosts file and try the 'scp' command again:
 
-`> /home/rocky/.ssh/known_hosts`
+`ssh-keygen -R 172.16.0.1`
+
+Alternatively, setup an `ignore.conf` file per [Section 2.8.3](https://openchami.org/docs/tutorial/#283-logging-into-the-compute-node) of the tutorial, to prevent this issue.
 {{< /callout >}}
 
 Continuing **inside the compute node**, setup and start the services for Slurm.
@@ -1531,9 +1561,11 @@ LENGTH:           0
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
-In the case of an error about "Offending ECDSA key in /home/rocky/.ssh/known_hosts:3", wipe the contents of the known hosts file and try the 'munge' command again:
+In the case of an error about "Offending ECDSA key in ~/.ssh/known_hosts:3", remove the compute node from the known hosts file and try the 'scp' command again:
 
-`> /home/rocky/.ssh/known_hosts`
+`ssh-keygen -R 172.16.0.1`
+
+Alternatively, setup an `ignore.conf` file per [Section 2.8.3](https://openchami.org/docs/tutorial/#283-logging-into-the-compute-node) of the tutorial, to prevent this issue.
 {{< /callout >}}
 
 Test that you can submit a job from the **head node**.
@@ -1571,8 +1603,8 @@ The output should be:
 ```
 srun: job 1 queued and waiting for resources
 srun: job 1 has been allocated resources
-slurmstepd: error: couldn't chdir to `/home/lmorrow': No such file or directory: going to /tmp instead
-slurmstepd: error: couldn't chdir to `/home/lmorrow': No such file or directory: going to /tmp instead
+slurmstepd: error: couldn't chdir to `/home/testuser': No such file or directory: going to /tmp instead
+slurmstepd: error: couldn't chdir to `/home/testuser': No such file or directory: going to /tmp instead
 de01
 ```
 
