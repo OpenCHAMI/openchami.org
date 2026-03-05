@@ -339,12 +339,11 @@ Add the Slurm repo created earlier to install from it (will ensure we get the co
 ```bash
 # Create local repo file
 SLURMVERSION=24.05.5
-RELEASE=rocky9
 
 cat <<EOF | sudo tee /etc/yum.repos.d/slurm-local.repo
 [slurm-local]
 name=Slurm ${SLURMVERSION} - Local
-baseurl=file:///install/osupdates/${RELEASE}/x86_64/slurm-${SLURMVERSION}
+baseurl=file:////srv/repo/rocky/9/x86_64/slurm-${SLURMVERSION}
 gpgcheck=0
 enabled=1
 countme=1
