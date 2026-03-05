@@ -343,7 +343,7 @@ SLURMVERSION=24.05.5
 cat <<EOF | sudo tee /etc/yum.repos.d/slurm-local.repo
 [slurm-local]
 name=Slurm ${SLURMVERSION} - Local
-baseurl=file:////srv/repo/rocky/9/x86_64/slurm-${SLURMVERSION}
+baseurl=file:///srv/repo/rocky/9/x86_64/slurm-${SLURMVERSION}
 gpgcheck=0
 enabled=1
 countme=1
@@ -625,7 +625,7 @@ Use Podman to run Nginx in a container that has the local Slurm repository and t
 ```bash
 podman run --name serve-slurm \
     -v /opt/workdir/nginx.conf:/etc/nginx/nginx.conf \
-    --mount type=bind,source=/install/osupdates/rocky9/x86_64/slurm-24.05.5,target=/usr/share/nginx/html/slurm-24.05.5,readonly \
+    --mount type=bind,source=/srv/repo/rocky/9/x86_64/slurm-24.05.5,target=/usr/share/nginx/html/slurm-24.05.5,readonly \
     -p 8080:80 -d nginx
 ```
 
