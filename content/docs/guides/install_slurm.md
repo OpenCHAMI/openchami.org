@@ -65,11 +65,11 @@ Convert tarball to rpm package, build dependencies and build binary package:
 ```bash
 sudo dnf install -y rpm-build rpmdevtools
 
-rpmbuild -ts munge-0.5.18.tar.xz
+rpmbuild -ts munge-0.5.18.tar.xz --define "_topdir /opt/workdir/rpmbuild"
 
-sudo dnf builddep /opt/workdir/rpmbuild/SRPMS/munge-0.5.18-1.el9.src.rpm
+sudo dnf builddep -y /opt/workdir/rpmbuild/SRPMS/munge-0.5.18-1.el9.src.rpm
 
-rpmbuild -tb munge-0.5.18.tar.xz
+rpmbuild -tb munge-0.5.18.tar.xz --define "_topdir /opt/workdir/rpmbuild"
 ```
 
 Install rpms created by rpmbuild:
@@ -369,7 +369,7 @@ Modify the SlurmDB config. You will need the `pwgen` generated password generate
 
 ```bash
 DBHOST=demo
-DBPASSWORD="${SQL_PWORD}"   # EDIT TO THE PASSWORD SET IN THE MARIADB CONFIGURATION SECTION
+DBPASSWORD="${SQL_PWORD}"
 SLURMDBHOST1=demo
 
 sudo sed -i "s|DbdAddr.*|DbdAddr=${SLURMDBHOST1}|g" /etc/slurm/slurmdbd.conf
