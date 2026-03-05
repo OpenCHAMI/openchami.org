@@ -385,7 +385,7 @@ sudo sed -i "s|PidFile.*|PidFile=/var/run/slurm/slurmdbd.pid|g" /etc/slurm/slurm
 sudo sed -i "s|#StorageLoc.*|StorageLoc=slurm_acct_db|g" /etc/slurm/slurmdbd.conf
 ```
 
-The environment variable we set earlier to store the password for SQL should not be unset for security:
+The environment variable we set earlier to store the password for SQL should now be unset for security:
 
 ```bash
 unset SQL_PWORD
@@ -1447,7 +1447,9 @@ chown munge:munge /etc/munge/munge.key
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 In the case of an error about "Offending ECDSA key in ~/.ssh/known_hosts:3", remove the compute node from the known hosts file and try the 'scp' command again:
 
-`ssh-keygen -R 172.16.0.1`
+```
+ssh-keygen -R 172.16.0.1
+```
 
 Alternatively, setup an `ignore.conf` file per [Section 2.8.3](https://openchami.org/docs/tutorial/#283-logging-into-the-compute-node) of the tutorial, to prevent this issue.
 {{< /callout >}}
@@ -1563,7 +1565,9 @@ LENGTH:           0
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 In the case of an error about "Offending ECDSA key in ~/.ssh/known_hosts:3", remove the compute node from the known hosts file and try the 'scp' command again:
 
-`ssh-keygen -R 172.16.0.1`
+```
+ssh-keygen -R 172.16.0.1
+```
 
 Alternatively, setup an `ignore.conf` file per [Section 2.8.3](https://openchami.org/docs/tutorial/#283-logging-into-the-compute-node) of the tutorial, to prevent this issue.
 {{< /callout >}}
