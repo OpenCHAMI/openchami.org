@@ -118,7 +118,7 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 | 10:00-10:20 | Deploying OpenCHAMI with Kubernetes (title TBD) | Speaker TBD | TBD |
 | 10:20-10:40 | UK/EU Research Needs Discussion (including TRE requirements) | Camilla Harris | TBD |
 | 10:40-11:00 | Morning Break | - | TBD |
-| 11:00-11:20 | HPC Operations (title TBD) | Stig Telfer (StackHPC) | TBD |
+| 11:00-11:20 | Virtual Multi-Node Testing with OpenStack (title TBD) | Stig Telfer (StackHPC) | TBD |
 | 11:20-11:40 | Operational Discussion: Migration Risks and Recovery Plans | Panel | TBD |
 | 11:40-12:00 | Operational Q&A and Day 2 Midday Summary | Panel | TBD |
 | 12:00-12:20 | Lunch | - | TBD |
