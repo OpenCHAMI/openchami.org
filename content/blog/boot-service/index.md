@@ -173,7 +173,9 @@ At this point, you should be able to boot your nodes whether they are virtual or
 If you're using this with `haproxy`, you will need to add the following lines to route requests to the appropriate service.
 
 ```ini
-
+backend boot-service
+  server boot-service boot-service:8080
+  http-request replace-path ^/boot(/.*) \1
 ```
 
 ## Next Steps
