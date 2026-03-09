@@ -2483,7 +2483,7 @@ sudo ochami config --system cluster set demo boot-service.uri: /boot
 {{< /callout >}}
 
 {{< tabs "Clients" >}}
-{{< tab "ochami>}}
+{{< tab "ochami">}}
 
 ```bash
 ochami boot config add -d @/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml --uri https://demo.openchami.cluster:8443 -l debug
@@ -2502,7 +2502,7 @@ boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/bo
 Verify that the boot configuration was set.
 
 {{< tabs "Clients" >}}
-{{< tab "ochami>}}
+{{< tab "ochami">}}
 
 ```bash
 ochami boot config list -F json-pretty
