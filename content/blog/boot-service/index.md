@@ -50,7 +50,7 @@ Restart=always
 
 This file defines the quadlet that generates a Systemd unit file. The dependency on SMD is not necessary here since boot-service has another mechanism for adding nodes with a file. However, we want to use SMD to pull node information like we're currently doing with BSS.
 
-First, let's set up a couple of things. 
+First, let's set up a couple of things.
 
 ```bash
 mkdir -p /opt/workdir/
@@ -64,10 +64,10 @@ git clone https://github.com/OpenCHAMI/tokensmith
 git clone https://github.com/OpenCHAMI/fabrica
 ```
 
-Then, if you need to make changes and test out a custom image, you can clone the ``boot-service` respository and build with `podman build` using the `Dockerfile.standalone` file.
+Then, if you need to make changes and test out a custom image, you can clone the `boot-service` respository and build with `podman build` using the `Dockerfile.standalone` file.
 
 ```bash
-
+# clone the boot-service repository and download dependencies
 git clone https://github.com/OpenCHAMI/boot-service
 cd boot-service
 go mod tidy
@@ -167,6 +167,14 @@ Now, we just need to give boot-service a boot config to serve the nodes. Copy th
 ```
 
 At this point, you should be able to boot your nodes whether they are virtual or real. You can view the logs with `sudo podman logs -f boot-service` like before to see the requests coming from your nodes!
+
+### Update the Haproxy Config
+
+If you're using this with `haproxy`, you will need to add the following lines to route requests to the appropriate service.
+
+```ini
+
+```
 
 ## Next Steps
 
