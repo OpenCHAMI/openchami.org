@@ -50,7 +50,7 @@ guides/resources:
   - [**Guide/Repo**](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart)
 - **Podman Quadlets (Release RPM)** -- Use the OpenCHAMI release RPM to run
   OpenCHAMI services using Podman Quadlets.
-  - [**Guide**](/docs/tutorial)
+  - [**Guide**](/docs/tutorial/#14-install-openchami)
   - [**Repo**](https://github.com/OpenCHAMI/release)
 - **Libvirt Virtual Machines** -- Boot Libvirt VMs using OpenCHAMI and Podman
   Quadlets.
