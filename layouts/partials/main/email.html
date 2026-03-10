@@ -1,0 +1,2 @@
+{{ $address := replace (.emailAddress | safeURL) "mailto:" "" -}}
+<a href="{{ printf "mailto:%s" $address | safeURL }}">{{ if ne .emailTitle $address }}{{ .emailTitle | safeHTML }}{{ else }}{{ $address }}{{ end }}</a>
