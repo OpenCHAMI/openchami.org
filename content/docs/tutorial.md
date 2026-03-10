@@ -2480,7 +2480,7 @@ The things to check are:
 {{< /tab >}}
 {{< /tabs >}}
 
-Set the boot configuration with the client.
+Set the boot configuration and verify with the `ochami` client.
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 You may need to update the `ochami` config to set the `boot-service` URI.
@@ -2493,26 +2493,20 @@ sudo ochami config --system cluster set demo boot-service.uri: /boot
 Using the `ochami` CLI:
 
 ```bash
+# Set/add the boot configuration
 ochami boot config add -d @/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml --uri https://demo.openchami.cluster:8443 -l debug
-```
 
-Or using the generated `boot-service` CLI:
-
-```bash
-boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
-```
-
-Verify that the boot configuration was set.
-
-Using the `ochami` CLI:
-
-```bash
+# Verify that it was set properly
 ochami boot config list -F json-pretty
 ```
 
 Or using the generated `boot-service` CLI:
 
 ```bash
+# Set/add the boot configuration
+boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+
+# Verify that it was set properly
 boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
 ```
 
