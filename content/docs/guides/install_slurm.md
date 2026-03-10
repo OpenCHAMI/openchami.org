@@ -827,7 +827,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/slurm | awk '{print $4}' | s
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/boot-compute-slurm-rocky9.yaml
+cat <<EOF | sudo tee /etc/openchami/data/boot/bss/boot-compute-slurm-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
@@ -840,7 +840,7 @@ EOF
 Set BSS parameters:
 
 ```bash
-ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/boot-compute-slurm-rocky9.yaml
+ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/boot-compute-slurm-rocky9.yaml
 ```
 
 Check the BSS boot parameters were added:
@@ -1191,6 +1191,14 @@ slurm-slurmrestd.x86_64                        24.05.5-1.el9                    
 slurm-torque.x86_64                            24.05.5-1.el9                    @8080_slurm-24.05.5 
 ``` 
 
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If there is a version 0.5.13 of munge currently installed and present in the output from the above command, remove it to ensure that version 0.5.18 is used.
+
+```
+dnf remove -y munge-libs-0.5.13-<version> munge-0.5.13-<version>
+```
+{{< /callout >}}
+
 Create slurm config file that is identical to that of the head node. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
 
 **Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
@@ -1422,7 +1430,7 @@ Kill the process and repeat above two commands:
 Update munge file/directory ownership:
 
 ```bash
-find / -uid 991 -type d -mount -writable -exec chown -R munge:munge \{\} \;
+find / -mount -writable -type d -uid 991 -exec chown -R munge:munge \{\} \;
 ```
 
 Copy the munge key from the head node to the compute node.
