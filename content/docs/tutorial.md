@@ -2396,8 +2396,8 @@ using the `add` command, `bss` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
 
-{{< tabs "Set boot configuration" >}}
-{{< tab "BSS Backend" >}}
+{{< tabs "Set-boot-configuration" >}}
+{{< tab "BSS-Backend" >}}
 
 Apply the boot parameters created above with:
 
@@ -2442,8 +2442,7 @@ The things to check are:
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
 
 {{< /tab >}}
-
-{{< tab "Boot-service Backend" >}}
+{{< tab "Boot-service-backend" >}}
 
 Setting the boot configuration with the `boot-service` backend is a little
 different than with the BSS backend. Instead of using the `ochami` client, we
@@ -2471,6 +2470,15 @@ be the same values from section 2.5.2.a but in JSON.
 
 }
 ```
+
+The things to check are:
+
+- `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
+- `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
+- `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
+
+{{< /tab >}}
+{{< /tabs >}}
 
 Set the boot configuration with the client.
 
@@ -2501,28 +2509,20 @@ boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/bo
 
 Verify that the boot configuration was set.
 
-{{< tabs "Clients" >}}
-{{< tab "ochami">}}
+Using `ochami` CLI:
 
 ```bash
 ochami boot config list -F json-pretty
 ```
 
-{{< /tab>}}
-{{< tab "boot-service" >}}
+Or using the generated `boot-service` CLI:
 
 ```bash
 boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
 ```
 
-{{< /tab>}}
-{{< /tabs>}}
-
 You should see output that is similar to the input JSON. At this point, you should
 be ready to boot the compute node.
-
-{{< /tab >}}
-{{< /tabs >}}
 
 ### 2.6 Boot the Compute Node with the Debug Image
 
