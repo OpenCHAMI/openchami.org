@@ -2480,7 +2480,7 @@ The things to check are:
 {{< /tab >}}
 {{< /tabs >}}
 
-Set the boot configuration and verify with the `ochami` client.
+Set the boot configuration and verify with the `ochami` or `boot-service` client.
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 You may need to update the `ochami` config to set the `boot-service` URI.
