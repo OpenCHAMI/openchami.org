@@ -1,7 +1,7 @@
 +++
 title = 'OpenCHAMI Developer Summit @ UCL 2026'
 date = 2026-01-09        # page publication date
-start_date = 2026-05-07
+start_date = 2026-05-06
 end_date = 2026-05-08
 draft = false
 categories = ['Summit', 'Development', 'HPC']
@@ -10,11 +10,11 @@ aliases = ["/events/summits/ucl-2026/", "/ucl26/"]
 +++
 
 
-### University College London • London, UK • May 7th – 8th 2026
+### University College London • London, UK • May 6th – 8th 2026 (Optional Day 0 @ Cambridge + Days 1–2 @ UCL)
 **Event**: OpenCHAMI Developer Summit @ UCL 2026
 
 
-**Date**: May 7-8, 2026
+**Date**: May 6-8, 2026 (Optional Day 0 on May 6th at Cambridge; Main Summit May 7-8 at UCL)
 
 **Location**: University College London, London, UK
 
@@ -68,6 +68,26 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 ## Schedule
 *(All times Local)*
 
+### Optional Day 0 – Wednesday, May 6th
+
+**Location:** University of Cambridge, Cambridge, UK
+
+This optional pre-summit day at Cambridge provides an opportunity to explore cutting-edge HPC and AI infrastructure, learn about cloud-native approaches to HPC, and network with Cambridge's research computing community.
+
+| Time | Session | Speaker(s) | Room |
+| --- | --- | --- | --- |
+| 12:00 | Arrival and Networking Lunch | - | TBD |
+| 13:00-13:20 | RCS Intro | - | TBD |
+| 13:20-13:50 | HPC and AI Data Centre Infrastructure | - | TBD |
+| 13:50-14:50 | Data Centre Tour | - | TBD |
+| 14:50-15:00 | Coffee | - | TBD |
+| 15:00-15:30 | Cloud-native HPC and AI Stack | - | TBD |
+| 15:30-16:00 | AIRR@Cambridge | - | TBD |
+| 16:00-16:30 | LLMOps | - | TBD |
+| 16:30+ | Return trips to London / Social opportunity | - | TBD |
+
+---
+
 ### Day 1 – Thursday, May 7th
 
 **Hosts:** UCL, Bristol, Cambridge  
@@ -80,25 +100,27 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 | 09:20-09:40 | Host Welcome and Logistics (Part 2) | Hosts (UCL, Bristol, Cambridge) | TBD |
 | 09:40-10:00 | How UCL Runs Systems | Camilla Harris | TBD |
 | 10:00-10:20 | Vendor Lightning Session (shared block) | Vendor representatives | TBD |
-| 10:20-10:40 | Operations Talk: Site Bring-up and Baseline Practices (title TBD) | Speaker TBD | TBD |
-| 10:40-11:00 | Morning Break | - | TBD |
-| 11:00-11:20 | Operations Talk: Authentication and Access Patterns (title TBD) | Speaker TBD | TBD |
-| 11:20-11:40 | Operations Talk: Image Lifecycle and Recovery Workflow (title TBD) | Speaker TBD | TBD |
-| 11:40-12:00 | Operations Roundtable and Q&A | Panel | TBD |
-| 12:00-12:20 | Lunch | - | TBD |
+| 10:20-10:40 | Site/Partner Updates | Site representatives | TBD |
+| 10:40-11:00 | Operations Talk: Site Bring-up and Baseline Practices (title TBD) | Speaker TBD | TBD |
+| 11:00-11:20 | Morning Break | - | TBD |
+| 11:20-11:40 | Operations Talk: Authentication and Access Patterns (title TBD) | Speaker TBD | TBD |
+| 11:40-12:00 | Operations Talk: Image Lifecycle and Recovery Workflow (title TBD) | Speaker TBD | TBD |
+| 12:00-12:20 | Operations Roundtable and Q&A | Panel | TBD |
+| 12:00-12:20 | Operations Roundtable and Q&A | Panel | TBD |
 | 12:20-12:40 | Lunch | - | TBD |
 | 12:40-13:00 | Lunch | - | TBD |
-| 13:00-13:20 | HPSF and Linux Foundation Context for OpenCHAMI | Tom Green | TBD |
-| 13:20-13:40 | UK/EU Growth Update for OpenCHAMI | Tom Green | TBD |
-| 13:40-14:00 | Sovereign AI in UK/EU: Operational Requirements | Tom Green | TBD |
-| 14:00-14:20 | UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1) | UK/EU site representatives | TBD |
-| 14:20-14:40 | UK/EU Sites Panel: Plans for the Next Year (Part 2) | UK/EU site representatives | TBD |
-| 14:40-15:00 | Panel Q&A and Action Items | Tom Green and panelists | TBD |
-| 15:00-15:20 | Afternoon Break | - | TBD |
-| 15:20-15:40 | Project Review: Current Developments from LANL Needs (Part 1) | Alex Lovell-Troy | TBD |
-| 15:40-16:00 | Project Review: Future Direction from LANL Needs (Part 2) | Alex Lovell-Troy | TBD |
-| 16:00-16:20 | Open Discussion: Priorities and Risks for 2026 | Alex Lovell-Troy and Tom Green | TBD |
-| 16:20-16:40 | Day 1 Wrap-up and Next-Day Alignment | Tom Green | TBD |
+| 13:00-13:20 | Lunch | - | TBD |
+| 13:20-13:40 | HPSF and Linux Foundation Context for OpenCHAMI | Tom Green | TBD |
+| 13:40-14:00 | UK/EU Growth Update for OpenCHAMI | Tom Green | TBD |
+| 14:00-14:20 | Sovereign AI in UK/EU: Operational Requirements | Tom Green | TBD |
+| 14:20-14:40 | UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1) | UK/EU site representatives | TBD |
+| 14:40-15:00 | UK/EU Sites Panel: Plans for the Next Year (Part 2) | UK/EU site representatives | TBD |
+| 15:00-15:20 | Panel Q&A and Action Items | Tom Green and panelists | TBD |
+| 15:20-15:40 | Afternoon Break | - | TBD |
+| 15:40-16:00 | Project Review: Current Developments from LANL Needs (Part 1) | Alex Lovell-Troy | TBD |
+| 16:00-16:20 | Project Review: Future Direction from LANL Needs (Part 2) | Alex Lovell-Troy | TBD |
+| 16:20-16:40 | Open Discussion: Priorities and Risks for 2026 | Alex Lovell-Troy and Tom Green | TBD |
+| 16:40-17:00 | Day 1 Wrap-up and Next-Day Alignment | Tom Green | TBD |
 
 
 
