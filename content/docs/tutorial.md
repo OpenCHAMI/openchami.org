@@ -2388,15 +2388,18 @@ macs:
   - 52:54:00:be:ef:05
 ```
 
-##### 2.5.2.a Set the Boot Configuration with BSS Backend
-
-Apply the boot parameters created above with:
+Now, we set the boot configuration using one of the backends below.
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 `ochami` supports both `add` and `set`.  The difference is idempotency.  If
 using the `add` command, `bss` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
+
+{{< tabs "Set-boot-configuration" >}}
+{{< tab "BSS-Backend" >}}
+
+Apply the boot parameters created above with:
 
 ```bash
 ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
@@ -2438,7 +2441,8 @@ The things to check are:
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
 
-##### 2.5.2.b Set the Boot Configuration with the `boot-service` Backend
+{{< /tab >}}
+{{< tab "Boot-service-backend" >}}
 
 Setting the boot configuration with the `boot-service` backend is a little
 different than with the BSS backend. Instead of using the `ochami` client, we
@@ -2447,7 +2451,7 @@ Unfortunately, the client command can only take a JSON value with the `--spec`
 flag and cannot be set using a file. However, for the purpose of this tutorial,
 we will create a file to make comparing this method to the `ochami` easier.
 
-Edit the **/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml** file.
+Edit *as root* the **/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml** file.
 Copy the contents below into the file. Notice that the values in this file should
 be the same values from section 2.5.2.a but in JSON.
 
@@ -2467,15 +2471,42 @@ be the same values from section 2.5.2.a but in JSON.
 }
 ```
 
-Set the boot configuration with the client.
+The things to check are:
+
+- `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
+- `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
+- `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
+
+{{< /tab >}}
+{{< /tabs >}}
+
+Set the boot configuration and verify with the `ochami` or `boot-service` client.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+You may need to update the `ochami` config to set the `boot-service` URI.
 
 ```bash
-boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+sudo ochami config --system cluster set demo boot-service.uri: /boot
+```
+{{< /callout >}}
+
+Using the `ochami` CLI:
+
+```bash
+# Set/add the boot configuration
+ochami boot config add -d @/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml --uri https://demo.openchami.cluster:8443 -l debug
+
+# Verify that it was set properly
+ochami boot config list -F json-pretty
 ```
 
-Verify that the boot configuration was set.
+Or using the generated `boot-service` CLI:
 
 ```bash
+# Set/add the boot configuration
+boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+
+# Verify that it was set properly
 boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
 ```
 

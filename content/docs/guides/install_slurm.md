@@ -887,12 +887,38 @@ EOF
 
 Configure the hosts file with addresses for both the head node and the compute node:
 
+{{< tabs "head-hosts" >}}
+{{< tab "Bare Metal Head" >}}
+
 ```bash
 cat <<EOF | sudo tee -a /etc/hosts
 172.16.0.254   demo.openchami.cluster demo
 172.16.0.1     de01.openchami.cluster de01
 EOF
 ```
+
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+
+```bash
+cat <<EOF | sudo tee -a /etc/hosts
+172.16.0.254   demo.openchami.cluster demo
+172.16.0.1     de01.openchami.cluster de01
+EOF
+```
+
+{{< /tab >}}
+{{< tab "VM Head" >}}
+
+```bash
+cat <<EOF | sudo tee -a /etc/hosts
+172.16.0.254   demo.openchami.cluster demo head
+172.16.0.1     de01.openchami.cluster de01
+EOF
+```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 ## 1.4 Make a Local Slurm Repository and Serve it with Nginx
 
@@ -2005,12 +2031,38 @@ PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=
 
 Configure the hosts file with addresses for both the head node and the compute node:
 
+{{< tabs "compute-hosts" >}}
+{{< tab "Bare Metal Head" >}}
+
 ```bash
 cat <<EOF | tee -a /etc/hosts
 172.16.0.254   demo.openchami.cluster demo
 172.16.0.1     de01.openchami.cluster de01
 EOF
 ```
+
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+
+```bash
+cat <<EOF | tee -a /etc/hosts
+172.16.0.254   demo.openchami.cluster demo
+172.16.0.1     de01.openchami.cluster de01
+EOF
+```
+
+{{< /tab >}}
+{{< tab "VM Head" >}}
+
+```bash
+cat <<EOF | tee -a /etc/hosts
+172.16.0.254   demo.openchami.cluster demo head
+172.16.0.1     de01.openchami.cluster de01
+EOF
+```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 Create the Slurm user on the compute node:
 
