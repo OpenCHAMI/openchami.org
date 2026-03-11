@@ -392,7 +392,16 @@ unset SQL_PWORD
 
 Create the Slurm config file, which will be used by SlurmCTL. Note that you may need to update the `NodeName` info depending on the configuration of your compute node.
 
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If the head node is in a VM (see [**Head Node: Using Virtual
+Machine**](https://openchami.org/docs/tutorial/#05-head-node-using-virtual-machine)), 
+the `SlurmctldHost` will be `head` instead of `demo`.
+{{< /callout >}}
+
 **Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
+
+{{< tabs "slurm-config-headnode" >}}
+{{< tab "Bare Metal Head" >}}
 ```bash {title="/etc/slurm/slurm.conf"}
 #
 ClusterName=demo
@@ -547,6 +556,320 @@ NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=
 
 PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
 ```
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+```bash {title="/etc/slurm/slurm.conf"}
+#
+ClusterName=demo
+SlurmctldHost=demo
+#
+#DisableRootJobs=NO
+EnforcePartLimits=ALL
+#Epilog=
+#EpilogSlurmctld=
+#FirstJobId=1
+#MaxJobId=67043328
+#GresTypes=
+#GroupUpdateForce=0
+#GroupUpdateTime=600
+#JobFileAppend=0
+JobRequeue=0
+#JobSubmitPlugins=lua
+KillOnBadExit=1
+#LaunchType=launch/slurm
+#Licenses=foo*4,bar
+#MailProg=/bin/mail
+#MaxJobCount=10000
+#MaxStepCount=40000
+#MaxTasksPerNode=512
+MpiDefault=pmix
+#MpiParams=ports=#-#
+#PluginDir=
+#PlugStackConfig=
+PrivateData=accounts,jobs,reservations,usage,users
+ProctrackType=proctrack/linuxproc
+#Prolog=
+PrologFlags=Contain
+#PrologSlurmctld=
+#PropagatePrioProcess=0
+PropagateResourceLimits=NONE
+#PropagateResourceLimitsExcept=
+#RebootProgram=
+ReturnToService=2
+SlurmctldPidFile=/var/run/slurm/slurmctld.pid
+SlurmctldPort=6817
+SlurmdPidFile=/var/run/slurm/slurmd.pid
+SlurmdPort=6818
+SlurmdSpoolDir=/var/spool/slurmd
+SlurmUser=slurm
+SlurmdUser=root
+#SrunEpilog=
+#SrunProlog=
+StateSaveLocation=/var/spool/slurmctld
+SwitchType=switch/none
+#TaskEpilog=
+TaskPlugin=task/none
+#TaskProlog=
+#TopologyPlugin=topology/tree
+#TmpFS=/tmp
+#TrackWCKey=no
+#TreeWidth=
+#UnkillableStepProgram=
+#UsePAM=0
+#
+#
+# TIMERS
+#BatchStartTimeout=10
+CompleteWait=32
+#EpilogMsgTime=2000
+#GetEnvTimeout=2
+#HealthCheckInterval=0
+#HealthCheckProgram=
+InactiveLimit=300
+KillWait=30
+MessageTimeout=30
+#ResvOverRun=0
+MinJobAge=300
+#OverTimeLimit=0
+SlurmctldTimeout=120
+SlurmdTimeout=300
+#UnkillableStepTimeout=60
+#VSizeFactor=0
+Waittime=0
+#
+#
+# SCHEDULING
+DefMemPerCPU=2048
+#MaxMemPerCPU=0
+#SchedulerTimeSlice=30
+SchedulerType=sched/backfill
+SelectType=select/cons_tres
+SelectTypeParameters=CR_Core_Memory
+SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
+DependencyParameters=kill_invalid_depend
+#
+#
+# JOB PRIORITY
+#PriorityFlags=
+#PriorityType=priority/multifactor
+#PriorityDecayHalfLife=
+#PriorityCalcPeriod=
+#PriorityFavorSmall=
+#PriorityMaxAge=
+#PriorityUsageResetPeriod=
+#PriorityWeightAge=
+#PriorityWeightFairshare=
+#PriorityWeightJobSize=
+#PriorityWeightPartition=
+#PriorityWeightQOS=
+#
+#
+# LOGGING AND ACCOUNTING
+AccountingStorageEnforce=safe,associations,limits,qos
+#AccountingStorageHost=
+#AccountingStoragePass=
+#AccountingStoragePort=
+AccountingStorageType=accounting_storage/slurmdbd
+#AccountingStorageUser=
+#AccountingStoreFlags=
+#JobCompHost=
+#JobCompLoc=
+#JobCompPass=
+#JobCompPort=
+JobCompType=jobcomp/none
+#JobCompUser=
+JobContainerType=job_container/tmpfs
+JobAcctGatherFrequency=30
+JobAcctGatherType=jobacct_gather/cgroup
+SlurmctldDebug=info
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdDebug=info
+SlurmdLogFile=/var/log/slurm/slurmd.log
+#SlurmSchedLogFile=
+#SlurmSchedLogLevel=
+#DebugFlags=
+#
+#
+# POWER SAVE SUPPORT FOR IDLE NODES (optional)
+#SuspendProgram=
+#ResumeProgram=
+#SuspendTimeout=
+#ResumeTimeout=
+#ResumeRate=
+#SuspendExcNodes=
+#SuspendExcParts=
+#SuspendRate=
+#SuspendTime=
+#
+#
+# CUSTOM CONFIGS
+LaunchParameters=use_interactive_step
+#SlurmctldParameters=enable_configless
+#
+#
+# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
+NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
+
+PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
+```
+{{< /tab >}}
+{{< tab "VM Head" >}}
+```bash {title="/etc/slurm/slurm.conf"}
+#
+ClusterName=demo
+SlurmctldHost=head
+#
+#DisableRootJobs=NO
+EnforcePartLimits=ALL
+#Epilog=
+#EpilogSlurmctld=
+#FirstJobId=1
+#MaxJobId=67043328
+#GresTypes=
+#GroupUpdateForce=0
+#GroupUpdateTime=600
+#JobFileAppend=0
+JobRequeue=0
+#JobSubmitPlugins=lua
+KillOnBadExit=1
+#LaunchType=launch/slurm
+#Licenses=foo*4,bar
+#MailProg=/bin/mail
+#MaxJobCount=10000
+#MaxStepCount=40000
+#MaxTasksPerNode=512
+MpiDefault=pmix
+#MpiParams=ports=#-#
+#PluginDir=
+#PlugStackConfig=
+PrivateData=accounts,jobs,reservations,usage,users
+ProctrackType=proctrack/linuxproc
+#Prolog=
+PrologFlags=Contain
+#PrologSlurmctld=
+#PropagatePrioProcess=0
+PropagateResourceLimits=NONE
+#PropagateResourceLimitsExcept=
+#RebootProgram=
+ReturnToService=2
+SlurmctldPidFile=/var/run/slurm/slurmctld.pid
+SlurmctldPort=6817
+SlurmdPidFile=/var/run/slurm/slurmd.pid
+SlurmdPort=6818
+SlurmdSpoolDir=/var/spool/slurmd
+SlurmUser=slurm
+SlurmdUser=root
+#SrunEpilog=
+#SrunProlog=
+StateSaveLocation=/var/spool/slurmctld
+SwitchType=switch/none
+#TaskEpilog=
+TaskPlugin=task/none
+#TaskProlog=
+#TopologyPlugin=topology/tree
+#TmpFS=/tmp
+#TrackWCKey=no
+#TreeWidth=
+#UnkillableStepProgram=
+#UsePAM=0
+#
+#
+# TIMERS
+#BatchStartTimeout=10
+CompleteWait=32
+#EpilogMsgTime=2000
+#GetEnvTimeout=2
+#HealthCheckInterval=0
+#HealthCheckProgram=
+InactiveLimit=300
+KillWait=30
+MessageTimeout=30
+#ResvOverRun=0
+MinJobAge=300
+#OverTimeLimit=0
+SlurmctldTimeout=120
+SlurmdTimeout=300
+#UnkillableStepTimeout=60
+#VSizeFactor=0
+Waittime=0
+#
+#
+# SCHEDULING
+DefMemPerCPU=2048
+#MaxMemPerCPU=0
+#SchedulerTimeSlice=30
+SchedulerType=sched/backfill
+SelectType=select/cons_tres
+SelectTypeParameters=CR_Core_Memory
+SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
+DependencyParameters=kill_invalid_depend
+#
+#
+# JOB PRIORITY
+#PriorityFlags=
+#PriorityType=priority/multifactor
+#PriorityDecayHalfLife=
+#PriorityCalcPeriod=
+#PriorityFavorSmall=
+#PriorityMaxAge=
+#PriorityUsageResetPeriod=
+#PriorityWeightAge=
+#PriorityWeightFairshare=
+#PriorityWeightJobSize=
+#PriorityWeightPartition=
+#PriorityWeightQOS=
+#
+#
+# LOGGING AND ACCOUNTING
+AccountingStorageEnforce=safe,associations,limits,qos
+#AccountingStorageHost=
+#AccountingStoragePass=
+#AccountingStoragePort=
+AccountingStorageType=accounting_storage/slurmdbd
+#AccountingStorageUser=
+#AccountingStoreFlags=
+#JobCompHost=
+#JobCompLoc=
+#JobCompPass=
+#JobCompPort=
+JobCompType=jobcomp/none
+#JobCompUser=
+JobContainerType=job_container/tmpfs
+JobAcctGatherFrequency=30
+JobAcctGatherType=jobacct_gather/cgroup
+SlurmctldDebug=info
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdDebug=info
+SlurmdLogFile=/var/log/slurm/slurmd.log
+#SlurmSchedLogFile=
+#SlurmSchedLogLevel=
+#DebugFlags=
+#
+#
+# POWER SAVE SUPPORT FOR IDLE NODES (optional)
+#SuspendProgram=
+#ResumeProgram=
+#SuspendTimeout=
+#ResumeTimeout=
+#ResumeRate=
+#SuspendExcNodes=
+#SuspendExcParts=
+#SuspendRate=
+#SuspendTime=
+#
+#
+# CUSTOM CONFIGS
+LaunchParameters=use_interactive_step
+#SlurmctldParameters=enable_configless
+#
+#
+# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
+NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
+
+PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Add job container config file to Slurm config directory:
 
@@ -1201,7 +1524,16 @@ dnf remove -y munge-libs-0.5.13-<version> munge-0.5.13-<version>
 
 Create slurm config file that is identical to that of the head node. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
 
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If the head node is in a VM (see [**Head Node: Using Virtual
+Machine**](https://openchami.org/docs/tutorial/#05-head-node-using-virtual-machine)), 
+the `SlurmctldHost` will be `head` instead of `demo`.
+{{< /callout >}}
+
 **Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
+
+{{< tabs "slurm-config-computenode" >}}
+{{< tab "Bare Metal Head" >}}
 ```bash {title="/etc/slurm/slurm.conf"}
 #
 ClusterName=demo
@@ -1356,6 +1688,320 @@ NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=
 
 PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
 ```
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+```bash {title="/etc/slurm/slurm.conf"}
+#
+ClusterName=demo
+SlurmctldHost=demo
+#
+#DisableRootJobs=NO
+EnforcePartLimits=ALL
+#Epilog=
+#EpilogSlurmctld=
+#FirstJobId=1
+#MaxJobId=67043328
+#GresTypes=
+#GroupUpdateForce=0
+#GroupUpdateTime=600
+#JobFileAppend=0
+JobRequeue=0
+#JobSubmitPlugins=lua
+KillOnBadExit=1
+#LaunchType=launch/slurm
+#Licenses=foo*4,bar
+#MailProg=/bin/mail
+#MaxJobCount=10000
+#MaxStepCount=40000
+#MaxTasksPerNode=512
+MpiDefault=pmix
+#MpiParams=ports=#-#
+#PluginDir=
+#PlugStackConfig=
+PrivateData=accounts,jobs,reservations,usage,users
+ProctrackType=proctrack/linuxproc
+#Prolog=
+PrologFlags=Contain
+#PrologSlurmctld=
+#PropagatePrioProcess=0
+PropagateResourceLimits=NONE
+#PropagateResourceLimitsExcept=
+#RebootProgram=
+ReturnToService=2
+SlurmctldPidFile=/var/run/slurm/slurmctld.pid
+SlurmctldPort=6817
+SlurmdPidFile=/var/run/slurm/slurmd.pid
+SlurmdPort=6818
+SlurmdSpoolDir=/var/spool/slurmd
+SlurmUser=slurm
+SlurmdUser=root
+#SrunEpilog=
+#SrunProlog=
+StateSaveLocation=/var/spool/slurmctld
+SwitchType=switch/none
+#TaskEpilog=
+TaskPlugin=task/none
+#TaskProlog=
+#TopologyPlugin=topology/tree
+#TmpFS=/tmp
+#TrackWCKey=no
+#TreeWidth=
+#UnkillableStepProgram=
+#UsePAM=0
+#
+#
+# TIMERS
+#BatchStartTimeout=10
+CompleteWait=32
+#EpilogMsgTime=2000
+#GetEnvTimeout=2
+#HealthCheckInterval=0
+#HealthCheckProgram=
+InactiveLimit=300
+KillWait=30
+MessageTimeout=30
+#ResvOverRun=0
+MinJobAge=300
+#OverTimeLimit=0
+SlurmctldTimeout=120
+SlurmdTimeout=300
+#UnkillableStepTimeout=60
+#VSizeFactor=0
+Waittime=0
+#
+#
+# SCHEDULING
+DefMemPerCPU=2048
+#MaxMemPerCPU=0
+#SchedulerTimeSlice=30
+SchedulerType=sched/backfill
+SelectType=select/cons_tres
+SelectTypeParameters=CR_Core_Memory
+SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
+DependencyParameters=kill_invalid_depend
+#
+#
+# JOB PRIORITY
+#PriorityFlags=
+#PriorityType=priority/multifactor
+#PriorityDecayHalfLife=
+#PriorityCalcPeriod=
+#PriorityFavorSmall=
+#PriorityMaxAge=
+#PriorityUsageResetPeriod=
+#PriorityWeightAge=
+#PriorityWeightFairshare=
+#PriorityWeightJobSize=
+#PriorityWeightPartition=
+#PriorityWeightQOS=
+#
+#
+# LOGGING AND ACCOUNTING
+AccountingStorageEnforce=safe,associations,limits,qos
+#AccountingStorageHost=
+#AccountingStoragePass=
+#AccountingStoragePort=
+AccountingStorageType=accounting_storage/slurmdbd
+#AccountingStorageUser=
+#AccountingStoreFlags=
+#JobCompHost=
+#JobCompLoc=
+#JobCompPass=
+#JobCompPort=
+JobCompType=jobcomp/none
+#JobCompUser=
+JobContainerType=job_container/tmpfs
+JobAcctGatherFrequency=30
+JobAcctGatherType=jobacct_gather/cgroup
+SlurmctldDebug=info
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdDebug=info
+SlurmdLogFile=/var/log/slurm/slurmd.log
+#SlurmSchedLogFile=
+#SlurmSchedLogLevel=
+#DebugFlags=
+#
+#
+# POWER SAVE SUPPORT FOR IDLE NODES (optional)
+#SuspendProgram=
+#ResumeProgram=
+#SuspendTimeout=
+#ResumeTimeout=
+#ResumeRate=
+#SuspendExcNodes=
+#SuspendExcParts=
+#SuspendRate=
+#SuspendTime=
+#
+#
+# CUSTOM CONFIGS
+LaunchParameters=use_interactive_step
+#SlurmctldParameters=enable_configless
+#
+#
+# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
+NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
+
+PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
+```
+{{< /tab >}}
+{{< tab "VM Head" >}}
+```bash {title="/etc/slurm/slurm.conf"}
+#
+ClusterName=demo
+SlurmctldHost=head
+#
+#DisableRootJobs=NO
+EnforcePartLimits=ALL
+#Epilog=
+#EpilogSlurmctld=
+#FirstJobId=1
+#MaxJobId=67043328
+#GresTypes=
+#GroupUpdateForce=0
+#GroupUpdateTime=600
+#JobFileAppend=0
+JobRequeue=0
+#JobSubmitPlugins=lua
+KillOnBadExit=1
+#LaunchType=launch/slurm
+#Licenses=foo*4,bar
+#MailProg=/bin/mail
+#MaxJobCount=10000
+#MaxStepCount=40000
+#MaxTasksPerNode=512
+MpiDefault=pmix
+#MpiParams=ports=#-#
+#PluginDir=
+#PlugStackConfig=
+PrivateData=accounts,jobs,reservations,usage,users
+ProctrackType=proctrack/linuxproc
+#Prolog=
+PrologFlags=Contain
+#PrologSlurmctld=
+#PropagatePrioProcess=0
+PropagateResourceLimits=NONE
+#PropagateResourceLimitsExcept=
+#RebootProgram=
+ReturnToService=2
+SlurmctldPidFile=/var/run/slurm/slurmctld.pid
+SlurmctldPort=6817
+SlurmdPidFile=/var/run/slurm/slurmd.pid
+SlurmdPort=6818
+SlurmdSpoolDir=/var/spool/slurmd
+SlurmUser=slurm
+SlurmdUser=root
+#SrunEpilog=
+#SrunProlog=
+StateSaveLocation=/var/spool/slurmctld
+SwitchType=switch/none
+#TaskEpilog=
+TaskPlugin=task/none
+#TaskProlog=
+#TopologyPlugin=topology/tree
+#TmpFS=/tmp
+#TrackWCKey=no
+#TreeWidth=
+#UnkillableStepProgram=
+#UsePAM=0
+#
+#
+# TIMERS
+#BatchStartTimeout=10
+CompleteWait=32
+#EpilogMsgTime=2000
+#GetEnvTimeout=2
+#HealthCheckInterval=0
+#HealthCheckProgram=
+InactiveLimit=300
+KillWait=30
+MessageTimeout=30
+#ResvOverRun=0
+MinJobAge=300
+#OverTimeLimit=0
+SlurmctldTimeout=120
+SlurmdTimeout=300
+#UnkillableStepTimeout=60
+#VSizeFactor=0
+Waittime=0
+#
+#
+# SCHEDULING
+DefMemPerCPU=2048
+#MaxMemPerCPU=0
+#SchedulerTimeSlice=30
+SchedulerType=sched/backfill
+SelectType=select/cons_tres
+SelectTypeParameters=CR_Core_Memory
+SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
+DependencyParameters=kill_invalid_depend
+#
+#
+# JOB PRIORITY
+#PriorityFlags=
+#PriorityType=priority/multifactor
+#PriorityDecayHalfLife=
+#PriorityCalcPeriod=
+#PriorityFavorSmall=
+#PriorityMaxAge=
+#PriorityUsageResetPeriod=
+#PriorityWeightAge=
+#PriorityWeightFairshare=
+#PriorityWeightJobSize=
+#PriorityWeightPartition=
+#PriorityWeightQOS=
+#
+#
+# LOGGING AND ACCOUNTING
+AccountingStorageEnforce=safe,associations,limits,qos
+#AccountingStorageHost=
+#AccountingStoragePass=
+#AccountingStoragePort=
+AccountingStorageType=accounting_storage/slurmdbd
+#AccountingStorageUser=
+#AccountingStoreFlags=
+#JobCompHost=
+#JobCompLoc=
+#JobCompPass=
+#JobCompPort=
+JobCompType=jobcomp/none
+#JobCompUser=
+JobContainerType=job_container/tmpfs
+JobAcctGatherFrequency=30
+JobAcctGatherType=jobacct_gather/cgroup
+SlurmctldDebug=info
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdDebug=info
+SlurmdLogFile=/var/log/slurm/slurmd.log
+#SlurmSchedLogFile=
+#SlurmSchedLogLevel=
+#DebugFlags=
+#
+#
+# POWER SAVE SUPPORT FOR IDLE NODES (optional)
+#SuspendProgram=
+#ResumeProgram=
+#SuspendTimeout=
+#ResumeTimeout=
+#ResumeRate=
+#SuspendExcNodes=
+#SuspendExcParts=
+#SuspendRate=
+#SuspendTime=
+#
+#
+# CUSTOM CONFIGS
+LaunchParameters=use_interactive_step
+#SlurmctldParameters=enable_configless
+#
+#
+# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
+NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
+
+PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
+```
+{{< /tab >}}
+{{< /tabs >}}
 
 Configure the hosts file with addresses for both the head node and the compute node:
 
