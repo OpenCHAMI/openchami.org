@@ -6,11 +6,14 @@ images = ["cover.png"]
 # mainSections
 mainSections = ["docs", "events"]
 
+# Enable mathematical rendering on every page (unless you set the `math` parameter to `false` in front matter)
+math = false # false (default) or true
+mathEngine = "KaTeX" # "KaTeX" (default) or "MathJax"
+
 [social]
   github = "openchami"
-  
 
-# Doks (@hyas/doks-core)
+# Doks (@thulite/doks-core)
 [doks]
   # Color mode
   colorMode = "auto" # auto (default), light or dark
@@ -18,7 +21,7 @@ mainSections = ["docs", "events"]
 
   # Navbar
   navbarSticky = true # true (default) or false
-  containerBreakpoint = "xl" # "", "sm", "md", "lg" (default), "xl", "xxl", or "fluid"
+  containerBreakpoint = "xl" # "", "sm", "md", "lg", "xl", "xxl", or "fluid" (default)
 
   ## Button
   navBarButton = false # false (default) or true
@@ -45,6 +48,7 @@ mainSections = ["docs", "events"]
   bootstrapJavascript = true # false (default) or true
 
   # Nav
+  sectionSwitcher = false # true or false (default)
   sectionNav = ["docs", "events"] # ["docs"] (default) or list of sections (e.g. ["docs", "guides"])
   toTopButton = true # false (default) or true
   breadcrumbTrail = true # false (default) or true
@@ -62,6 +66,7 @@ mainSections = ["docs", "events"]
   # UX
   headerBar = true # true (default) or false
   backgroundDots = true # true (default) or false
+  aiButtons = true # true (default) or false
 
   # Homepage
   sectionFooter = false # false (default) or true
@@ -78,6 +83,8 @@ mainSections = ["docs", "events"]
   docsRepo = "https://github.com/OpenCHAMI/openchami.org"
   docsRepoBranch = "main" # main (default), master, or <branch name>
   docsRepoSubPath = "" # "" (none, default) or <sub path>
+
+  krokiURL = "https://kroki.io" # "https://kroki.io" (default) or custom URL like http://localhost:8000.
 
   # SCSS colors
   # backGround = "yellowgreen"
@@ -101,37 +108,38 @@ mainSections = ["docs", "events"]
   errorLevel = 'ignore' # ignore (default), warning, or error (fails the build)
   highlightBroken = false # true or false (default)
 
-# Images (@hyas/images)
-[hyas_images]
-  [hyas_images.defaults]
+# Images (@thulite/images)
+[thulite_images]
+  [thulite_images.defaults]
     decoding = "async" # sync, async, or auto (default)
-    fetchpriority = "auto" # high, low, or auto (default) 
+    fetchpriority = "auto" # high, low, or auto (default)
     loading = "lazy" # eager or lazy (default)
     widths = [480, 576, 768, 1025, 1200, 1440] # [640, 768, 1024, 1366, 1600, 1920] for example
     sizes = "auto" # 100vw (default), 75vw, or auto for example
     process = "" # "fill 1600x900" or "fill 2100x900" for example
     lqip = "16x webp q20" # "16x webp q20" or "21x webp q20" for example
 
-# Inline SVG (@hyas/inline-svg)
+# Inline SVG (@thulite/inline-svg)
 [inline_svg]
-  iconSetDir = "tabler-icons" # "tabler-icons" (default)
+  iconSetDir = "tabler-icons" # tabler-icons (default)
+  iconSetVariant = "outline" # outline (default) or filled
 
-# SEO (@hyas/seo)
+# SEO (@thulite/seo)
 [seo]
   [seo.title]
-    separator = " | "
-    suffix = ""
+    separator = "" # "|" (default)
+    suffix = "" # title hugo.toml (default)
+  [seo.description]
+    summaryFallback = "" # "" (default)
   [seo.favicons]
-    sizes = []
     icon = "favicon.png" # favicon.png (default)
     svgIcon = "favicon.svg" # favicon.svg (default)
-    maskIcon = "mask-icon.svg" # mask-icon.svg (default)
-    maskIconColor = "white" # white (default)
   [seo.schemas]
     type = "Organization" # Organization (default) or Person
     logo = "favicon-512x512.png" # Logo of Organization — favicon-512x512.png (default)
-    name = "OpenCHAMI" # Name of Organization or Person
-    sameAs = ["https://www.openchami.org", "https://github.com/openCHAMI/"]
+    name = "Thulite" # Name of Organization or Person
+    sameAs = [] # E.g. ["https://github.com/thuliteio/thulite", "https://fosstodon.org/@thulite"]
+    images = ["cover.png"] # ["cover.png"] (default)
     article = [] # Article sections
     newsArticle = [] # NewsArticle sections
     blogPosting = ["blog"] # BlogPosting sections
