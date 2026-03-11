@@ -3178,3 +3178,10 @@ This can be done in at least two ways here:
 
 - Alternatively, the necessary SLURM and MPI packages can be installed via the
   cloud-init config.
+
+### 3.6 Deploy Slurm Workload Manager
+
+Follow the guide for [Slurm Installation](https://openchami.org/docs/guides/install-slurm/)
+to setup and configure the Slurm Workload Manager on the OpenCHAMI cluster
+created during this tutorial. Complete up to [Section 2.6](https://openchami.org/docs/tutorial/#26-boot-the-compute-node-with-the-debug-image)
+of this tutorial, then begin the "Install Slurm" guide.
