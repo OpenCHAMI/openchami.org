@@ -1,5 +1,5 @@
 title = "OpenCHAMI"
-baseurl = "http://localhost/"
+baseurl = "/"
 canonifyURLs = false
 disableAliases = false
 disableHugoGeneratorInject = true
