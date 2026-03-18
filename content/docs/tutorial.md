@@ -361,6 +361,12 @@ Run a temporary webserver to serve the kickstart file created above:
 python3 -m http.server -d ./serve 8000 &
 ```
 
+To ensure the Kickstart file is being served properly, `curl` it from the webserver:
+
+```bash
+curl http://localhost:8000/kickstart.conf
+```
+
 ##### 0.5.2.b. Create External VM Network
 
 Create and start the external VM network:
@@ -391,6 +397,12 @@ sudo virsh net-start openchami-net-external
 ```
 
 This is the network that the user will SSH into the VM through.
+
+Now that the network is up, ensure the Kickstart file can be retrieved over it:
+
+```bash
+curl http://192.168.200.1:8000/kickstart.conf
+```
 
 ##### 0.5.2.c. Create Internal VM Network
 
