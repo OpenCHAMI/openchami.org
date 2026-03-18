@@ -2440,6 +2440,15 @@ The things to check are:
 - `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
+Set the boot configuration and verify with the `ochami` or `boot-service` client.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+You may need to update the `ochami` config to set the `boot-service` URI.
+
+```bash
+sudo ochami config --system cluster set demo boot-service.uri: /boot
+```
+{{< /callout >}}
 
 {{< /tab >}}
 {{< tab "Boot-service-backend" >}}
@@ -2476,20 +2485,6 @@ The things to check are:
 - `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
-
-{{< /tab >}}
-{{< /tabs >}}
-
-Set the boot configuration and verify with the `ochami` or `boot-service` client.
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-You may need to update the `ochami` config to set the `boot-service` URI.
-
-```bash
-sudo ochami config --system cluster set demo boot-service.uri: /boot
-```
-{{< /callout >}}
-
 Using the `ochami` CLI:
 
 ```bash
@@ -2509,6 +2504,9 @@ boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/bo
 # Verify that it was set properly
 boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
 ```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 You should see output that is similar to the input JSON. At this point, you should
 be ready to boot the compute node.
