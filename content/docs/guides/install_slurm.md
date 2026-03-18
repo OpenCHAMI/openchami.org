@@ -253,7 +253,7 @@ Copy the munge key to the normal user's home directory, so that the compute node
 
 ```bash
 sudo cp /etc/munge/munge.key ~/
-sudo chown "$(id -u):$(id -u)" munge.key
+sudo chown "$(id -u):$(id -u)" ~/munge.key
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
@@ -2041,6 +2041,13 @@ Restart Slurm service daemons in the **head node**:
 sudo systemctl restart slurmdbd
 sudo systemctl restart slurmctld
 ```
+
+Now is the time to delete the copy of `munge.key` in the normal user's home directory on the **head node**:
+
+```bash
+rm ~/munge.key
+```
+
 
 ## 1.8 Test Munge and Slurm
 
