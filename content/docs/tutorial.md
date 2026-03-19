@@ -280,18 +280,19 @@ Then, create `kickstart.conf` within that directory:
 # Use text install
 text
 
-url --url='https://download.rockylinux.org/stg/rocky/9/BaseOS/$basearch/os/'
+url --url="https://download.rockylinux.org/pub/rocky/9/BaseOS/$basearch/os/"
+repo --name="appstream" --baseurl="https://download.rockylinux.org/pub/rocky/9/AppStream/$basearch/os/" --install
 
 %packages
 @^minimal-environment
 bash-completion
 buildah
-epel-release
 kexec-tools
 man-pages
 podman
 tar
 tmux
+vim
 
 %end
 
@@ -300,10 +301,9 @@ keyboard --xlayouts='us'
 # System language
 lang en_US.UTF-8
 
-# Network information
-network  --bootproto=static --device=enp1s0 --bootproto=dhcp --ipv6=auto --activate
-network  --bootproto=static --device=enp2s0 --ip=172.16.0.254 --netmask=255.255.255.0 --ipv6=auto --activate
-network  --hostname=head
+network --device=enp1s0 --bootproto=dhcp --ipv6=auto --activate
+network --device=enp2s0 --bootproto=static --ip=172.16.0.254 --netmask=255.255.255.0 --ipv6=auto --activate
+network --hostname=head
 
 # Run the Setup Agent on first boot
 firstboot --enable
@@ -341,9 +341,15 @@ firewall --disabled
 # Kernel command line arguments to add.
 grubby --update-kernel=ALL --args='console=ttyS0,115200n8 systemd.unified_cgroup_hierarchy=1'
 grub2-mkconfig -o /etc/grub2.cfg
+
 # Enable mounting /tmp as tmpfs
 systemctl enable tmp.mount
-dnf install -y vim s3cmd awscli
+
+# Enable EPEL after the OS is installed
+dnf install -y epel-release
+
+# Install some other useful packages
+dnf install -y s3cmd awscli
 %end
 
 reboot
@@ -353,6 +359,12 @@ Run a temporary webserver to serve the kickstart file created above:
 
 ```bash
 python3 -m http.server -d ./serve 8000 &
+```
+
+To ensure the Kickstart file is being served properly, `curl` it from the webserver:
+
+```bash
+curl http://localhost:8000/kickstart.conf
 ```
 
 ##### 0.5.2.b. Create External VM Network
@@ -385,6 +397,12 @@ sudo virsh net-start openchami-net-external
 ```
 
 This is the network that the user will SSH into the VM through.
+
+Now that the network is up, ensure the Kickstart file can be retrieved over it:
+
+```bash
+curl http://192.168.200.1:8000/kickstart.conf
+```
 
 ##### 0.5.2.c. Create Internal VM Network
 
