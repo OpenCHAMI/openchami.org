@@ -1094,15 +1094,15 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.6.0
-Tag:        v0.6.0
+Version:    0.7.0
+Tag:        v0.7.0
 Branch:     HEAD
-Commit:     2243fa5a8b1b47667b0e2c662397fbc5c1761627
+Commit:     b0d2f7d4565d2a2668c4d1662ef85707c22fa9bf
 Git State:  clean
-Date:       2025-11-25T16:13:22Z
-Go:         go1.25.4
+Date:       2026-03-05T18:03:55Z
+Go:         go1.26.0
 Compiler:   gc
-Build Host: runnervmg1sw1
+Build Host: runnervm0kj6c
 Build User: runner
 ```
 
@@ -2414,8 +2414,16 @@ using the `add` command, `bss` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
 
-{{< tabs "Set-boot-configuration" >}}
-{{< tab "BSS-Backend" >}}
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If using the `boot-service` backend below, you may need to update the `ochami` config to set the `boot-service` URI.
+
+```bash
+sudo ochami config --system cluster set demo boot-service.uri: /boot
+```
+{{< /callout >}}
+
+{{< tabs "set-boot-configuration" >}}
+{{< tab "BSS Backend" >}}
 
 Apply the boot parameters created above with:
 
@@ -2460,7 +2468,7 @@ The things to check are:
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
 
 {{< /tab >}}
-{{< tab "Boot-service-backend" >}}
+{{< tab "boot-service Backend" >}}
 
 Setting the boot configuration with the `boot-service` backend is a little
 different than with the BSS backend. Instead of using the `ochami` client, we
@@ -2469,9 +2477,7 @@ Unfortunately, the client command can only take a JSON value with the `--spec`
 flag and cannot be set using a file. However, for the purpose of this tutorial,
 we will create a file to make comparing this method to the `ochami` easier.
 
-Edit *as root* the **/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml** file.
-Copy the contents below into the file. Notice that the values in this file should
-be the same values from section 2.5.2.a but in JSON.
+**Edit as root:** **`/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml`**
 
 ```json
 {
@@ -2489,24 +2495,16 @@ be the same values from section 2.5.2.a but in JSON.
 }
 ```
 
+Notice that the values in this file should be the same values from section
+2.5.2.a but in JSON.
+
 The things to check are:
 
 - `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
 
-{{< /tab >}}
-{{< /tabs >}}
-
 Set the boot configuration and verify with the `ochami` or `boot-service` client.
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-You may need to update the `ochami` config to set the `boot-service` URI.
-
-```bash
-sudo ochami config --system cluster set demo boot-service.uri: /boot
-```
-{{< /callout >}}
 
 Using the `ochami` CLI:
 
@@ -2527,6 +2525,9 @@ boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/bo
 # Verify that it was set properly
 boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
 ```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 You should see output that is similar to the input JSON. At this point, you should
 be ready to boot the compute node.
