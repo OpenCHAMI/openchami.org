@@ -680,7 +680,7 @@ latest_versity_url=$(curl -s https://api.github.com/repos/openchami/versitygw-qu
 # Download RPM
 curl -L "${latest_versity_url}" -o versitygw.rpm
 # Install the RPM
-sudo dnf install ./versitygw.rpm
+sudo dnf install -y ./versitygw.rpm
 ```
 
 #### 1.3.2 Container Registry
