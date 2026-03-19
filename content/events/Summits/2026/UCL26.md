@@ -60,31 +60,34 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 
 ## Agenda Snapshot
 
-| Day | Theme | Highlights |
-|---|---|---|
-| **Day 1** | Operations and Community Development | Hosts welcome, UCL operations, vendor update, operational talks, UK/EU panel, project review |
-| **Day 2** | Operations and AI Workflows | Hosts kickoff, Cambridge operations, migration/deployment sessions, UK/EU research discussion, AI sessions |
+| Day                  | Theme                                | Highlights                                                                                                 |
+|---                   |---                                   |---                                                                                                         |
+| **(Optional) Day 0** | HPC and AI in Cambridge              | Networking lunch, Welcome, Intro and HPC/AI Infrastructure, Data Centre Tours, AI Service and LLM Serving  |
+| **Day 1**            | Operations and Community Development | Hosts welcome, UCL operations, vendor update, operational talks, UK/EU panel, project review               |
+| **Day 2**            | Operations and AI Workflows          | Hosts kickoff, Cambridge operations, migration/deployment sessions, UK/EU research discussion, AI sessions |
 
 ## Schedule
 *(All times Local)*
 
 ### Optional Day 0 – Wednesday, May 6th
 
-**Location:** University of Cambridge, Cambridge, UK
+This, optional, pre-summit day provides an opportunity to visit and explore the cutting-edge HPC and AI infrastructure hosted by Research Computing Services (RCS) at the University of Cambridge. RCS hosts its flagship HPC service, the Cambridge Service for Data-driven Discovery (CSD3), and one half of the UK's AI Resarch Resource (AIRR) in the form of the Dawn. Come along to learn about cloud-native approaches to HPC, hear lessons learnt and experiences of running a UK AI service and be amongst the first to peak behind the scenes as Dawn's hardware refresh. **Spots are limited so please register your interest early.**
 
-This optional pre-summit day at Cambridge provides an opportunity to explore cutting-edge HPC and AI infrastructure, learn about cloud-native approaches to HPC, and network with Cambridge's research computing community.
+**Hosts:** Cambridge  
+**Venue:** Suite 2, Moller Institute, University of Cambridge, Cambridge, UK - ///fines.hers.shared  
+**Co-Chairs:** Wojciech Turek and Dominic Friend
 
-| Time | Session | Speaker(s) | Room |
-| --- | --- | --- | --- |
-| 12:00 | Arrival and Networking Lunch | - | TBD |
-| 13:00-13:20 | RCS Intro | - | TBD |
-| 13:20-13:50 | HPC and AI Data Centre Infrastructure | - | TBD |
-| 13:50-14:50 | Data Centre Tour | - | TBD |
-| 14:50-15:00 | Coffee | - | TBD |
-| 15:00-15:30 | Cloud-native HPC and AI Stack | - | TBD |
-| 15:30-16:00 | AIRR@Cambridge | - | TBD |
-| 16:00-16:30 | LLMOps | - | TBD |
-| 16:30+ | Return trips to London / Social opportunity | - | TBD |
+| Time        | Session                                              | Speaker(s)           | Room                      |
+| ---         | ---                                                  | ---                  | ---                       |
+| 12:00-13:00 | Arrival and Networking Lunch                         | Co-chairs            | Suite 2, Moller Institute |
+| 13:00-13:20 | Intro to Cambridge Research Computing Services (RCS) | Wojciech Turek       | Suite 2, Moller Institute |
+| 13:20-13:50 | HPC and AI Data Centre Infrastructure                | Wojciech Turek       | Suite 2, Moller Institute |
+| 13:50-14:50 | Data Centre Tours                                    | Co-chairs            | Suite 2, Moller Institute |
+| 14:50-15:00 | Mid-afternoon Networking Break                       | Co-chairs            | Suite 2, Moller Institute |
+| 15:00-15:30 | Cloud-native HPC and AI Stack                        | TBD                  | Suite 2, Moller Institute |
+| 15:30-16:00 | AI Research Resource (AIRR) at Cambridge             | Deepak Aggarwal      | Suite 2, Moller Institute |
+| 16:00-16:30 | Large Language Model Operations (LLMOps)             | Yiannos Stathopoulos | Suite 2, Moller Institute |
+| 16:30+      | Depart / Social Opportunity                          | Co-chairs            | TBD                       |
 
 ---
 
