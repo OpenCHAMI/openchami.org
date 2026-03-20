@@ -8,14 +8,15 @@ enableEmoji = true
 enableGitInfo = true
 enableRobotsTXT = true
 languageCode = "en-US"
-[pagination]
-  pagerSize = 10
 rssLimit = 10
 summarylength = 20 # 70 (default)
-
+defaultContentLanguage = "en"
+disableLanguages = ["de", "nl"]
 
 copyRight = "Copyright (c) 2023-2026 OpenCHAMI"
 
+[pagination]
+  pagerSize = 10
 
 
 [services]
@@ -28,17 +29,17 @@ copyRight = "Copyright (c) 2023-2026 OpenCHAMI"
   enable = true
 
 [outputs]
-  home = ["HTML", "RSS", "searchIndex"]
-  section = ["HTML", "RSS", "SITEMAP"]
+  home = ["html", "rss", "searchindex"]
+  section = ["html", "rss", "sitemap"]
 
-[outputFormats.searchIndex]
+[outputFormats.searchindex]
   mediaType = "application/json"
   baseName = "search-index"
   isPlainText = true
   notAlternative = true
 
 # Add output format for section sitemap.xml
-[outputFormats.SITEMAP]
+[outputFormats.sitemap]
   mediaType = "application/xml"
   baseName = "sitemap"
   isHTML = false
