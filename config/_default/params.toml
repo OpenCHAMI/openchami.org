@@ -45,7 +45,6 @@ mainSections = ["docs", "events"]
   bootstrapJavascript = true # false (default) or true
 
   # Nav
-  sectionSwitcher = false # true or false (default)
   sectionNav = ["docs", "events"] # ["docs"] (default) or list of sections (e.g. ["docs", "guides"])
   toTopButton = true # false (default) or true
   breadcrumbTrail = true # false (default) or true
