@@ -1,35 +1,44 @@
-import autoprefixer from 'autoprefixer';
-import purgeCSSPlugin from '@fullhuman/postcss-purgecss';
+const autoprefixer = require('autoprefixer');
+const purgecss = require('@fullhuman/postcss-purgecss');
+const whitelister = require('purgecss-whitelister');
 
-const purgecss = purgeCSSPlugin({
-    content: ['./hugo_stats.json'],
-    defaultExtractor: (content) => {
-        const els = JSON.parse(content).htmlElements;
-        return [...(els.tags || []), ...(els.classes || []), ...(els.ids || [])];
-    },
-    dynamicAttributes: [
+module.exports = {
+  plugins: [
+    autoprefixer(),
+    purgecss({
+      content: [ './hugo_stats.json' ],
+      extractors: [
+        {
+          extractor: (content) => {
+            const els = JSON.parse(content).htmlElements;
+            return els.tags.concat(els.classes, els.ids);
+          },
+          extensions: ['json'],
+        },
+      ],
+      dynamicAttributes: [
         'aria-expanded',
         'data-bs-popper',
         'data-bs-target',
         'data-bs-theme',
         'data-dark-mode',
         'data-global-alert',
-        'data-pane', // tabs.js
+        'data-pane',             // tabs.js
         'data-popper-placement',
         'data-sizes',
-        'data-toggle-tab', // tabs.js
+        'data-toggle-tab',       // tabs.js
         'id',
         'size',
-        'type'
-    ],
-    safelist: [
+        'type',
+      ],
+      safelist: [
         'active',
-        'btn-clipboard', // clipboards.js
-        'clipboard', // clipboards.js
+        'btn-clipboard',         // clipboards.js
+        'clipboard',             // clipboards.js
         'disabled',
         'hidden',
-        'modal-backdrop', // search-modal.js
-        'selected', // search-modal.js
+        'modal-backdrop',        // search-modal.js
+        'selected',              // search-modal.js
         'show',
         'img-fluid',
         'blur-up',
@@ -47,15 +56,13 @@ const purgecss = purgeCSSPlugin({
         'hiding',
         'page-item',
         'page-link',
-        'not-content',
-        'copy',
-        'btn-copy',
-    ]
-});
-
-export default {
-  plugins: [
-    autoprefixer(),
-    ...(process.env.HUGO_ENVIRONMENT === "production" ? [purgecss] : []),
+        ...whitelister([
+          './assets/scss/**/*.scss',
+          './node_modules/@hyas/doks-core/assets/scss/components/_code.scss',
+          './node_modules/@hyas/doks-core/assets/scss/components/_expressive-code.scss',
+          './node_modules/@hyas/doks-core/assets/scss/common/_syntax.scss',
+        ]),
+      ],
+    }),
   ],
 };

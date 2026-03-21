@@ -15,16 +15,20 @@
   # excludeFiles = ["scss/app.scss", "js/app.js"]
 
 [[mounts]]
-  source = "node_modules/@thulite/images/assets"
-  target = "assets"
-
-[[mounts]]
   source = "node_modules/@thulite/doks-core/assets"
   target = "assets"
 
 [[mounts]]
   source = "node_modules/@tabler/icons/icons"
   target = "assets/svgs/tabler-icons"
+
+[[mounts]]
+  source = "node_modules/@thulite/images/assets"
+  target = "assets"
+
+[[mounts]]
+  source = "hugo_stats.json"
+  target = "assets/watching/hugo_stats.json"
 
 [[mounts]]
   source = "assets"
@@ -59,6 +63,11 @@
   target = "layouts"
 
 [[mounts]]
+  excludeFiles = ['home.html']
+  source = "node_modules/@thulite/doks-core/layouts"
+  target = "layouts"
+
+[[mounts]]
   source = "node_modules/@thulite/core/layouts"
   target = "layouts"
 
@@ -68,11 +77,6 @@
 
 [[mounts]]
   source = "node_modules/@thulite/images/layouts"
-  target = "layouts"
-
-[[mounts]]
-  files = ['! home.html']
-  source = "node_modules/@thulite/doks-core/layouts"
   target = "layouts"
 
 [[mounts]]

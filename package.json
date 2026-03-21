@@ -43,9 +43,7 @@
     "hugo": "0.152.2"
   },
   "overrides": {
-    "semver": "^7.5.4",
-    "minimatch": "^10.2.2",
-    "glob": "^13.0.6"
+    "semver": "^7.5.4"
   },
   "engines": {
     "node": ">=18.14.1",
