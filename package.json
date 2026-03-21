@@ -33,7 +33,6 @@
     "@tabler/icons": "^3.31.0",
     "exec-bin": "^1.0.0",
     "thulite": "^2.6.5",
-    "hugo": "^0.0.3",
     "hugo-installer": "^4.0.1"
   },
   "devDependencies": {
