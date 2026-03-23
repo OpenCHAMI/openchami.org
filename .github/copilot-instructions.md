@@ -207,7 +207,7 @@ rm -rf public resources .hugo_build.lock && npm run dev
 **Build passes locally but fails in CI?** Check:
 - Node version (18.16.1 on Netlify, verify locally)
 - pnpm version (>= 8.10.0)
-- Hugo version in `package.json` → `otherDependencies.hugo`
+- Hugo version in `package.json` → `dependencies.hugo-extended`
 - All dependencies installed: `npm install`
 
 **CSS/JS not updating?** Clear asset cache:

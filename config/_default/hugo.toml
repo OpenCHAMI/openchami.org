@@ -51,11 +51,6 @@ copyRight = "Copyright (c) 2023-2026 OpenCHAMI"
   filename = "sitemap.xml"
   priority = 0.5
 
-[caches]
-  [caches.getjson]
-    dir = ":cacheDir/:project"
-    maxAge = -1 # "30m"
-
 [taxonomies]
   contributor = "contributors"
   category = "categories"
