@@ -10,7 +10,7 @@ mainSections = ["docs", "events"]
   github = "openchami"
   
 
-# Doks (@hyas/doks-core)
+# Doks (@thulite/doks-core)
 [doks]
   # Color mode
   colorMode = "auto" # auto (default), light or dark
@@ -101,9 +101,9 @@ mainSections = ["docs", "events"]
   errorLevel = 'ignore' # ignore (default), warning, or error (fails the build)
   highlightBroken = false # true or false (default)
 
-# Images (@hyas/images)
-[hyas_images]
-  [hyas_images.defaults]
+# Images (@thulite/images)
+[thulite_images]
+  [thulite_images.defaults]
     decoding = "async" # sync, async, or auto (default)
     fetchpriority = "auto" # high, low, or auto (default) 
     loading = "lazy" # eager or lazy (default)
@@ -112,11 +112,11 @@ mainSections = ["docs", "events"]
     process = "" # "fill 1600x900" or "fill 2100x900" for example
     lqip = "16x webp q20" # "16x webp q20" or "21x webp q20" for example
 
-# Inline SVG (@hyas/inline-svg)
-[inline_svg]
+# Inline SVG (@thulite/inline-svg)
+[thulite_svg]
   iconSetDir = "tabler-icons" # "tabler-icons" (default)
 
-# SEO (@hyas/seo)
+# SEO (@thulite/seo)
 [seo]
   [seo.title]
     separator = " | "
