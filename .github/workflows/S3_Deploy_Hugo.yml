@@ -9,15 +9,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out main
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4.0.2
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
       - name: NPM Install
-        run: npm install
+        run: npm ci
+      - name: Install Hugo withdeploy
+        run: |
+          HUGO_VERSION=$(node -e "const pkg=require('./package.json'); const version=(pkg.dependencies?.['hugo-extended'] || pkg.devDependencies?.['hugo-extended'] || '').replace(/^[~^]/, ''); if(!version){console.error('Could not determine hugo-extended version from package.json'); process.exit(1);} process.stdout.write(version);")
+          curl -fsSL -o /tmp/hugo-withdeploy.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_withdeploy_${HUGO_VERSION}_linux-amd64.tar.gz"
+          mkdir -p "$RUNNER_TEMP/hugo-bin"
+          tar -xzf /tmp/hugo-withdeploy.tar.gz -C "$RUNNER_TEMP/hugo-bin" hugo
+          chmod +x "$RUNNER_TEMP/hugo-bin/hugo"
+          echo "$RUNNER_TEMP/hugo-bin" >> "$GITHUB_PATH"
+      - name: Verify Hugo deploy support
+        run: |
+          hugo version
+          hugo help deploy
       - name: Build Hugo
-        run: npm run build
-      - name: Deploy to S3
-        run: npm run deploy
+        run: hugo --minify
+      - name: Deploy to S3 (no CDN invalidation)
+        run: hugo deploy --target aws-deployment --invalidateCDN=false --maxDeletes -1
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
