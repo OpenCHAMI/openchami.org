@@ -1149,7 +1149,11 @@ cmds:
   - cmd: 'dnf remove -y munge-libs-0.5.13-* munge-0.5.13-*'
 ```
 
-Run podman container to run image build command. The S3_ACCESS and S3_SECRET tokens are set in the tutorial [here](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients).
+Run podman container to run image build command.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+The ROOT_ACCESS_KEY and ROOT_SECRET_KEY tokens are set in the tutorial [here](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients).
+{{< /callout >}}
 
 ```bash
 podman run \
