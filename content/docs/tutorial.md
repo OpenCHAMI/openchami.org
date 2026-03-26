@@ -280,18 +280,19 @@ Then, create `kickstart.conf` within that directory:
 # Use text install
 text
 
-url --url='https://download.rockylinux.org/stg/rocky/9/BaseOS/$basearch/os/'
+url --url="https://download.rockylinux.org/pub/rocky/9/BaseOS/$basearch/os/"
+repo --name="appstream" --baseurl="https://download.rockylinux.org/pub/rocky/9/AppStream/$basearch/os/" --install
 
 %packages
 @^minimal-environment
 bash-completion
 buildah
-epel-release
 kexec-tools
 man-pages
 podman
 tar
 tmux
+vim
 
 %end
 
@@ -300,10 +301,9 @@ keyboard --xlayouts='us'
 # System language
 lang en_US.UTF-8
 
-# Network information
-network  --bootproto=static --device=enp1s0 --bootproto=dhcp --ipv6=auto --activate
-network  --bootproto=static --device=enp2s0 --ip=172.16.0.254 --netmask=255.255.255.0 --ipv6=auto --activate
-network  --hostname=head
+network --device=enp1s0 --bootproto=dhcp --ipv6=auto --activate
+network --device=enp2s0 --bootproto=static --ip=172.16.0.254 --netmask=255.255.255.0 --ipv6=auto --activate
+network --hostname=head
 
 # Run the Setup Agent on first boot
 firstboot --enable
@@ -341,9 +341,15 @@ firewall --disabled
 # Kernel command line arguments to add.
 grubby --update-kernel=ALL --args='console=ttyS0,115200n8 systemd.unified_cgroup_hierarchy=1'
 grub2-mkconfig -o /etc/grub2.cfg
+
 # Enable mounting /tmp as tmpfs
 systemctl enable tmp.mount
-dnf install -y vim s3cmd awscli
+
+# Enable EPEL after the OS is installed
+dnf install -y epel-release
+
+# Install some other useful packages
+dnf install -y s3cmd awscli
 %end
 
 reboot
@@ -353,6 +359,12 @@ Run a temporary webserver to serve the kickstart file created above:
 
 ```bash
 python3 -m http.server -d ./serve 8000 &
+```
+
+To ensure the Kickstart file is being served properly, `curl` it from the webserver:
+
+```bash
+curl http://localhost:8000/kickstart.conf
 ```
 
 ##### 0.5.2.b. Create External VM Network
@@ -385,6 +397,12 @@ sudo virsh net-start openchami-net-external
 ```
 
 This is the network that the user will SSH into the VM through.
+
+Now that the network is up, ensure the Kickstart file can be retrieved over it:
+
+```bash
+curl http://192.168.200.1:8000/kickstart.conf
+```
 
 ##### 0.5.2.c. Create Internal VM Network
 
@@ -662,7 +680,7 @@ latest_versity_url=$(curl -s https://api.github.com/repos/openchami/versitygw-qu
 # Download RPM
 curl -L "${latest_versity_url}" -o versitygw.rpm
 # Install the RPM
-sudo dnf install ./versitygw.rpm
+sudo dnf install -y ./versitygw.rpm
 ```
 
 #### 1.3.2 Container Registry
@@ -1076,15 +1094,15 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.6.0
-Tag:        v0.6.0
+Version:    0.7.0
+Tag:        v0.7.0
 Branch:     HEAD
-Commit:     2243fa5a8b1b47667b0e2c662397fbc5c1761627
+Commit:     b0d2f7d4565d2a2668c4d1662ef85707c22fa9bf
 Git State:  clean
-Date:       2025-11-25T16:13:22Z
-Go:         go1.25.4
+Date:       2026-03-05T18:03:55Z
+Go:         go1.26.0
 Compiler:   gc
-Build Host: runnervmg1sw1
+Build Host: runnervm0kj6c
 Build User: runner
 ```
 
@@ -2388,15 +2406,26 @@ macs:
   - 52:54:00:be:ef:05
 ```
 
-##### 2.5.2.a Set the Boot Configuration with BSS Backend
-
-Apply the boot parameters created above with:
+Now, we set the boot configuration using one of the backends below.
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 `ochami` supports both `add` and `set`.  The difference is idempotency.  If
 using the `add` command, `bss` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If using the `boot-service` backend below, you may need to update the `ochami` config to set the `boot-service` URI.
+
+```bash
+sudo ochami config --system cluster set demo boot-service.uri: /boot
+```
+{{< /callout >}}
+
+{{< tabs "set-boot-configuration" >}}
+{{< tab "BSS Backend" >}}
+
+Apply the boot parameters created above with:
 
 ```bash
 ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
@@ -2438,7 +2467,8 @@ The things to check are:
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
 
-##### 2.5.2.b Set the Boot Configuration with the `boot-service` Backend
+{{< /tab >}}
+{{< tab "boot-service Backend" >}}
 
 Setting the boot configuration with the `boot-service` backend is a little
 different than with the BSS backend. Instead of using the `ochami` client, we
@@ -2447,9 +2477,7 @@ Unfortunately, the client command can only take a JSON value with the `--spec`
 flag and cannot be set using a file. However, for the purpose of this tutorial,
 we will create a file to make comparing this method to the `ochami` easier.
 
-Edit the **/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml** file.
-Copy the contents below into the file. Notice that the values in this file should
-be the same values from section 2.5.2.a but in JSON.
+**Edit as root:** **`/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml`**
 
 ```json
 {
@@ -2462,22 +2490,44 @@ be the same values from section 2.5.2.a but in JSON.
   ],
   "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
   "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64",
-  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img",
+  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img"
 
 }
 ```
 
-Set the boot configuration with the client.
+Notice that the values in this file should be the same values from section
+2.5.2.a but in JSON.
+
+The things to check are:
+
+- `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
+- `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
+- `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
+
+Set the boot configuration and verify with the `ochami` or `boot-service` client.
+
+Using the `ochami` CLI:
 
 ```bash
-boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+# Set/add the boot configuration
+ochami boot config add -d @/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml --uri https://demo.openchami.cluster:8443 -l debug
+
+# Verify that it was set properly
+ochami boot config list -F json-pretty
 ```
 
-Verify that the boot configuration was set.
+Or using the generated `boot-service` CLI:
 
 ```bash
+# Set/add the boot configuration
+boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+
+# Verify that it was set properly
 boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
 ```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 You should see output that is similar to the input JSON. At this point, you should
 be ready to boot the compute node.
@@ -3147,3 +3197,10 @@ This can be done in at least two ways here:
 
 - Alternatively, the necessary SLURM and MPI packages can be installed via the
   cloud-init config.
+
+### 3.6 Deploy Slurm Workload Manager
+
+Follow the guide for [Slurm Installation](https://openchami.org/docs/guides/install-slurm/)
+to setup and configure the Slurm Workload Manager on the OpenCHAMI cluster
+created during this tutorial. Complete up to [Section 2.6](https://openchami.org/docs/tutorial/#26-boot-the-compute-node-with-the-debug-image)
+of this tutorial, then begin the "Install Slurm" guide.

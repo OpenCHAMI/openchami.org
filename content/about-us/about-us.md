@@ -1,6 +1,6 @@
 ---
 title: "About Us"
-date: 2025-04-010T12:00:00Z  # Adjust as needed
+date: 2025-04-10T12:00:00Z  # Adjust as needed
 draft: false
 ---
 
