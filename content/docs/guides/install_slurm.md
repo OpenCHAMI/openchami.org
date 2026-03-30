@@ -942,6 +942,42 @@ sudo systemctl start slurmdbd
 sudo systemctl start slurmctld
 ```
 
+Install NFS:
+
+```bash
+sudo dnf install -y nfs-utils
+```
+
+Setup NFS to share Slurm configuration directories between nodes:
+
+```bash
+# Add to /etc/exports to share the mountpoints to other machines
+cat <<EOF | sudo tee -a /etc/exports
+/home 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+/etc/slurm 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+/etc/sssd 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+/etc/openldap 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+EOF
+
+# Enable and start nfs-server
+sudo systemctl enable --now nfs-server
+```
+
+Check if NFS is working:
+
+```bash
+sudo exportfs
+```
+
+The output should be:
+
+```
+/home         	172.16.0.1
+/etc/slurm    	172.16.0.1
+/etc/sssd     	172.16.0.1
+/etc/openldap 	172.16.0.1
+```
+
 ## 1.4 Make a Local Slurm Repository and Serve it with Nginx
 
 Create configuration file to mount into Nginx container:
@@ -1156,6 +1192,8 @@ The ROOT_ACCESS_KEY and ROOT_SECRET_KEY tokens are set in the tutorial [here](ht
 {{< /callout >}}
 
 ```bash
+source <(sudo cat /etc/versitygw/secrets.env)
+
 podman run \
   --rm \
   --device /dev/fuse \
@@ -1300,7 +1338,7 @@ The output should be:
   "public-keys": [
     "<YOUR SSH KEY>"
   ],
-  "short-name": "nid"
+  "short-name": "de"
 }
 ```
 
