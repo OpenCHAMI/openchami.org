@@ -2081,6 +2081,7 @@ Restart Slurm service daemons in the **head node**:
 
 ```bash
 sudo systemctl restart slurmdbd
+sleep 5
 sudo systemctl restart slurmctld
 ```
 
