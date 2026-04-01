@@ -249,21 +249,6 @@ sudo -u munge /usr/sbin/mungekey -v
 sudo systemctl enable --now munge
 ```
 
-Copy the munge key to the normal user's home directory, so that the compute node can fetch it while booting.
-
-```bash
-sudo cp /etc/munge/munge.key ~/
-sudo chown "$(id -u):$(id -u)" ~/munge.key
-```
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-Make sure to delete the copy of `munge.key` in the normal user's home directory after the compute node is setup! 
-
-```bash
-rm ~/munge.key
-```
-{{< /callout >}}
-
 Install mariaDB:
 
 ```bash
@@ -955,8 +940,7 @@ Setup NFS to share Slurm configuration directories between nodes:
 cat <<EOF | sudo tee -a /etc/exports
 /home 172.16.0.1(rw,async,no_root_squash,no_all_squash)
 /etc/slurm 172.16.0.1(rw,async,no_root_squash,no_all_squash)
-/etc/sssd 172.16.0.1(rw,async,no_root_squash,no_all_squash)
-/etc/openldap 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+/etc/munge 172.16.0.1(rw,async,no_root_squash,no_all_squash)
 EOF
 
 # Enable and start nfs-server
@@ -974,8 +958,7 @@ The output should be:
 ```
 /home         	172.16.0.1
 /etc/slurm    	172.16.0.1
-/etc/sssd     	172.16.0.1
-/etc/openldap 	172.16.0.1
+/etc/munge    	172.16.0.1
 ```
 
 ## 1.4 Make a Local Slurm Repository and Serve it with Nginx
@@ -1378,6 +1361,7 @@ Configure cloud-init for compute group:
         content: |
           demo.openchami.cluster:/home /home nfs defaults 0 0
           demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+          demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
       bootcmd:
         - hostnamectl set-hostname de01.openchami.cluster
@@ -1395,8 +1379,6 @@ Configure cloud-init for compute group:
         - usermod -u 616 munge
         - groupmod -g 616 munge
         - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-        - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-        - chown munge:munge /etc/munge/munge.key
         - systemctl enable --now munge
         - systemctl enable --now slurmd
         - systemctl stop firewalld
@@ -1436,8 +1418,7 @@ Configure cloud-init for compute group:
         content: |
           demo.openchami.cluster:/home /home nfs defaults 0 0
           demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
-          demo.openchami.cluster:/etc/sssd /etc/sssd nfs defaults 0 0
-          demo.openchami.cluster:/etc/openldap /etc/openldap nfs defaults 0 0
+          demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
       bootcmd:
         - hostnamectl set-hostname de01.openchami.cluster
@@ -1455,8 +1436,6 @@ Configure cloud-init for compute group:
         - usermod -u 616 munge
         - groupmod -g 616 munge
         - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-        - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-        - chown munge:munge /etc/munge/munge.key
         - systemctl enable --now munge
         - systemctl enable --now slurmd
         - systemctl stop firewalld
@@ -1496,8 +1475,7 @@ Configure cloud-init for compute group:
         content: |
           demo.openchami.cluster:/home /home nfs defaults 0 0
           demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
-          demo.openchami.cluster:/etc/sssd /etc/sssd nfs defaults 0 0
-          demo.openchami.cluster:/etc/openldap /etc/openldap nfs defaults 0 0
+          demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
       bootcmd:
         - hostnamectl set-hostname de01.openchami.cluster
@@ -1515,8 +1493,6 @@ Configure cloud-init for compute group:
         - usermod -u 616 munge
         - groupmod -g 616 munge
         - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-        - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-        - chown munge:munge /etc/munge/munge.key
         - systemctl enable --now munge
         - systemctl enable --now slurmd
         - systemctl stop firewalld
@@ -1569,6 +1545,7 @@ write_files:
   content: |
     demo.openchami.cluster:/home /home nfs defaults 0 0
     demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
 bootcmd:
   - hostnamectl set-hostname de01.openchami.cluster
@@ -1586,8 +1563,6 @@ runcmd:
   - usermod -u 616 munge
   - groupmod -g 616 munge
   - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-  - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-  - chown munge:munge /etc/munge/munge.key
   - systemctl enable --now munge
   - systemctl enable --now slurmd
   - systemctl stop firewalld
@@ -1622,6 +1597,7 @@ write_files:
   content: |
     demo.openchami.cluster:/home /home nfs defaults 0 0
     demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
 bootcmd:
   - hostnamectl set-hostname de01.openchami.cluster
@@ -1639,8 +1615,6 @@ runcmd:
   - usermod -u 616 munge
   - groupmod -g 616 munge
   - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-  - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-  - chown munge:munge /etc/munge/munge.key
   - systemctl enable --now munge
   - systemctl enable --now slurmd
   - systemctl stop firewalld
@@ -1675,6 +1649,7 @@ write_files:
   content: |
     demo.openchami.cluster:/home /home nfs defaults 0 0
     demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
 bootcmd:
   - hostnamectl set-hostname de01.openchami.cluster
@@ -1692,8 +1667,6 @@ runcmd:
   - usermod -u 616 munge
   - groupmod -g 616 munge
   - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-  - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-  - chown munge:munge /etc/munge/munge.key
   - systemctl enable --now munge
   - systemctl enable --now slurmd
   - systemctl stop firewalld
@@ -1747,6 +1720,7 @@ write_files:
   content: |
     demo.openchami.cluster:/home /home nfs defaults 0 0
     demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
 bootcmd:
   - hostnamectl set-hostname de01.openchami.cluster
@@ -1764,8 +1738,6 @@ runcmd:
   - usermod -u 616 munge
   - groupmod -g 616 munge
   - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-  - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-  - chown munge:munge /etc/munge/munge.key
   - systemctl enable --now munge
   - systemctl enable --now slurmd
   - systemctl stop firewalld
@@ -1800,6 +1772,7 @@ write_files:
   content: |
     demo.openchami.cluster:/home /home nfs defaults 0 0
     demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
 bootcmd:
   - hostnamectl set-hostname de01.openchami.cluster
@@ -1817,8 +1790,6 @@ runcmd:
   - usermod -u 616 munge
   - groupmod -g 616 munge
   - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-  - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-  - chown munge:munge /etc/munge/munge.key
   - systemctl enable --now munge
   - systemctl enable --now slurmd
   - systemctl stop firewalld
@@ -1853,6 +1824,7 @@ write_files:
   content: |
     demo.openchami.cluster:/home /home nfs defaults 0 0
     demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
 
 bootcmd:
   - hostnamectl set-hostname de01.openchami.cluster
@@ -1870,8 +1842,6 @@ runcmd:
   - usermod -u 616 munge
   - groupmod -g 616 munge
   - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
-  - sshpass -p rocky scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null rocky@172.16.0.254:/home/rocky/munge.key /etc/munge/munge.key
-  - chown munge:munge /etc/munge/munge.key
   - systemctl enable --now munge
   - systemctl enable --now slurmd
   - systemctl stop firewalld
@@ -2084,13 +2054,6 @@ sudo systemctl restart slurmdbd
 sleep 5
 sudo systemctl restart slurmctld
 ```
-
-Now is the time to delete the copy of `munge.key` in the normal user's home directory on the **head node**:
-
-```bash
-rm ~/munge.key
-```
-
 
 ## 1.8 Test Munge and Slurm
 
