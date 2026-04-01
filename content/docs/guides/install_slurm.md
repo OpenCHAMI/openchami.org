@@ -2127,7 +2127,7 @@ srun: job 1 queued and waiting for resources
 srun: job 1 has been allocated resources
 slurmstepd: error: couldn't chdir to `/home/testuser': No such file or directory: going to /tmp instead
 slurmstepd: error: couldn't chdir to `/home/testuser': No such file or directory: going to /tmp instead
-de01
+de01.openchami.cluster
 ```
 
 If something goes wrong and your compute node goes down, restart it with this command:
