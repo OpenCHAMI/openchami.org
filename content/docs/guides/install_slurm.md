@@ -180,7 +180,7 @@ sudo /opt/workdir/build.sh
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 The above command will likely not produce any output for a few minutes - this is expected and ok.
 
-Additionallu, the following warnings are normal:
+Additionally, the following warnings are normal:
 ```bash
 configure: WARNING: unable to locate libnvidia-ml.so and/or nvml.h
 configure: WARNING: unable to locate librocm_smi64.so and/or rocm_smi.h
@@ -1265,11 +1265,11 @@ The output should be:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.20.0.254:7070/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.36.1.el9_7.x86_64.img
-  kernel: http://172.20.0.254:7070/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.36.1.el9_7.x86_64
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.36.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.36.1.el9_7.x86_64
   macs:
     - 52:54:00:be:ef:01
-  params: nomodeset ro root=live:http://172.20.0.254:7070/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.20.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 Create new directory for setting up cloud-init configuration:
