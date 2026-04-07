@@ -178,7 +178,9 @@ sudo /opt/workdir/build.sh
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
-The following warnings are normal:
+The above command will likely not produce any output for a few minutes - this is expected and ok.
+
+Additionallu, the following warnings are normal:
 ```bash
 configure: WARNING: unable to locate libnvidia-ml.so and/or nvml.h
 configure: WARNING: unable to locate librocm_smi64.so and/or rocm_smi.h
@@ -1121,30 +1123,24 @@ repos:
     url: 'http://localhost:8080/slurm-24.05.5'
             
 packages:
+  - bind-utils
   - boxes
+  - curl
   - figlet
   - git
-  - nfs-utils
-  - bind-utils
-  - openldap-clients
-  - sssd
-  - sssd-ldap
-  - oddjob-mkhomedir
-  - tcpdump
-  - traceroute
-  - vim
-  - curl
-  - rpm-build
-  - shadow-utils
-  - sshpass
-  - pwgen
   - jq
   - libconfuse
+  - nfs-utils
   - numactl
+  - oddjob-mkhomedir
+  - openldap-clients
   - parallel
   - perl-DBI
-  - slurm-24.05.5
   - pmix-4.2.9
+  - pwgen
+  - rpm-build
+  - shadow-utils
+  - slurm-24.05.5
   - slurm-contribs-24.05.5
   - slurm-devel-24.05.5
   - slurm-example-configs-24.05.5
@@ -1157,6 +1153,12 @@ packages:
   - slurm-slurmdbd-24.05.5
   - slurm-slurmrestd-24.05.5
   - slurm-torque-24.05.5
+  - sshpass
+  - sssd
+  - sssd-ldap
+  - tcpdump
+  - traceroute
+  - vim
 
 cmds:
   - cmd: 'curl -sL https://github.com/dun/munge/releases/download/munge-0.5.18/munge-0.5.18.tar.xz -o munge-0.5.18.tar.xz'
@@ -1206,9 +1208,9 @@ s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4- | grep slurm
 The output should be:
 
 ```
-1615M  s3://boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9
-  84M  s3://boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.20.1.el9_7.x86_64.img
-  14M  s3://boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
+1660M  s3://boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9
+  85M  s3://boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.36.1.el9_7.x86_64.img
+  14M  s3://boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.36.1.el9_7.x86_64
 ```
 
 ## 1.5 Configure the Boot Script Service and Cloud-Init
@@ -1263,11 +1265,11 @@ The output should be:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.16.0.254:9000/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.20.1.el9_7.x86_64.img
-  kernel: http://172.16.0.254:9000/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
+  initrd: http://172.20.0.254:7070/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.36.1.el9_7.x86_64.img
+  kernel: http://172.20.0.254:7070/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.36.1.el9_7.x86_64
   macs:
     - 52:54:00:be:ef:01
-  params: nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.20.0.254:7070/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.20.0.254:8081/cloud-init
 ```
 
 Create new directory for setting up cloud-init configuration:
