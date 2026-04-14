@@ -178,7 +178,9 @@ sudo /opt/workdir/build.sh
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
-The following warnings are normal:
+The above command will likely not produce any output for a few minutes - this is expected and ok.
+
+Additionally, the following warnings are normal:
 ```bash
 configure: WARNING: unable to locate libnvidia-ml.so and/or nvml.h
 configure: WARNING: unable to locate librocm_smi64.so and/or rocm_smi.h
@@ -920,6 +922,47 @@ EOF
 {{< /tab >}}
 {{< /tabs >}}
 
+Start Slurm service daemons: 
+
+```bash
+sudo systemctl start slurmdbd
+sudo systemctl start slurmctld
+```
+
+Install NFS:
+
+```bash
+sudo dnf install -y nfs-utils
+```
+
+Setup NFS to share Slurm configuration directories between nodes:
+
+```bash
+# Add to /etc/exports to share the mountpoints to other machines
+cat <<EOF | sudo tee -a /etc/exports
+/home 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+/etc/slurm 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+/etc/munge 172.16.0.1(rw,async,no_root_squash,no_all_squash)
+EOF
+
+# Enable and start nfs-server
+sudo systemctl enable --now nfs-server
+```
+
+Check if NFS is working:
+
+```bash
+sudo exportfs
+```
+
+The output should be:
+
+```
+/home         	172.16.0.1
+/etc/slurm    	172.16.0.1
+/etc/munge    	172.16.0.1
+```
+
 ## 1.4 Make a Local Slurm Repository and Serve it with Nginx
 
 Create configuration file to mount into Nginx container:
@@ -1079,26 +1122,25 @@ repos:
   - alias: 'Slurm'
     url: 'http://localhost:8080/slurm-24.05.5'
             
-
 packages:
+  - bind-utils
   - boxes
+  - curl
   - figlet
   - git
-  - nfs-utils
-  - tcpdump
-  - traceroute
-  - vim
-  - curl
-  - rpm-build
-  - shadow-utils
-  - pwgen
   - jq
   - libconfuse
+  - nfs-utils
   - numactl
+  - oddjob-mkhomedir
+  - openldap-clients
   - parallel
   - perl-DBI
-  - slurm-24.05.5
   - pmix-4.2.9
+  - pwgen
+  - rpm-build
+  - shadow-utils
+  - slurm-24.05.5
   - slurm-contribs-24.05.5
   - slurm-devel-24.05.5
   - slurm-example-configs-24.05.5
@@ -1111,6 +1153,12 @@ packages:
   - slurm-slurmdbd-24.05.5
   - slurm-slurmrestd-24.05.5
   - slurm-torque-24.05.5
+  - sshpass
+  - sssd
+  - sssd-ldap
+  - tcpdump
+  - traceroute
+  - vim
 
 cmds:
   - cmd: 'curl -sL https://github.com/dun/munge/releases/download/munge-0.5.18/munge-0.5.18.tar.xz -o munge-0.5.18.tar.xz'
@@ -1119,12 +1167,18 @@ cmds:
   - cmd: 'rpmbuild -tb munge-0.5.18.tar.xz'
   - cmd: 'cd /root/rpmbuild'
   - cmd: 'rpm --install --verbose --force /root/rpmbuild/RPMS/x86_64/munge-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-debuginfo-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-debugsource-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-devel-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-libs-0.5.18-1.el9.x86_64.rpm /root/rpmbuild/RPMS/x86_64/munge-libs-debuginfo-0.5.18-1.el9.x86_64.rpm'
-  - cmd: 'dnf remove -y munge-libs-0.5.13-13.el9 munge-0.5.13-13.el9'
+  - cmd: 'dnf remove -y munge-libs-0.5.13-* munge-0.5.13-*'
 ```
 
-Run podman container to run image build command. The S3_ACCESS and S3_SECRET tokens are set in the tutorial [here](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients).
+Run podman container to run image build command.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+The ROOT_ACCESS_KEY and ROOT_SECRET_KEY tokens are set in the tutorial [here](https://openchami.org/docs/tutorial/#233-install-and-configure-s3-clients).
+{{< /callout >}}
 
 ```bash
+source <(sudo cat /etc/versitygw/secrets.env)
+
 podman run \
   --rm \
   --device /dev/fuse \
@@ -1154,9 +1208,9 @@ s3cmd ls -Hr s3://boot-images/ | cut -d' ' -f 4- | grep slurm
 The output should be:
 
 ```
-1615M  s3://boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9
-  84M  s3://boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.20.1.el9_7.x86_64.img
-  14M  s3://boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
+1660M  s3://boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9
+  85M  s3://boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.36.1.el9_7.x86_64.img
+  14M  s3://boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.36.1.el9_7.x86_64
 ```
 
 ## 1.5 Configure the Boot Script Service and Cloud-Init
@@ -1211,11 +1265,11 @@ The output should be:
         pub_key_ecdsa: ""
         pub_key_rsa: ""
     user-data: null
-  initrd: http://172.16.0.254:9000/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.20.1.el9_7.x86_64.img
-  kernel: http://172.16.0.254:9000/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.20.1.el9_7.x86_64
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/slurm/initramfs-5.14.0-611.36.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/slurm/vmlinuz-5.14.0-611.36.1.el9_7.x86_64
   macs:
     - 52:54:00:be:ef:01
-  params: nomodeset ro root=live:http://172.16.0.254:9000/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/slurm/rocky9.7-compute-slurm-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 Create new directory for setting up cloud-init configuration:
@@ -1269,13 +1323,16 @@ The output should be:
   "public-keys": [
     "<YOUR SSH KEY>"
   ],
-  "short-name": "nid"
+  "short-name": "de"
 }
 ```
 
 Configure cloud-init for compute group:
 
 **Edit as root: `/etc/openchami/data/cloud-init/ci-group-compute.yaml`**
+
+{{< tabs "cloud-init-compute-configs" >}}
+{{< tab "Bare Metal Head" >}}
 
 ```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
 - name: compute
@@ -1293,8 +1350,161 @@ Configure cloud-init for compute group:
       users:
         - name: root
           ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
-      disable_root: false      
+      disable_root: false
+
+      write_files:
+      - path: /etc/hosts
+        append: true
+        content: |
+          172.16.0.254   demo.openchami.cluster demo
+          172.16.0.1     de01.openchami.cluster de01
+
+      - path: /etc/fstab
+        content: |
+          demo.openchami.cluster:/home /home nfs defaults 0 0
+          demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+          demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+      bootcmd:
+        - hostnamectl set-hostname de01.openchami.cluster
+        - groupadd -g 666 slurm
+        - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+      runcmd:
+        - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+        - systemctl restart NetworkManager
+        - systemctl daemon-reload
+        - mount -a
+        - chown -R slurm:slurm /var/lib/slurm
+        - mkdir /var/log/slurm
+        - chown slurm:slurm /var/log/slurm
+        - usermod -u 616 munge
+        - groupmod -g 616 munge
+        - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+        - systemctl enable --now munge
+        - systemctl enable --now slurmd
+        - systemctl stop firewalld
+        - systemctl disable firewalld
+        - nft flush ruleset
 ```
+
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+
+```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
+- name: compute
+  description: "compute config"
+  file:
+    encoding: plain
+    content: |
+      ## template: jinja
+      #cloud-config
+      merge_how:
+      - name: list
+        settings: [append]
+      - name: dict
+        settings: [no_replace, recurse_list]
+      users:
+        - name: root
+          ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+      disable_root: false
+
+      write_files:
+      - path: /etc/hosts
+        append: true
+        content: |
+          172.16.0.254   demo.openchami.cluster demo
+          172.16.0.1     de01.openchami.cluster de01
+
+      - path: /etc/fstab
+        content: |
+          demo.openchami.cluster:/home /home nfs defaults 0 0
+          demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+          demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+      bootcmd:
+        - hostnamectl set-hostname de01.openchami.cluster
+        - groupadd -g 666 slurm
+        - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+      runcmd:
+        - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+        - systemctl restart NetworkManager
+        - systemctl daemon-reload
+        - mount -a
+        - chown -R slurm:slurm /var/lib/slurm
+        - mkdir /var/log/slurm
+        - chown slurm:slurm /var/log/slurm
+        - usermod -u 616 munge
+        - groupmod -g 616 munge
+        - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+        - systemctl enable --now munge
+        - systemctl enable --now slurmd
+        - systemctl stop firewalld
+        - systemctl disable firewalld
+        - nft flush ruleset
+```
+
+{{< /tab >}}
+{{< tab "VM Head" >}}
+
+```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
+- name: compute
+  description: "compute config"
+  file:
+    encoding: plain
+    content: |
+      ## template: jinja
+      #cloud-config
+      merge_how:
+      - name: list
+        settings: [append]
+      - name: dict
+        settings: [no_replace, recurse_list]
+      users:
+        - name: root
+          ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+      disable_root: false
+
+      write_files:
+      - path: /etc/hosts
+        append: true
+        content: |
+          172.16.0.254   demo.openchami.cluster demo head
+          172.16.0.1     de01.openchami.cluster de01
+
+      - path: /etc/fstab
+        content: |
+          demo.openchami.cluster:/home /home nfs defaults 0 0
+          demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+          demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+      bootcmd:
+        - hostnamectl set-hostname de01.openchami.cluster
+        - groupadd -g 666 slurm
+        - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+      runcmd:
+        - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+        - systemctl restart NetworkManager
+        - systemctl daemon-reload
+        - mount -a
+        - chown -R slurm:slurm /var/lib/slurm
+        - mkdir /var/log/slurm
+        - chown slurm:slurm /var/log/slurm
+        - usermod -u 616 munge
+        - groupmod -g 616 munge
+        - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+        - systemctl enable --now munge
+        - systemctl enable --now slurmd
+        - systemctl stop firewalld
+        - systemctl disable firewalld
+        - nft flush ruleset
+```
+
+{{< /tab >}}
+{{< /tabs >}}
+
 
 Now, set this configuration for the compute group:
 
@@ -1310,6 +1520,9 @@ ochami cloud-init group get config compute
 
 The cloud-config file created within the YAML above should get print out:
 
+{{< tabs "compute-config-outputs" >}}
+{{< tab "Bare Metal Head" >}}
+
 ```yaml
 ## template: jinja
 #cloud-config
@@ -1322,10 +1535,152 @@ users:
   - name: root
     ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
 disable_root: false
+
+write_files:
+- path: /etc/hosts
+  append: true
+  content: |
+    172.16.0.254   demo.openchami.cluster demo
+    172.16.0.1     de01.openchami.cluster de01
+
+- path: /etc/fstab
+  content: |
+    demo.openchami.cluster:/home /home nfs defaults 0 0
+    demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+bootcmd:
+  - hostnamectl set-hostname de01.openchami.cluster
+  - groupadd -g 666 slurm
+  - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+runcmd:
+  - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+  - systemctl restart NetworkManager
+  - systemctl daemon-reload
+  - mount -a
+  - chown -R slurm:slurm /var/lib/slurm
+  - mkdir /var/log/slurm
+  - chown slurm:slurm /var/log/slurm
+  - usermod -u 616 munge
+  - groupmod -g 616 munge
+  - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+  - systemctl enable --now munge
+  - systemctl enable --now slurmd
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  - nft flush ruleset
 ```
 
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+
+```yaml
+## template: jinja
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+disable_root: false
+
+write_files:
+- path: /etc/hosts
+  append: true
+  content: |
+    172.16.0.254   demo.openchami.cluster demo
+    172.16.0.1     de01.openchami.cluster de01
+
+- path: /etc/fstab
+  content: |
+    demo.openchami.cluster:/home /home nfs defaults 0 0
+    demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+bootcmd:
+  - hostnamectl set-hostname de01.openchami.cluster
+  - groupadd -g 666 slurm
+  - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+runcmd:
+  - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+  - systemctl restart NetworkManager
+  - systemctl daemon-reload
+  - mount -a
+  - chown -R slurm:slurm /var/lib/slurm
+  - mkdir /var/log/slurm
+  - chown slurm:slurm /var/log/slurm
+  - usermod -u 616 munge
+  - groupmod -g 616 munge
+  - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+  - systemctl enable --now munge
+  - systemctl enable --now slurmd
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  - nft flush ruleset
+```
+
+{{< /tab >}}
+{{< tab "VM Head" >}}
+
+```yaml
+## template: jinja
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+disable_root: false
+
+write_files:
+- path: /etc/hosts
+  append: true
+  content: |
+    172.16.0.254   demo.openchami.cluster demo head
+    172.16.0.1     de01.openchami.cluster de01
+
+- path: /etc/fstab
+  content: |
+    demo.openchami.cluster:/home /home nfs defaults 0 0
+    demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+bootcmd:
+  - hostnamectl set-hostname de01.openchami.cluster
+  - groupadd -g 666 slurm
+  - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+runcmd:
+  - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+  - systemctl restart NetworkManager
+  - systemctl daemon-reload
+  - mount -a
+  - chown -R slurm:slurm /var/lib/slurm
+  - mkdir /var/log/slurm
+  - chown slurm:slurm /var/log/slurm
+  - usermod -u 616 munge
+  - groupmod -g 616 munge
+  - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+  - systemctl enable --now munge
+  - systemctl enable --now slurmd
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  - nft flush ruleset
+```
+
+{{< /tab >}}
+{{< /tabs >}}
+
 `ochami` has basic per-group template rendering available that can be used to
-check that the Jinja2 is rendering properly for a node. Check if for the first
+check that the Jinja2 is rendering properly for a node. Check it for the first
 compute node (x1000c0s0b0n0):
 
 ```bash
@@ -1340,7 +1695,11 @@ make sure that the `IMPERSONATION` environment variable is set in
 
 The SSH key that was created above should appear in the config:
 
+{{< tabs "compute-node-config-outputs" >}}
+{{< tab "Bare Metal Head" >}}
+
 ```yaml
+## template: jinja
 #cloud-config
 merge_how:
 - name: list
@@ -1350,8 +1709,150 @@ merge_how:
 users:
   - name: root
     ssh_authorized_keys: ['<SSH_KEY>']
+disable_root: false
+
+write_files:
+- path: /etc/hosts
+  append: true
+  content: |
+    172.16.0.254   demo.openchami.cluster demo
+    172.16.0.1     de01.openchami.cluster de01
+
+- path: /etc/fstab
+  content: |
+    demo.openchami.cluster:/home /home nfs defaults 0 0
+    demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+bootcmd:
+  - hostnamectl set-hostname de01.openchami.cluster
+  - groupadd -g 666 slurm
+  - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+runcmd:
+  - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+  - systemctl restart NetworkManager
+  - systemctl daemon-reload
+  - mount -a
+  - chown -R slurm:slurm /var/lib/slurm
+  - mkdir /var/log/slurm
+  - chown slurm:slurm /var/log/slurm
+  - usermod -u 616 munge
+  - groupmod -g 616 munge
+  - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+  - systemctl enable --now munge
+  - systemctl enable --now slurmd
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  - nft flush ruleset
 ```
 
+{{< /tab >}}
+{{< tab "Cloud Instance Head" >}}
+
+```yaml
+## template: jinja
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: ['<SSH_KEY>']
+disable_root: false
+
+write_files:
+- path: /etc/hosts
+  append: true
+  content: |
+    172.16.0.254   demo.openchami.cluster demo
+    172.16.0.1     de01.openchami.cluster de01
+
+- path: /etc/fstab
+  content: |
+    demo.openchami.cluster:/home /home nfs defaults 0 0
+    demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+bootcmd:
+  - hostnamectl set-hostname de01.openchami.cluster
+  - groupadd -g 666 slurm
+  - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+runcmd:
+  - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+  - systemctl restart NetworkManager
+  - systemctl daemon-reload
+  - mount -a
+  - chown -R slurm:slurm /var/lib/slurm
+  - mkdir /var/log/slurm
+  - chown slurm:slurm /var/log/slurm
+  - usermod -u 616 munge
+  - groupmod -g 616 munge
+  - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+  - systemctl enable --now munge
+  - systemctl enable --now slurmd
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  - nft flush ruleset
+```
+
+{{< /tab >}}
+{{< tab "VM Head" >}}
+
+```yaml
+## template: jinja
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: ['<SSH_KEY>']
+disable_root: false
+
+write_files:
+- path: /etc/hosts
+  append: true
+  content: |
+    172.16.0.254   demo.openchami.cluster demo head
+    172.16.0.1     de01.openchami.cluster de01
+
+- path: /etc/fstab
+  content: |
+    demo.openchami.cluster:/home /home nfs defaults 0 0
+    demo.openchami.cluster:/etc/slurm /etc/slurm nfs defaults 0 0
+    demo.openchami.cluster:/etc/munge /etc/munge nfs defaults 0 0
+
+bootcmd:
+  - hostnamectl set-hostname de01.openchami.cluster
+  - groupadd -g 666 slurm
+  - useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u 666 -g slurm -s /sbin/nologin slurm
+
+runcmd:
+  - nmcli connection modify "System enp1s0" ipv4.dns "172.16.0.254 8.8.8.8"
+  - systemctl restart NetworkManager
+  - systemctl daemon-reload
+  - mount -a
+  - chown -R slurm:slurm /var/lib/slurm
+  - mkdir /var/log/slurm
+  - chown slurm:slurm /var/log/slurm
+  - usermod -u 616 munge
+  - groupmod -g 616 munge
+  - find / -writable -uid 991 -type d -exec chown -R munge:munge \{\} \;
+  - systemctl enable --now munge
+  - systemctl enable --now slurmd
+  - systemctl stop firewalld
+  - systemctl disable firewalld
+  - nft flush ruleset
+```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 ## 1.6 Boot the Compute Node with the Slurm Compute Image
 
@@ -1548,698 +2049,12 @@ dnf remove -y munge-libs-0.5.13-<version> munge-0.5.13-<version>
 ```
 {{< /callout >}}
 
-Create slurm config file that is identical to that of the head node. Note that you may need to update the `NodeName` info depending on the configuration of your compute node:
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-If the head node is in a VM (see [**Head Node: Using Virtual
-Machine**](https://openchami.org/docs/tutorial/#05-head-node-using-virtual-machine)), 
-the `SlurmctldHost` will be `head` instead of `demo`.
-{{< /callout >}}
-
-**Edit the Slurm config file as root: `/etc/slurm/slurm.conf`**
-
-{{< tabs "slurm-config-computenode" >}}
-{{< tab "Bare Metal Head" >}}
-```bash {title="/etc/slurm/slurm.conf"}
-#
-ClusterName=demo
-SlurmctldHost=demo
-#
-#DisableRootJobs=NO
-EnforcePartLimits=ALL
-#Epilog=
-#EpilogSlurmctld=
-#FirstJobId=1
-#MaxJobId=67043328
-#GresTypes=
-#GroupUpdateForce=0
-#GroupUpdateTime=600
-#JobFileAppend=0
-JobRequeue=0
-#JobSubmitPlugins=lua
-KillOnBadExit=1
-#LaunchType=launch/slurm
-#Licenses=foo*4,bar
-#MailProg=/bin/mail
-#MaxJobCount=10000
-#MaxStepCount=40000
-#MaxTasksPerNode=512
-MpiDefault=pmix
-#MpiParams=ports=#-#
-#PluginDir=
-#PlugStackConfig=
-PrivateData=accounts,jobs,reservations,usage,users
-ProctrackType=proctrack/linuxproc
-#Prolog=
-PrologFlags=Contain
-#PrologSlurmctld=
-#PropagatePrioProcess=0
-PropagateResourceLimits=NONE
-#PropagateResourceLimitsExcept=
-#RebootProgram=
-ReturnToService=2
-SlurmctldPidFile=/var/run/slurm/slurmctld.pid
-SlurmctldPort=6817
-SlurmdPidFile=/var/run/slurm/slurmd.pid
-SlurmdPort=6818
-SlurmdSpoolDir=/var/spool/slurmd
-SlurmUser=slurm
-SlurmdUser=root
-#SrunEpilog=
-#SrunProlog=
-StateSaveLocation=/var/spool/slurmctld
-SwitchType=switch/none
-#TaskEpilog=
-TaskPlugin=task/none
-#TaskProlog=
-#TopologyPlugin=topology/tree
-#TmpFS=/tmp
-#TrackWCKey=no
-#TreeWidth=
-#UnkillableStepProgram=
-#UsePAM=0
-#
-#
-# TIMERS
-#BatchStartTimeout=10
-CompleteWait=32
-#EpilogMsgTime=2000
-#GetEnvTimeout=2
-#HealthCheckInterval=0
-#HealthCheckProgram=
-InactiveLimit=300
-KillWait=30
-MessageTimeout=30
-#ResvOverRun=0
-MinJobAge=300
-#OverTimeLimit=0
-SlurmctldTimeout=120
-SlurmdTimeout=300
-#UnkillableStepTimeout=60
-#VSizeFactor=0
-Waittime=0
-#
-#
-# SCHEDULING
-DefMemPerCPU=2048
-#MaxMemPerCPU=0
-#SchedulerTimeSlice=30
-SchedulerType=sched/backfill
-SelectType=select/cons_tres
-SelectTypeParameters=CR_Core_Memory
-SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
-DependencyParameters=kill_invalid_depend
-#
-#
-# JOB PRIORITY
-#PriorityFlags=
-#PriorityType=priority/multifactor
-#PriorityDecayHalfLife=
-#PriorityCalcPeriod=
-#PriorityFavorSmall=
-#PriorityMaxAge=
-#PriorityUsageResetPeriod=
-#PriorityWeightAge=
-#PriorityWeightFairshare=
-#PriorityWeightJobSize=
-#PriorityWeightPartition=
-#PriorityWeightQOS=
-#
-#
-# LOGGING AND ACCOUNTING
-AccountingStorageEnforce=safe,associations,limits,qos
-#AccountingStorageHost=
-#AccountingStoragePass=
-#AccountingStoragePort=
-AccountingStorageType=accounting_storage/slurmdbd
-#AccountingStorageUser=
-#AccountingStoreFlags=
-#JobCompHost=
-#JobCompLoc=
-#JobCompPass=
-#JobCompPort=
-JobCompType=jobcomp/none
-#JobCompUser=
-JobContainerType=job_container/tmpfs
-JobAcctGatherFrequency=30
-JobAcctGatherType=jobacct_gather/cgroup
-SlurmctldDebug=info
-SlurmctldLogFile=/var/log/slurm/slurmctld.log
-SlurmdDebug=info
-SlurmdLogFile=/var/log/slurm/slurmd.log
-#SlurmSchedLogFile=
-#SlurmSchedLogLevel=
-#DebugFlags=
-#
-#
-# POWER SAVE SUPPORT FOR IDLE NODES (optional)
-#SuspendProgram=
-#ResumeProgram=
-#SuspendTimeout=
-#ResumeTimeout=
-#ResumeRate=
-#SuspendExcNodes=
-#SuspendExcParts=
-#SuspendRate=
-#SuspendTime=
-#
-#
-# CUSTOM CONFIGS
-LaunchParameters=use_interactive_step
-#SlurmctldParameters=enable_configless
-#
-#
-# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
-NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
-
-PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
-```
-{{< /tab >}}
-{{< tab "Cloud Instance Head" >}}
-```bash {title="/etc/slurm/slurm.conf"}
-#
-ClusterName=demo
-SlurmctldHost=demo
-#
-#DisableRootJobs=NO
-EnforcePartLimits=ALL
-#Epilog=
-#EpilogSlurmctld=
-#FirstJobId=1
-#MaxJobId=67043328
-#GresTypes=
-#GroupUpdateForce=0
-#GroupUpdateTime=600
-#JobFileAppend=0
-JobRequeue=0
-#JobSubmitPlugins=lua
-KillOnBadExit=1
-#LaunchType=launch/slurm
-#Licenses=foo*4,bar
-#MailProg=/bin/mail
-#MaxJobCount=10000
-#MaxStepCount=40000
-#MaxTasksPerNode=512
-MpiDefault=pmix
-#MpiParams=ports=#-#
-#PluginDir=
-#PlugStackConfig=
-PrivateData=accounts,jobs,reservations,usage,users
-ProctrackType=proctrack/linuxproc
-#Prolog=
-PrologFlags=Contain
-#PrologSlurmctld=
-#PropagatePrioProcess=0
-PropagateResourceLimits=NONE
-#PropagateResourceLimitsExcept=
-#RebootProgram=
-ReturnToService=2
-SlurmctldPidFile=/var/run/slurm/slurmctld.pid
-SlurmctldPort=6817
-SlurmdPidFile=/var/run/slurm/slurmd.pid
-SlurmdPort=6818
-SlurmdSpoolDir=/var/spool/slurmd
-SlurmUser=slurm
-SlurmdUser=root
-#SrunEpilog=
-#SrunProlog=
-StateSaveLocation=/var/spool/slurmctld
-SwitchType=switch/none
-#TaskEpilog=
-TaskPlugin=task/none
-#TaskProlog=
-#TopologyPlugin=topology/tree
-#TmpFS=/tmp
-#TrackWCKey=no
-#TreeWidth=
-#UnkillableStepProgram=
-#UsePAM=0
-#
-#
-# TIMERS
-#BatchStartTimeout=10
-CompleteWait=32
-#EpilogMsgTime=2000
-#GetEnvTimeout=2
-#HealthCheckInterval=0
-#HealthCheckProgram=
-InactiveLimit=300
-KillWait=30
-MessageTimeout=30
-#ResvOverRun=0
-MinJobAge=300
-#OverTimeLimit=0
-SlurmctldTimeout=120
-SlurmdTimeout=300
-#UnkillableStepTimeout=60
-#VSizeFactor=0
-Waittime=0
-#
-#
-# SCHEDULING
-DefMemPerCPU=2048
-#MaxMemPerCPU=0
-#SchedulerTimeSlice=30
-SchedulerType=sched/backfill
-SelectType=select/cons_tres
-SelectTypeParameters=CR_Core_Memory
-SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
-DependencyParameters=kill_invalid_depend
-#
-#
-# JOB PRIORITY
-#PriorityFlags=
-#PriorityType=priority/multifactor
-#PriorityDecayHalfLife=
-#PriorityCalcPeriod=
-#PriorityFavorSmall=
-#PriorityMaxAge=
-#PriorityUsageResetPeriod=
-#PriorityWeightAge=
-#PriorityWeightFairshare=
-#PriorityWeightJobSize=
-#PriorityWeightPartition=
-#PriorityWeightQOS=
-#
-#
-# LOGGING AND ACCOUNTING
-AccountingStorageEnforce=safe,associations,limits,qos
-#AccountingStorageHost=
-#AccountingStoragePass=
-#AccountingStoragePort=
-AccountingStorageType=accounting_storage/slurmdbd
-#AccountingStorageUser=
-#AccountingStoreFlags=
-#JobCompHost=
-#JobCompLoc=
-#JobCompPass=
-#JobCompPort=
-JobCompType=jobcomp/none
-#JobCompUser=
-JobContainerType=job_container/tmpfs
-JobAcctGatherFrequency=30
-JobAcctGatherType=jobacct_gather/cgroup
-SlurmctldDebug=info
-SlurmctldLogFile=/var/log/slurm/slurmctld.log
-SlurmdDebug=info
-SlurmdLogFile=/var/log/slurm/slurmd.log
-#SlurmSchedLogFile=
-#SlurmSchedLogLevel=
-#DebugFlags=
-#
-#
-# POWER SAVE SUPPORT FOR IDLE NODES (optional)
-#SuspendProgram=
-#ResumeProgram=
-#SuspendTimeout=
-#ResumeTimeout=
-#ResumeRate=
-#SuspendExcNodes=
-#SuspendExcParts=
-#SuspendRate=
-#SuspendTime=
-#
-#
-# CUSTOM CONFIGS
-LaunchParameters=use_interactive_step
-#SlurmctldParameters=enable_configless
-#
-#
-# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
-NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
-
-PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
-```
-{{< /tab >}}
-{{< tab "VM Head" >}}
-```bash {title="/etc/slurm/slurm.conf"}
-#
-ClusterName=demo
-SlurmctldHost=head
-#
-#DisableRootJobs=NO
-EnforcePartLimits=ALL
-#Epilog=
-#EpilogSlurmctld=
-#FirstJobId=1
-#MaxJobId=67043328
-#GresTypes=
-#GroupUpdateForce=0
-#GroupUpdateTime=600
-#JobFileAppend=0
-JobRequeue=0
-#JobSubmitPlugins=lua
-KillOnBadExit=1
-#LaunchType=launch/slurm
-#Licenses=foo*4,bar
-#MailProg=/bin/mail
-#MaxJobCount=10000
-#MaxStepCount=40000
-#MaxTasksPerNode=512
-MpiDefault=pmix
-#MpiParams=ports=#-#
-#PluginDir=
-#PlugStackConfig=
-PrivateData=accounts,jobs,reservations,usage,users
-ProctrackType=proctrack/linuxproc
-#Prolog=
-PrologFlags=Contain
-#PrologSlurmctld=
-#PropagatePrioProcess=0
-PropagateResourceLimits=NONE
-#PropagateResourceLimitsExcept=
-#RebootProgram=
-ReturnToService=2
-SlurmctldPidFile=/var/run/slurm/slurmctld.pid
-SlurmctldPort=6817
-SlurmdPidFile=/var/run/slurm/slurmd.pid
-SlurmdPort=6818
-SlurmdSpoolDir=/var/spool/slurmd
-SlurmUser=slurm
-SlurmdUser=root
-#SrunEpilog=
-#SrunProlog=
-StateSaveLocation=/var/spool/slurmctld
-SwitchType=switch/none
-#TaskEpilog=
-TaskPlugin=task/none
-#TaskProlog=
-#TopologyPlugin=topology/tree
-#TmpFS=/tmp
-#TrackWCKey=no
-#TreeWidth=
-#UnkillableStepProgram=
-#UsePAM=0
-#
-#
-# TIMERS
-#BatchStartTimeout=10
-CompleteWait=32
-#EpilogMsgTime=2000
-#GetEnvTimeout=2
-#HealthCheckInterval=0
-#HealthCheckProgram=
-InactiveLimit=300
-KillWait=30
-MessageTimeout=30
-#ResvOverRun=0
-MinJobAge=300
-#OverTimeLimit=0
-SlurmctldTimeout=120
-SlurmdTimeout=300
-#UnkillableStepTimeout=60
-#VSizeFactor=0
-Waittime=0
-#
-#
-# SCHEDULING
-DefMemPerCPU=2048
-#MaxMemPerCPU=0
-#SchedulerTimeSlice=30
-SchedulerType=sched/backfill
-SelectType=select/cons_tres
-SelectTypeParameters=CR_Core_Memory
-SchedulerParameters=defer,bf_continue,bf_interval=60,bf_resolution=300,bf_window=1440,bf_busy_nodes,default_queue_depth=1000,bf_max_job_start=200,bf_max_job_test=500,max_switch_wait=1800
-DependencyParameters=kill_invalid_depend
-#
-#
-# JOB PRIORITY
-#PriorityFlags=
-#PriorityType=priority/multifactor
-#PriorityDecayHalfLife=
-#PriorityCalcPeriod=
-#PriorityFavorSmall=
-#PriorityMaxAge=
-#PriorityUsageResetPeriod=
-#PriorityWeightAge=
-#PriorityWeightFairshare=
-#PriorityWeightJobSize=
-#PriorityWeightPartition=
-#PriorityWeightQOS=
-#
-#
-# LOGGING AND ACCOUNTING
-AccountingStorageEnforce=safe,associations,limits,qos
-#AccountingStorageHost=
-#AccountingStoragePass=
-#AccountingStoragePort=
-AccountingStorageType=accounting_storage/slurmdbd
-#AccountingStorageUser=
-#AccountingStoreFlags=
-#JobCompHost=
-#JobCompLoc=
-#JobCompPass=
-#JobCompPort=
-JobCompType=jobcomp/none
-#JobCompUser=
-JobContainerType=job_container/tmpfs
-JobAcctGatherFrequency=30
-JobAcctGatherType=jobacct_gather/cgroup
-SlurmctldDebug=info
-SlurmctldLogFile=/var/log/slurm/slurmctld.log
-SlurmdDebug=info
-SlurmdLogFile=/var/log/slurm/slurmd.log
-#SlurmSchedLogFile=
-#SlurmSchedLogLevel=
-#DebugFlags=
-#
-#
-# POWER SAVE SUPPORT FOR IDLE NODES (optional)
-#SuspendProgram=
-#ResumeProgram=
-#SuspendTimeout=
-#ResumeTimeout=
-#ResumeRate=
-#SuspendExcNodes=
-#SuspendExcParts=
-#SuspendRate=
-#SuspendTime=
-#
-#
-# CUSTOM CONFIGS
-LaunchParameters=use_interactive_step
-#SlurmctldParameters=enable_configless
-#
-#
-# COMPUTE NODES     ## GET CONF WITH `slurmd -C`
-NodeName=de01 CPUs=1 Boards=1 SocketsPerBoard=1 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=3892
-
-PartitionName=main Nodes=de01 Default=YES State=UP OverSubscribe=NO PreemptMode=OFF
-```
-{{< /tab >}}
-{{< /tabs >}}
-
-Configure the hosts file with addresses for both the head node and the compute node:
-
-{{< tabs "compute-hosts" >}}
-{{< tab "Bare Metal Head" >}}
+Restart Slurm service daemons in the **head node**:
 
 ```bash
-cat <<EOF | tee -a /etc/hosts
-172.16.0.254   demo.openchami.cluster demo
-172.16.0.1     de01.openchami.cluster de01
-EOF
-```
-
-{{< /tab >}}
-{{< tab "Cloud Instance Head" >}}
-
-```bash
-cat <<EOF | tee -a /etc/hosts
-172.16.0.254   demo.openchami.cluster demo
-172.16.0.1     de01.openchami.cluster de01
-EOF
-```
-
-{{< /tab >}}
-{{< tab "VM Head" >}}
-
-```bash
-cat <<EOF | tee -a /etc/hosts
-172.16.0.254   demo.openchami.cluster demo head
-172.16.0.1     de01.openchami.cluster de01
-EOF
-```
-
-{{< /tab >}}
-{{< /tabs >}}
-
-Create the Slurm user on the compute node:
-
-```bash
-SLURMID=666
-groupadd -g $SLURMID slurm
-useradd -m -c "Slurm workload manager" -d /var/lib/slurm -u $SLURMID -g slurm -s /sbin/nologin slurm
-```
-
-Update Slurm file and directory ownership:
-
-```bash
-chown -R slurm:slurm /etc/slurm/
-chown -R slurm:slurm /var/lib/slurm
-```
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-Use `find / -name "slurm"` to make sure everything that needs to be changed is identified. Note that not all results need ownership modified though, such as directories under `/run/`, `/usr/` or `/var/`!
-{{< /callout >}}
-
-Create the directory /var/log/slurm as it doesn't exist yet, and set ownership to Slurm:
-
-```bash
-mkdir /var/log/slurm
-chown slurm:slurm /var/log/slurm
-```
-
-Creating job_container.conf file that matches the one in the head node:
-
-```bash
-SLURMTMPDIR=/lscratch
-
-cat <<EOF | sudo tee /etc/slurm/job_container.conf
-# Job /tmp on a local volume mounted on ${SLURMTMPDIR}
-# /dev/shm has special handling, and instead of a bind mount is always a fresh tmpfs filesystem.
-BasePath=${SLURMTMPDIR}
-AutoBasePath=true
-Shared=true
-EOF
-```
-
-Update ownership of the job container config file:
-
-```bash
-chown slurm:slurm /etc/slurm/job_container.conf
-```
-
-Munge UID is 991 and GID is 990, so change them both to 616 (to match head node UID/GID):
-
-```bash
-usermod -u 616 munge
-groupmod -g 616 munge
-```
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-If you get the following error:
-`usermod: user munge is currently used by process <PID>`
-
-Kill the process and repeat above two commands:
-`kill -15 <PID>`
-{{< /callout >}}
-
-Update munge file/directory ownership:
-
-```bash
-find / -mount -writable -type d -uid 991 -exec chown -R munge:munge \{\} \;
-```
-
-Copy the munge key from the head node to the compute node.
-
-**Inside the head node:**
-
-```bash
-cd ~
-sudo cp /etc/munge/munge.key ./
-sudo chown "$(id -u):$(id -u)" munge.key
-scp ./munge.key root@172.16.0.1:~/
-```
-
-**Inside the compute node:**
-
-```bash
-mv munge.key /etc/munge/munge.key
-chown munge:munge /etc/munge/munge.key
-```
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-In the case of an error about "Offending ECDSA key in ~/.ssh/known_hosts:3", remove the compute node from the known hosts file and try the 'scp' command again:
-
-```
-ssh-keygen -R 172.16.0.1
-```
-
-Alternatively, setup an `ignore.conf` file per [Section 2.8.3](https://openchami.org/docs/tutorial/#283-logging-into-the-compute-node) of the tutorial, to prevent this issue.
-{{< /callout >}}
-
-Continuing **inside the compute node**, setup and start the services for Slurm.
-
-Enable and start munge service:
-
-```bash
-systemctl enable munge.service
-systemctl start munge.service
-systemctl status munge.service
-```
-
-The output should be:
-
-```
-● munge.service - MUNGE authentication service
-     Loaded: loaded (/usr/lib/systemd/system/munge.service; enabled; preset: disabled)
-     Active: active (running) since Wed 2026-02-04 00:55:55 UTC; 1 week 2 days ago
-       Docs: man:munged(8)
-   Main PID: 1451 (munged)
-      Tasks: 4 (limit: 24335)
-     Memory: 2.2M (peak: 2.5M)
-        CPU: 4.710s
-     CGroup: /system.slice/munge.service
-             └─1451 /usr/sbin/munged
-
-Feb 04 00:55:55 de01 systemd[1]: Started MUNGE authentication service.
-```
-
-Enable and start slurmd:
-
-```bash
-systemctl enable slurmd
-systemctl start slurmd
-systemctl status slurmd
-```
-
-The output should be:
-
-```
-● slurmd.service - Slurm node daemon
-     Loaded: loaded (/usr/lib/systemd/system/slurmd.service; enabled; preset: disabled)
-     Active: active (running) since Fri 2026-02-13 05:59:32 UTC; 4s ago
-   Main PID: 30727 (slurmd)
-      Tasks: 1
-     Memory: 1.3M (peak: 1.5M)
-        CPU: 16ms
-     CGroup: /system.slice/slurmd.service
-             └─30727 /usr/sbin/slurmd --systemd
-
-Feb 13 05:59:32 de01.openchami.cluster systemd[1]: Stopped Slurm node daemon.
-Feb 13 05:59:32 de01.openchami.cluster systemd[1]: slurmd.service: Consumed 3.533s CPU time, 3.0M memory peak.
-Feb 13 05:59:32 de01.openchami.cluster systemd[1]: Starting Slurm node daemon...
-Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: _read_slurm_cgroup_conf: No cgroup.conf file (/etc/slurm/cgroup.conf), using defaults
-Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: _read_slurm_cgroup_conf: No cgroup.conf file (/etc/slurm/cgroup.conf), using defaults
-Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: CPU frequency setting not configured for this node
-Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: slurmd version 24.05.5 started
-Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: slurmd started on Fri, 13 Feb 2026 05:59:32 +0000
-Feb 13 05:59:32 de01.openchami.cluster systemd[1]: Started Slurm node daemon.
-Feb 13 05:59:32 de01.openchami.cluster slurmd[30727]: slurmd: CPUs=1 Boards=1 Sockets=1 Cores=1 Threads=1 Memory=3892 TmpDisk=778 Uptime=796812 CPUSpecList=(null) FeaturesAvail=(null) FeaturesActive=(null) 
-```
-
-Disable the firewall and reset the nft ruleset in the compute node:
-
-```bash
-systemctl stop firewalld
-systemctl disable firewalld
-
-nft flush ruleset
-nft list ruleset
-```
-
-Start Slurm service daemons in the **head node**: 
-
-```bash
-sudo systemctl start slurmdbd
-sudo systemctl start slurmctld
-```
-
-Restart Slurm service daemons in the **compute node** to ensure changes are applied:
-
-```bash
-systemctl restart slurmd
+sudo systemctl restart slurmdbd
+sleep 5
+sudo systemctl restart slurmctld
 ```
 
 ## 1.8 Test Munge and Slurm
@@ -2314,7 +2129,7 @@ srun: job 1 queued and waiting for resources
 srun: job 1 has been allocated resources
 slurmstepd: error: couldn't chdir to `/home/testuser': No such file or directory: going to /tmp instead
 slurmstepd: error: couldn't chdir to `/home/testuser': No such file or directory: going to /tmp instead
-de01
+de01.openchami.cluster
 ```
 
 If something goes wrong and your compute node goes down, restart it with this command:
@@ -2322,5 +2137,3 @@ If something goes wrong and your compute node goes down, restart it with this co
 ```bash
 sudo scontrol update NodeName=de01 State=RESUME
 ```
-
-
