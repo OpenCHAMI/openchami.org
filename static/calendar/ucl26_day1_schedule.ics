@@ -1,0 +1,219 @@
+BEGIN:VCALENDAR
+PRODID:-//OpenCHAMI//UCL26 Day 1//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:OpenCHAMI Developer Summit @ UCL 2026 - Day 1
+X-WR-TIMEZONE:Europe/London
+BEGIN:VEVENT
+UID:ucl26-day1-0900-host-welcome-logistics-part1@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T090000
+DTEND;TZID=Europe/London:20260507T092000
+SUMMARY:Host Welcome and Logistics (Part 1)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Hosts (UCL, Bristol, Cambridge)
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-0920-host-welcome-logistics-part2@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T092000
+DTEND;TZID=Europe/London:20260507T094000
+SUMMARY:Host Welcome and Logistics (Part 2)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Hosts (UCL, Bristol, Cambridge)
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-0940-how-ucl-runs-systems@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T094000
+DTEND;TZID=Europe/London:20260507T100000
+SUMMARY:How UCL Runs Systems
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Camilla Harris
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1000-vendor-lightning@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T100000
+DTEND;TZID=Europe/London:20260507T102000
+SUMMARY:Vendor Lightning Session (shared block)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Vendor representatives
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1020-site-partner-updates@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T102000
+DTEND;TZID=Europe/London:20260507T104000
+SUMMARY:Site/Partner Updates
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Site representatives
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1040-site-bring-up-baseline@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T104000
+DTEND;TZID=Europe/London:20260507T110000
+SUMMARY:Operations Talk: Site Bring-up and Baseline Practices (title TBD)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Speaker TBD
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1100-morning-break@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T110000
+DTEND;TZID=Europe/London:20260507T112000
+SUMMARY:Morning Break
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1120-auth-access-patterns@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T112000
+DTEND;TZID=Europe/London:20260507T114000
+SUMMARY:Operations Talk: Authentication and Access Patterns (title TBD)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Speaker TBD
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1140-image-lifecycle-recovery@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T114000
+DTEND;TZID=Europe/London:20260507T120000
+SUMMARY:Operations Talk: Image Lifecycle and Recovery Workflow (title TBD)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Speaker TBD
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1200-roundtable-qa@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T120000
+DTEND;TZID=Europe/London:20260507T122000
+SUMMARY:Operations Roundtable and Q&A
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Panel
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1220-lunch-1@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T122000
+DTEND;TZID=Europe/London:20260507T124000
+SUMMARY:Lunch
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1240-lunch-2@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T124000
+DTEND;TZID=Europe/London:20260507T130000
+SUMMARY:Lunch
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1300-lunch-3@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T130000
+DTEND;TZID=Europe/London:20260507T132000
+SUMMARY:Lunch
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1320-hpsf-linux-foundation-context@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T132000
+DTEND;TZID=Europe/London:20260507T134000
+SUMMARY:HPSF and Linux Foundation Context for OpenCHAMI
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Tom Green
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1340-uk-eu-growth-update@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T134000
+DTEND;TZID=Europe/London:20260507T140000
+SUMMARY:UK/EU Growth Update for OpenCHAMI
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Tom Green
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1400-sovereign-ai-operational-requirements@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T140000
+DTEND;TZID=Europe/London:20260507T142000
+SUMMARY:Sovereign AI in UK/EU: Operational Requirements
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Tom Green
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1420-uk-eu-sites-panel-part1@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T142000
+DTEND;TZID=Europe/London:20260507T144000
+SUMMARY:UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: UK/EU site representatives
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1440-uk-eu-sites-panel-part2@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T144000
+DTEND;TZID=Europe/London:20260507T150000
+SUMMARY:UK/EU Sites Panel: Plans for the Next Year (Part 2)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: UK/EU site representatives
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1500-panel-qa-action-items@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T150000
+DTEND;TZID=Europe/London:20260507T152000
+SUMMARY:Panel Q&A and Action Items
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Tom Green and panelists
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1520-afternoon-break@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T152000
+DTEND;TZID=Europe/London:20260507T154000
+SUMMARY:Afternoon Break
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1540-project-review-part1@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T154000
+DTEND;TZID=Europe/London:20260507T160000
+SUMMARY:Project Review: Current Developments from LANL Needs (Part 1)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Alex Lovell-Troy
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1600-project-review-part2@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T160000
+DTEND;TZID=Europe/London:20260507T162000
+SUMMARY:Project Review: Future Direction from LANL Needs (Part 2)
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Alex Lovell-Troy
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1620-open-discussion-priorities-risks@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T162000
+DTEND;TZID=Europe/London:20260507T164000
+SUMMARY:Open Discussion: Priorities and Risks for 2026
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speakers: Alex Lovell-Troy and Tom Green
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day1-1640-wrap-up-next-day-alignment@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260507T164000
+DTEND;TZID=Europe/London:20260507T170000
+SUMMARY:Day 1 Wrap-up and Next-Day Alignment
+LOCATION:Elvin Hall, UCL Institute of Education, 20 Bedford Way, London WC1H 0AL, UK
+DESCRIPTION:Speaker: Tom Green
+END:VEVENT
+END:VCALENDAR

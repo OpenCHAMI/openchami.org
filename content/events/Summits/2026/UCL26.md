@@ -109,7 +109,6 @@ This, optional, pre-summit day provides an opportunity to visit and explore the 
 | 11:20-11:40 | Operations Talk: Authentication and Access Patterns (title TBD) | Speaker TBD | Elvin Hall |
 | 11:40-12:00 | Operations Talk: Image Lifecycle and Recovery Workflow (title TBD) | Speaker TBD | Elvin Hall |
 | 12:00-12:20 | Operations Roundtable and Q&A | Panel | Elvin Hall |
-| 12:00-12:20 | Operations Roundtable and Q&A | Panel | Elvin Hall |
 | 12:20-12:40 | Lunch | - | Elvin Hall |
 | 12:40-13:00 | Lunch | - | Elvin Hall |
 | 13:00-13:20 | Lunch | - | Elvin Hall |
@@ -174,6 +173,9 @@ This, optional, pre-summit day provides an opportunity to visit and explore the 
 ## Registration
 Registration is required for attendance. Please secure your spot by visiting our [Registration page](https://pretix.eu/ARC/ochami-ucl-2026/). Capacity is limited.
 
+**Add to your calendar:**
+[Optional Day 0 (.ics)](/calendar/ucl26_day0_schedule.ics) · [Day 1 (.ics)](/calendar/ucl26_day1_schedule.ics) · [Day 2 (.ics)](/calendar/ucl26_day2_schedule.ics)
+
 
 ---
 
@@ -183,8 +185,6 @@ We’re grateful to our sponsors for supporting the OpenCHAMI Developer Summit. 
 ---
 
 > **We look forward to seeing you at UCL!**
-> A formal invitation with hotel and travel details will follow shortly.
+> If you require a formal invitation, we will happily issue one.
 > For questions or attendee suggestions, email **[contact@openchami.org](mailto:contact@openchami.org)**.
 
----
-*Save the date and stay tuned for more updates!*

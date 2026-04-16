@@ -1,0 +1,88 @@
+BEGIN:VCALENDAR
+PRODID:-//OpenCHAMI//UCL26 Day 0//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:OpenCHAMI Developer Summit @ UCL 2026 - Optional Day 0
+X-WR-TIMEZONE:Europe/London
+BEGIN:VEVENT
+UID:ucl26-day0-1200-arrival-networking-lunch@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T120000
+DTEND;TZID=Europe/London:20260506T130000
+SUMMARY:Arrival and Networking Lunch
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:OpenCHAMI Developer Summit @ UCL 2026 optional Cambridge day.
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1300-intro-to-cambridge-rcs@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T130000
+DTEND;TZID=Europe/London:20260506T132000
+SUMMARY:Intro to Cambridge Research Computing Services (RCS)
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speaker: Wojciech Turek
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1320-hpc-ai-data-centre-infrastructure@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T132000
+DTEND;TZID=Europe/London:20260506T135000
+SUMMARY:HPC and AI Data Centre Infrastructure
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speaker: Wojciech Turek
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1350-data-centre-tours@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T135000
+DTEND;TZID=Europe/London:20260506T145000
+SUMMARY:Data Centre Tours
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speakers: Co-chairs
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1450-networking-break@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T145000
+DTEND;TZID=Europe/London:20260506T150000
+SUMMARY:Mid-afternoon Networking Break
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speakers: Co-chairs
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1500-cloud-native-hpc-ai-stack@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T150000
+DTEND;TZID=Europe/London:20260506T153000
+SUMMARY:Cloud-native HPC and AI Stack
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speaker: TBD
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1530-airr-cambridge@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T153000
+DTEND;TZID=Europe/London:20260506T160000
+SUMMARY:AI Research Resource (AIRR) at Cambridge
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speaker: Deepak Aggarwal
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1600-llmops@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T160000
+DTEND;TZID=Europe/London:20260506T163000
+SUMMARY:Large Language Model Operations (LLMOps)
+LOCATION:Suite 2, Moller Institute, University of Cambridge, Cambridge, UK
+DESCRIPTION:Speaker: Yiannos Stathopoulos
+END:VEVENT
+BEGIN:VEVENT
+UID:ucl26-day0-1630-depart-social@openchami.org
+DTSTAMP:20260416T120000Z
+DTSTART;TZID=Europe/London:20260506T163000
+SUMMARY:Depart / Social Opportunity
+LOCATION:TBD
+DESCRIPTION:Speakers: Co-chairs. End time TBD.
+END:VEVENT
+END:VCALENDAR
