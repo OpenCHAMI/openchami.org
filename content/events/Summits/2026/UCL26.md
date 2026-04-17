@@ -149,17 +149,13 @@ This, optional, pre-summit day provides an opportunity to visit and explore the 
 | 12:00-12:20 | Lunch | - | Elvin Hall |
 | 12:20-12:40 | Lunch | - | Elvin Hall |
 | 12:40-13:00 | Lunch | - | Elvin Hall |
-| 13:00-13:20 | AI Session Kickoff: Objectives and Scope | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 13:20-13:40 | Using AI to Develop OpenCHAMI (title TBD) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 13:40-14:00 | Agentic Workflows for OpenCHAMI Interaction (title TBD) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 14:00-14:20 | AI Session: Tooling and Integration Discussion (title TBD) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 14:20-14:40 | AI Session: Practical Adoption Constraints (title TBD) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 14:40-15:00 | AI Session Q&A | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 15:00-15:20 | Afternoon Break | - | Elvin Hall |
-| 15:20-15:40 | AI Working Session: Development Patterns (title TBD) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 15:40-16:00 | AI Working Session: Operator Workflows (title TBD) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 16:00-16:20 | Joint Discussion: Near-term Priorities and Follow-up Actions | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 16:20-16:40 | Summit Close and Next Steps | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
+| 13:00-13:40 | AI Session Kickoff: Objectives and Scope | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
+| 13:40-14:20 | Cosmic Labs: AI Datacenter Standups Products | [Cosmic Labs](https://cosmiclabs.io/) | Elvin Hall |
+| 14:20-14:40 | Claude Code Demo | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
+| 14:40-15:00 | Afternoon Break | - | Elvin Hall |
+| 15:00-15:20 | Claude Code Demo (continued) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
+| 15:20-16:00 | Operator Workflows | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
+| 16:00-16:40 | How Should the Community Handle AI? | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
 
 
 ---
