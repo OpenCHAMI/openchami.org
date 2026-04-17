@@ -150,7 +150,7 @@ This, optional, pre-summit day provides an opportunity to visit and explore the 
 | 12:20-12:40 | Lunch | - | Elvin Hall |
 | 12:40-13:00 | Lunch | - | Elvin Hall |
 | 13:00-13:40 | AI Session Kickoff: Objectives and Scope | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
-| 13:40-14:20 | Cosmic Labs: AI Datacenter Standups Products | [Cosmic Labs](https://cosmiclabs.io/) | Elvin Hall |
+| 13:40-14:20 | Cosmic Labs: AI Data Centre Standups and Products | [Cosmic Labs](https://cosmiclabs.io/) | Elvin Hall |
 | 14:20-14:40 | Claude Code Demo | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
 | 14:40-15:00 | Afternoon Break | - | Elvin Hall |
 | 15:00-15:20 | Claude Code Demo (continued) | Alex Lovell-Troy and Alexandre Escoubas | Elvin Hall |
