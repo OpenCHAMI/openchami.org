@@ -601,20 +601,11 @@ For the purposes of the tutorial, the head node will need to be able to forward
 network traffic. Configure this persistently:
 
 ```bash
-echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/90-forward.conf
+echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/90-forward.conf > /dev/null
 sudo sysctl --system
 ```
 
-#### 1.2.2 Update Hosts File
-
-Add the cluster's service domain to `/etc/hosts` so that the certificates will work:
-
-```bash
-echo "172.16.0.254 demo.openchami.cluster" | sudo tee -a /etc/hosts > /dev/null
-```
-
-
-#### 1.2.3 Create and Start Internal Network
+#### 1.2.2 Create and Start Internal Network
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 **This step is only necessary if not using [a
@@ -628,7 +619,7 @@ network interface on the head node that the virtual compute nodes will be
 attached to:
 
 ```bash
-cat <<EOF > openchami-net.xml
+cat << EOF > openchami-net.xml
 <network>
   <name>openchami-net</name>
   <bridge name="virbr-openchami" />
@@ -659,6 +650,15 @@ The output should be:
  openchami-net   active   yes         yes
 ```
 
+#### 1.2.3 Update Hosts File
+
+Add the cluster's service domain to `/etc/hosts` so that the certificates will work:
+
+```bash
+echo "172.16.0.254 demo.openchami.cluster" | sudo tee -a /etc/hosts > /dev/null
+```
+
+
 ### 1.3 Enable Non-OpenCHAMI Services
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
@@ -688,9 +688,8 @@ sudo dnf install -y ./versitygw.rpm
 For the OCI container registry, the standard docker registry is used. Once
 again, this is deployed as a quadlet.
 
-**Edit as root: `/etc/containers/systemd/registry.container`**
-
-```ini {title="/etc/containers/systemd/registry.container"}
+```bash
+sudo tee /etc/containers/systemd/registry.container > /dev/null << EOF
 [Unit]
 Description=Image OCI Registry
 After=network-online.target
@@ -709,6 +708,7 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+EOF
 ```
 
 #### 1.3.3 Reload Systemd
@@ -776,7 +776,7 @@ rpm_name=$(echo "$release_json" | jq -r '.assets[] | select(.name | endswith(".r
 curl -L -o "$rpm_name" "$rpm_url"
 
 # Install the RPM
-sudo rpm -Uvh "$rpm_name"
+sudo dnf install -y ./"$rpm_name"
 ```
 
 #### 1.4.1 Update CoreDHCP Configuration
@@ -788,7 +788,7 @@ edited for this setup:
 {{< tabs "configure-coredhcp" >}}
 {{< tab "Bare Metal Head" >}}
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/coredhcp.yaml
+cat << EOF | sudo tee /etc/openchami/configs/coredhcp.yaml > /dev/null
 server4:
   # You can configure the specific interfaces that you want OpenCHAMI to listen on by
   # uncommenting the lines below and setting the interface
@@ -811,7 +811,7 @@ EOF
 {{< /tab >}}
 {{< tab "Cloud Instance Head" >}}
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/coredhcp.yaml
+cat << EOF | sudo tee /etc/openchami/configs/coredhcp.yaml > /dev/null
 server4:
   # You can configure the specific interfaces that you want OpenCHAMI to listen on by
   # uncommenting the lines below and setting the interface
@@ -834,7 +834,7 @@ EOF
 {{< /tab >}}
 {{< tab "VM Head" >}}
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/coredhcp.yaml
+cat << EOF | sudo tee /etc/openchami/configs/coredhcp.yaml > /dev/null
 server4:
   # You can configure the specific interfaces that you want OpenCHAMI to listen on by
   # uncommenting the lines below and setting the interface
@@ -864,7 +864,7 @@ This will allow the compute node later in the tutorial to request its PXE script
 Update the CoreDNS config as well:
 
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/Corefile
+cat << EOF | sudo tee /etc/openchami/configs/Corefile > /dev/null
 .:53 {
     # Enable readiness endpoint.
     ready
@@ -946,6 +946,7 @@ OpenCHAMI package provides a script to do this:
 
 ```bash
 sudo openchami-certificate-update update demo.openchami.cluster
+# Do NOT YET RUN the commands suggested in the output.
 ```
 
 The output should be:
@@ -1094,15 +1095,15 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.7.0
-Tag:        v0.7.0
+Version:    0.7.1
+Tag:        v0.7.1
 Branch:     HEAD
-Commit:     b0d2f7d4565d2a2668c4d1662ef85707c22fa9bf
+Commit:     08a11e6d18e6804270a0137618934810a10e470e
 Git State:  clean
-Date:       2026-03-05T18:03:55Z
-Go:         go1.26.0
+Date:       2026-03-25T18:25:04Z
+Go:         go1.26.1
 Compiler:   gc
-Build Host: runnervm0kj6c
+Build Host: runnervm46oaq
 Build User: runner
 ```
 
@@ -1134,19 +1135,23 @@ default-cluster: demo
 log:
     format: rfc3339
     level: warning
+timeout: 30s
+
 ```
 
 The cluster should now be able to be communicated with. Verify by checking the
 status of one of the services:
 
 ```bash
-ochami bss service status
+ochami bss service status | jq
 ```
 
 The output should be:
 
 ```json
-{"bss-status":"running"}
+{
+  "bss-status": "running"
+}
 ```
 
 {{< callout context="tip" title="Tip" icon="outline/bulb" >}}
@@ -1215,7 +1220,7 @@ regenerated, run the above command.
    systemctl list-dependencies openchami.target
    ```
    should yield:
-   ```bash
+   ```
    openchami.target
    ● ├─acme-deploy.service
    ● ├─acme-register.service
@@ -1236,19 +1241,25 @@ regenerated, run the above command.
    ● ├─smd.service
    ● └─step-ca.service
    ```
-1. ```
-   ochami bss service status
+2. ```bash
+   ochami bss service status | jq
    ```
    should yield:
+   ```json
+   {
+     "bss-status": "running"
+   }
    ```
-   {"bss-status":"running"}
-   ```
-1. ```
-   ochami smd service status
+
+3. ```bash
+   ochami smd service status | jq
    ```
    should yield:
-   ```
-   {"code":0,"message":"HSM is healthy"}
+   ```json
+   {
+     "code": 0,
+     "message": "HSM is healthy"
+   }
    ```
 
 ## Part 2. Configuration
@@ -1390,9 +1401,8 @@ sudo mkdir -p /etc/openchami/data
 
 Then, create a static discovery file there.
 
-**Edit as root: `/etc/openchami/data/nodes.yaml`**
-
-```yaml {title="/etc/openchami/data/nodes.yaml"}
+```bash
+sudo tee /etc/openchami/data/nodes.yaml > /dev/null << EOF
 bmcs:
 - xname: x1000c0s0b0
   mac: de:ca:fc:0f:fe:e1
@@ -1466,6 +1476,7 @@ nodes:
     ip_addrs:
     - name: management
       ip_addr: 172.16.0.5
+EOF
 ```
 
 Now, run the following to populate SMD with the node information:
@@ -1555,12 +1566,6 @@ into:
 - SquashFS images served through S3 (served to nodes)
 - Container images served through OCI registries (used as parent layers for child image layers)
 
-Create a directory for the cluster's image configs.
-
-```bash
-sudo mkdir -p /etc/openchami/data/images
-cd /etc/openchami/data/images
-```
 
 #### 2.3.1 Preparing Tools
 
@@ -1625,7 +1630,7 @@ access credentials, let's pull in the server environment file and generate
 source <(sudo cat /etc/versitygw/secrets.env)
 
 # Create the s3cmd config file
-cat <<EOF | tee "${HOME}/.s3cfg"
+cat << EOF | tee "${HOME}/.s3cfg"
 # Setup endpoint
 host_base = demo.openchami.cluster:7070
 host_bucket = demo.openchami.cluster:7070
@@ -1640,6 +1645,8 @@ secret_key = ${ROOT_SECRET_KEY}
 signature_v2 = False
 EOF
 ```
+
+In the output, verify that the keys were set with the variables' contents.
 
 We also will briefly need to use the `aws` CLI to ensure proper configuration
 of ACLs for `versitygw` buckets as the XML schema used by `s3cmd` for this
@@ -1670,9 +1677,8 @@ s3://boot-images/: Bucket Object Ownership updated
 
 Set the policy to allow public downloads from the `boot-images` bucket:
 
-**Edit as normal user: `/opt/workdir/s3-public-read-boot.json`**
-
-```json {title="/opt/workdir/s3-public-read-boot.json"}
+```bash
+cat << EOF > /opt/workdir/s3-public-read-boot.json
 {
   "Version":"2012-10-17",
   "Statement":[
@@ -1684,6 +1690,7 @@ Set the policy to allow public downloads from the `boot-images` bucket:
     }
   ]
 }
+EOF
 ```
 
 Apply the policy in S3:
@@ -1776,6 +1783,7 @@ Create a working directory for the image configs:
 
 ```bash
 sudo mkdir -p /etc/openchami/data/images
+cd /etc/openchami/data/images
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
@@ -1816,9 +1824,8 @@ When pasting, you may have to configure your editor to not apply indentation
 rules (`:set paste` in Vim, `:set nopaste` to switch back).
 {{< /callout >}}
 
-**Edit as root: `/etc/openchami/data/images/rocky-base-9.yaml`**
-
-```yaml {{title="/etc/openchami/data/images/rocky-base-9.yaml"}
+```bash
+sudo tee /etc/openchami/data/images/rocky-base-9.yaml > /dev/null << EOF
 options:
   layer_type: 'base'
   name: 'rocky-base'
@@ -1851,8 +1858,9 @@ packages:
   - wget
 
 cmds:
-  - cmd: 'dracut --add "dmsquash-live livenet network-manager" --kver $(basename /lib/modules/*) -N -f --logfile /tmp/dracut.log 2>/dev/null'
+  - cmd: 'dracut --add "dmsquash-live livenet network-manager" --kver \$(basename /lib/modules/*) -N -f --logfile /tmp/dracut.log 2>/dev/null'
   - cmd: 'echo DRACUT LOG:; cat /tmp/dracut.log'
+EOF
 ```
 
 Notice that this image is pushed to the OCI registry, but not S3. This is
@@ -1932,9 +1940,8 @@ built before as the parent layer. In this compute image layer, the stock Rocky
 9 image is being pulled and packages are added on top of it that will be common
 for all compute nodes.
 
-**Edit as root: `/etc/openchami/data/images/compute-base-rocky9.yaml`**
-
-```yaml {title="/etc/openchami/data/images/compute-base-rocky9.yaml"}
+```bash
+sudo tee /etc/openchami/data/images/compute-base-rocky9.yaml > /dev/null << EOF
 options:
   layer_type: 'base'
   name: 'compute-base'
@@ -1973,6 +1980,7 @@ packages:
   - tcpdump
   - traceroute
   - vim
+EOF
 ```
 
 Notice that this time, the image is pushed both to the OCI registry _and_ S3.
@@ -2089,9 +2097,8 @@ console. This will be useful later on when debugging potential post-boot
 configuration issues (e.g. SSH keys weren't provisioned and so login is
 impossible).
 
-**Edit as root: `/etc/openchami/data/images/compute-debug-rocky9.yaml`**
-
-```yaml {title="/etc/openchami/data/images/compute-debug-rocky9.yaml"}
+```bash
+sudo tee /etc/openchami/data/images/compute-debug-rocky9.yaml > /dev/null << EOF
 options:
   layer_type: base
   name: compute-debug
@@ -2111,7 +2118,8 @@ packages:
   - shadow-utils
 
 cmds:
-  - cmd: "useradd -mG wheel -p '$6$VHdSKZNm$O3iFYmRiaFQCemQJjhfrpqqV7DdHBi5YpY6Aq06JSQpABPw.3d8PQ8bNY9NuZSmDv7IL/TsrhRJ6btkgKaonT.' testuser"
+  - cmd: "useradd -mG wheel -p '\$6\$VHdSKZNm\$O3iFYmRiaFQCemQJjhfrpqqV7DdHBi5YpY6Aq06JSQpABPw.3d8PQ8bNY9NuZSmDv7IL/TsrhRJ6btkgKaonT.' testuser"
+EOF
 ```
 
 The debug image uses a few different directives that are worth drawing attention to:
@@ -2373,7 +2381,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | s
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
@@ -2744,7 +2752,7 @@ Create `ci-defaults.yaml`, setting the cluster-wide default values including
 the SSH key created above:
 
 ```bash
-cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
+cat << EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
 ---
 base-url: "http://172.16.0.254:8081/cloud-init"
 cluster-name: "demo"
@@ -2788,7 +2796,7 @@ The output should be:
   "public-keys": [
     "<YOUR SSH KEY>"
   ],
-  "short-name": "nid"
+  "short-name": "de"
 }
 ```
 
@@ -2801,9 +2809,8 @@ simple config that only sets created SSH key for the root user can be created.
 First, create a templated cloud-config file. Create `ci-group-compute.yaml`
 with the following contents:
 
-**Edit as root: `/etc/openchami/data/cloud-init/ci-group-compute.yaml`**
-
-```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
+```bash
+sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml > /dev/null << EOF
 - name: compute
   description: "compute config"
   file:
@@ -2820,6 +2827,7 @@ with the following contents:
         - name: root
           ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
       disable_root: false
+EOF
 ```
 
 Now, set this configuration for the compute group:
@@ -2876,6 +2884,7 @@ merge_how:
 users:
   - name: root
     ssh_authorized_keys: ['<SSH_KEY>']
+disable_root: false
 ```
 
 ### 2.7.3 (_OPTIONAL_) Configure Node-Specific Meta-Data
@@ -2970,7 +2979,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/base | awk '{print $4}' | se
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/bss/compute-base-rocky9.yaml
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-base-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
