@@ -121,8 +121,8 @@ This, optional, pre-summit day provides an opportunity to visit and explore the 
 | 15:20-15:40 | Afternoon Break | - | Elvin Hall |
 | 15:40-16:00 | Project Review: Current Developments from LANL Needs (Part 1) | Alex Lovell-Troy | Elvin Hall |
 | 16:00-16:20 | Project Review: Future Direction from LANL Needs (Part 2) | Alex Lovell-Troy | Elvin Hall |
-| 16:20-16:40 | Open Discussion: Priorities and Risks for 2026 | Alex Lovell-Troy and Tom Green | Elvin Hall |
-| 16:40-17:00 | Day 1 Wrap-up and Next-Day Alignment | Tom Green | Elvin Hall |
+| 16:20-16:40 | Open Discussion: Priorities and Risks for 2026 | Alex Lovell-Troy and Hosts (UCL, Bristol, Cambridge) | Elvin Hall |
+| 16:40-17:00 | Day 1 Wrap-up and Next-Day Alignment | Hosts (UCL, Bristol, Cambridge) | Elvin Hall |
 
 ---
 
