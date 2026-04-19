@@ -51,7 +51,7 @@ The OpenCHAMI community is gathering at UCL for three days of collaboration, lea
 ## Location & Directions
 
 
-**Venue:** [UCL Institute of Education, 20 Bedford Way, London WC1H 0AL](http://maps.google.com/maps?q=loc:51.52268100+-0.127989000)
+**Venue:** [UCL Institute of Education, 20 Bedford Way, London WC1H 0AL](http://maps.google.com/maps?q=51.52268100,-0.127989000)
 
 **Travel:** The IoE is well-served by [the London underground and national rail](https://maps.ucl.ac.uk/public-transport/). Most hotels in central London will be within 30 minutes travel time of the venue.
 
@@ -104,28 +104,25 @@ This, optional, pre-summit day provides an opportunity to visit and explore the 
 | 09:40-10:00 | How UCL Runs Systems | Camilla Harris | Elvin Hall |
 | 10:00-10:20 | Vendor Lightning Session (shared block) | Vendor representatives | Elvin Hall |
 | 10:20-10:40 | Site/Partner Updates | Site representatives | Elvin Hall |
-| 10:40-11:00 | Operations Talk: Site Bring-up and Baseline Practices (title TBD) | Speaker TBD | Elvin Hall |
+| 10:40-11:00 | CSM to OpenCHAMI - the Non-Technical Challenges | Johnathan Hermann | Elvin Hall |
 | 11:00-11:20 | Morning Break | - | Elvin Hall |
-| 11:20-11:40 | Operations Talk: Authentication and Access Patterns (title TBD) | Speaker TBD | Elvin Hall |
-| 11:40-12:00 | Operations Talk: Image Lifecycle and Recovery Workflow (title TBD) | Speaker TBD | Elvin Hall |
-| 12:00-12:20 | Operations Roundtable and Q&A | Panel | Elvin Hall |
-| 12:00-12:20 | Operations Roundtable and Q&A | Panel | Elvin Hall |
+| 11:20-11:40 | HPSF and Linux Foundation Context for OpenCHAMI | Tom Green | Elvin Hall |
+| 11:40-12:00 | UK/EU Growth Update for OpenCHAMI | Tom Green | Elvin Hall |
+| 12:00-12:20 | Sovereign AI in UK/EU: Operational Requirements | Tom Green | Elvin Hall |
 | 12:20-12:40 | Lunch | - | Elvin Hall |
 | 12:40-13:00 | Lunch | - | Elvin Hall |
 | 13:00-13:20 | Lunch | - | Elvin Hall |
-| 13:20-13:40 | HPSF and Linux Foundation Context for OpenCHAMI | Tom Green | Elvin Hall |
-| 13:40-14:00 | UK/EU Growth Update for OpenCHAMI | Tom Green | Elvin Hall |
-| 14:00-14:20 | Sovereign AI in UK/EU: Operational Requirements | Tom Green | Elvin Hall |
-| 14:20-14:40 | UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1) | UK/EU site representatives | Elvin Hall |
-| 14:40-15:00 | UK/EU Sites Panel: Plans for the Next Year (Part 2) | UK/EU site representatives | Elvin Hall |
-| 15:00-15:20 | Panel Q&A and Action Items | Tom Green and panelists | Elvin Hall |
+| 13:20-13:40 | Operations Talk: Site Bring-up and Baseline Practices (title TBD) | Speaker TBD | Elvin Hall |
+| 13:40-14:00 | Operations Talk: Authentication and Access Patterns (title TBD) | Speaker TBD | Elvin Hall |
+| 14:00-14:20 | Operations Talk: Image Lifecycle and Recovery Workflow (title TBD) | Speaker TBD | Elvin Hall |
+| 14:20-14:40 | Operations Roundtable and Q&A | Panel | Elvin Hall |
+| 14:40-15:00 | UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1) | UK/EU site representatives | Elvin Hall |
+| 15:00-15:20 | UK/EU Sites Panel: Plans for the Next Year (Part 2) | UK/EU site representatives | Elvin Hall |
 | 15:20-15:40 | Afternoon Break | - | Elvin Hall |
 | 15:40-16:00 | Project Review: Current Developments from LANL Needs (Part 1) | Alex Lovell-Troy | Elvin Hall |
 | 16:00-16:20 | Project Review: Future Direction from LANL Needs (Part 2) | Alex Lovell-Troy | Elvin Hall |
 | 16:20-16:40 | Open Discussion: Priorities and Risks for 2026 | Alex Lovell-Troy and Tom Green | Elvin Hall |
 | 16:40-17:00 | Day 1 Wrap-up and Next-Day Alignment | Tom Green | Elvin Hall |
-
-
 
 ---
 
