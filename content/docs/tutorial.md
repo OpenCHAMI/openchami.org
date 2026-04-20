@@ -35,88 +35,67 @@ Two different deployment methods for the "head node" (where the OpenCHAMI
 services will run) are supported in this tutorial: **Cloud Instance/Bare Metal**
 and **Virtual Machine**.
 
-- **Cloud Instance/Bare Metal:** OpenCHAMI service containers run on a cloud
-  instance (e.g. EC2) or on a bare metal host.
-  - In this case, the networking to be set up is between the host and the VMs to
-    be booted with OpenCHAMI.
-- **Virtual Machine:** OpenCHAMI service containers run in their own virtual
-  machine.
-  - In this case, the networking to be set up is between the head node VM and
-    the VMs to be booted with OpenCHAMI.
-
+- **Cloud Instance/Bare Metal as head node**<br>
+  OpenCHAMI service containers run directly on the host, in a cloud
+  instance or on a bare metal system.<br>
+  In this case, the networking to be set up is between the host and the compute node VMs which are to
+  be booted with OpenCHAMI.
+  {{< inline-svg src="svgs/diagrams/openchami-host-as-head-node.svg" class="svg-inline-custom" >}}
+- **Virtual Machine as head node**<br>
+  OpenCHAMI service containers run in their own virtual machine.<br>
+  In this case, the networking to be set up is between the head node VM and
+  the compute node VMs which are to be booted with OpenCHAMI.
+  {{< inline-svg src="svgs/diagrams/openchami-vm-head-node.svg" class="svg-inline-custom" >}}
+<br>
 Either of the above options for a head node will work, and the reader should
 choose one, follow the steps in the relevant deployment section below, then
 move to [**Part 1. Installation**](#part-1-installation).
 
-### 0.3. Head Node: Using Cloud Instance
+### 0.4. Head Node: Using Cloud Instance
 
-#### 0.3.1. Instance Type
+#### 0.4.1. Instance Type
 
 As for the instance type:
 
-- **AWS:** [c5.metal](https://aws.amazon.com/ec2/instance-types/c5/) on AWS, at
-  the time of writing, seems to be optimized for RAM and cost.
 - **JetStream2:**
   [m3.medium](https://docs.jetstream-cloud.org/general/vmsizes/) (8GB RAM), at
   the time of writing, seems optimal for RAM and cost.
+- **AWS:** [c5.metal](https://aws.amazon.com/ec2/instance-types/c5/) on AWS, at
+  the time of writing, seems to be optimized for RAM and cost.
 
 **x86_64** has the most support and is recommended.
 
 If using a different cloud service, ensure the following specifications.
 
-#### 0.3.2. Memory
+#### 0.4.2. Memory
 
 If using a cloud instance, ensure at least **4GB of RAM** is available.
 
-#### 0.3.3. Operating System
-
-This tutorial assumes **Rocky Linux 9** is running on the instance.
-
-#### 0.3.4. Storage
+#### 0.4.3. Storage
 
 The tutorial has been historically run with a **60GB root disk** and the launch
 template expands the filesystem to use the entire disk.
 
-#### 0.3.5. Launch Template
+#### 0.4.4. Operating System
+
+This tutorial assumes **Rocky Linux 9** is running on the instance.
+
+#### 0.4.5. Launch Template
 
 The following launch templates, in the form of a cloud-init config, are recommended.
 
-##### 0.3.5.a. AWS
-
-```yaml
-#cloud-config
-
-packages:
-  - libvirt
-  - qemu-kvm
-  - virt-install
-  - virt-manager
-  - dnsmasq
-  - podman
-  - buildah
-  - git
-  - vim
-  - ansible-core
-  - openssl
-  - nfs-utils
-
-# Post-package installation commands
-runcmd:
-  - dnf install -y epel-release
-  - dnf install -y s3cmd awscli
-  - systemctl enable --now libvirtd
-  - newgrp libvirt
-  - usermod -aG libvirt rocky
-  - sudo growpart /dev/xvda 4
-  - sudo pvresize /dev/xvda4
-  - sudo lvextend -l +100%FREE /dev/rocky/lvroot
-  - sudo xfs_growfs /
-```
-
-##### 0.3.5.b. JetStream2
+{{< tabs "cloud-instance-templates" >}}
+{{< tab "JetStream2" >}}
+<div style="background-color: #bcc2fe; padding: 10px; border: 1px solid #ddd;">
+<b>Note:</b> The Rocky 9 JetStream2 image does not allow containers to accept TCP
+connections, which prevents connections to Quadlet services. As a mitigation,
+the below cloud-config adds/enables/starts a Systemd service that marks the
+<mark style="background-color: #dcdcdc;"> container_t </mark> type as permissive.
+</div>
+<br>
 
 In the **Advanced Options** section of the template or instance definition,
-there is a text box marked **Boot Script**. Underneath the following header:
+there is a text box marked **Boot Script**.
 
 ```
 --=================exosphere-user-data====
@@ -125,14 +104,7 @@ Content-Type: text/cloud-config
 Content-Disposition: attachment; filename="exosphere.yml"
 ```
 
-Use the following cloud-config:
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-The Rocky 9 Jetstream2 image does not allow containers to accept TCP
-connections, which prevents connections to Quadlet services. As a mitigation,
-the below cloud-config adds/enables/starts a Systemd service that marks the
-`container_t` type as permissive.
-{{< /callout >}}
+Underneath this header, use the following cloud-config:
 
 ```yaml
 #cloud-config
@@ -185,10 +157,48 @@ runcmd:
   - systemctl enable selinux-container-permissive
   - systemctl start selinux-container-permissive
 ```
+{{< /tab >}}
+{{< tab "AWS" >}}
+```yaml
+#cloud-config
 
-### 0.4. Head Node: Using Bare Metal
+packages:
+  - libvirt
+  - qemu-kvm
+  - virt-install
+  - virt-manager
+  - dnsmasq
+  - podman
+  - buildah
+  - git
+  - vim
+  - ansible-core
+  - openssl
+  - nfs-utils
 
-Setup is similar to the cloud instance setups above. Ensure the following
+# Post-package installation commands
+runcmd:
+  - dnf install -y epel-release
+  - dnf install -y s3cmd awscli
+  - systemctl enable --now libvirtd
+  - newgrp libvirt
+  - usermod -aG libvirt rocky
+  - sudo growpart /dev/xvda 4
+  - sudo pvresize /dev/xvda4
+  - sudo lvextend -l +100%FREE /dev/rocky/lvroot
+  - sudo xfs_growfs /
+```
+{{< /tab >}}
+{{< /tabs >}}
+
+
+
+
+
+
+### 0.5. Head Node: Using Bare Metal
+
+The bare metal setup is similar to the cloud instance setups above. Ensure the following
 packages are installed (Red Hat package names used):
 
 - ansible-core
@@ -212,25 +222,25 @@ Make sure that the Libvirt daemon is running:
 sudo systemctl start libvirtd
 ```
 
-### 0.5. Head Node: Using Virtual Machine
+### 0.6. Head Node: Using Virtual Machine
 
 If using a virtual machine as a head node, this tutorial assumes the following
 network layout:
 
-{{< inline-svg src="svgs/diagrams/openchami-vm-net.svg" class="svg-inline-custom" >}}
+{{< inline-svg src="svgs/diagrams/openchami-vm-head-node.svg" class="svg-inline-custom" >}}
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 This tutorial assumes Libvirt + KVM, but the concepts should also be applicable
 to other hypervisors.
 {{< /callout >}}
 
-#### 0.5.1. Prerequisites
+#### 0.6.1. Prerequisites
 
 - Running on a host that supports Libvirt with enough resources to run multiple VMs; recommended is:
   - At least 4 CPU cores
   - At least 8 GB of RAM
   - At least 20GB of free disk space
-- Sudo access on the host
+- sudo access on the host
 - A working Libvirt installation
   - `virsh`
   - `virt-install`
@@ -238,7 +248,7 @@ to other hypervisors.
   - KVM
 - Python 3 (for running a quick webserver)
 
-#### 0.5.2. Preparing Head Node VM
+#### 0.6.2. Preparing Head Node VM
 
 The head node VM will run Rocky Linux 9. In order to set it up quickly and
 automatically, a
@@ -265,7 +275,7 @@ cd openchami-vm-workdir
 
 Steps in this section occur **on the host running Libvirt**.
 
-##### 0.5.2.a. Create Kickstart Server
+##### 0.6.2.a. Create Kickstart Server
 
 Within the working directory created above, create a serve directory:
 
@@ -275,7 +285,8 @@ mkdir serve/
 
 Then, create `kickstart.conf` within that directory:
 
-```yaml {title="openchami-vm-workdir/serve/kickstart.conf",linenos=true,linenostart=1}
+```bash
+cat > serve/kickstart.conf << EOF
 #version=RHEL9
 # Use text install
 text
@@ -353,6 +364,7 @@ dnf install -y s3cmd awscli
 %end
 
 reboot
+EOF
 ```
 
 Run a temporary webserver to serve the kickstart file created above:
@@ -367,7 +379,7 @@ To ensure the Kickstart file is being served properly, `curl` it from the webser
 curl http://localhost:8000/kickstart.conf
 ```
 
-##### 0.5.2.b. Create External VM Network
+##### 0.6.2.b. Create External VM Network
 
 Create and start the external VM network:
 
@@ -404,7 +416,7 @@ Now that the network is up, ensure the Kickstart file can be retrieved over it:
 curl http://192.168.200.1:8000/kickstart.conf
 ```
 
-##### 0.5.2.c. Create Internal VM Network
+##### 0.6.2.c. Create Internal VM Network
 
 Create and start the internal VM network:
 
@@ -424,7 +436,7 @@ This is the network that access to the compute nodes from the head node will be
 through. This network is **isolated from the host** such that SSH access to the
 compute nodes must be done through the head node VM.
 
-##### 0.5.2.d. Kickstart the Head Node VM
+##### 0.6.2.d. Kickstart the Head Node VM
 
 Ensure the **edk2-ovmf** package is installed on the host, which will provide
 the VM firmware and EFI variable files for the VMs. Using the Open Virtual
@@ -525,7 +537,7 @@ again (e.g. to troubleshoot by logging in), use:
 sudo virsh console head
 ```
 
-##### 0.5.2.e. Cleanup
+##### 0.6.2.e. Cleanup
 
 The Kickstart server can now be torn down. Run:
 
@@ -550,7 +562,7 @@ the output should be:
 [1]  + terminated  python3 -m http.server -d ./serve 8000
 ```
 
-##### 0.5.2.f. Accessing the Head Node VM
+##### 0.6.2.f. Accessing the Head Node VM
 
 Login to the head node via SSH:
 
