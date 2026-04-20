@@ -35,88 +35,67 @@ Two different deployment methods for the "head node" (where the OpenCHAMI
 services will run) are supported in this tutorial: **Cloud Instance/Bare Metal**
 and **Virtual Machine**.
 
-- **Cloud Instance/Bare Metal:** OpenCHAMI service containers run on a cloud
-  instance (e.g. EC2) or on a bare metal host.
-  - In this case, the networking to be set up is between the host and the VMs to
-    be booted with OpenCHAMI.
-- **Virtual Machine:** OpenCHAMI service containers run in their own virtual
-  machine.
-  - In this case, the networking to be set up is between the head node VM and
-    the VMs to be booted with OpenCHAMI.
-
+- **Cloud Instance/Bare Metal as head node**<br>
+  OpenCHAMI service containers run directly on the host, in a cloud
+  instance or on a bare metal system.<br>
+  In this case, the networking to be set up is between the host and the compute node VMs which are to
+  be booted with OpenCHAMI.
+  {{< inline-svg src="svgs/diagrams/openchami-host-as-head-node.svg" class="svg-inline-custom" >}}
+- **Virtual Machine as head node**<br>
+  OpenCHAMI service containers run in their own virtual machine.<br>
+  In this case, the networking to be set up is between the head node VM and
+  the compute node VMs which are to be booted with OpenCHAMI.
+  {{< inline-svg src="svgs/diagrams/openchami-vm-head-node.svg" class="svg-inline-custom" >}}
+<br>
 Either of the above options for a head node will work, and the reader should
 choose one, follow the steps in the relevant deployment section below, then
 move to [**Part 1. Installation**](#part-1-installation).
 
-### 0.3. Head Node: Using Cloud Instance
+### 0.4. Head Node: Using Cloud Instance
 
-#### 0.3.1. Instance Type
+#### 0.4.1. Instance Type
 
 As for the instance type:
 
-- **AWS:** [c5.metal](https://aws.amazon.com/ec2/instance-types/c5/) on AWS, at
-  the time of writing, seems to be optimized for RAM and cost.
 - **JetStream2:**
   [m3.medium](https://docs.jetstream-cloud.org/general/vmsizes/) (8GB RAM), at
   the time of writing, seems optimal for RAM and cost.
+- **AWS:** [c5.metal](https://aws.amazon.com/ec2/instance-types/c5/) on AWS, at
+  the time of writing, seems to be optimized for RAM and cost.
 
 **x86_64** has the most support and is recommended.
 
 If using a different cloud service, ensure the following specifications.
 
-#### 0.3.2. Memory
+#### 0.4.2. Memory
 
 If using a cloud instance, ensure at least **4GB of RAM** is available.
 
-#### 0.3.3. Operating System
-
-This tutorial assumes **Rocky Linux 9** is running on the instance.
-
-#### 0.3.4. Storage
+#### 0.4.3. Storage
 
 The tutorial has been historically run with a **60GB root disk** and the launch
 template expands the filesystem to use the entire disk.
 
-#### 0.3.5. Launch Template
+#### 0.4.4. Operating System
+
+This tutorial assumes **Rocky Linux 9** is running on the instance.
+
+#### 0.4.5. Launch Template
 
 The following launch templates, in the form of a cloud-init config, are recommended.
 
-##### 0.3.5.a. AWS
-
-```yaml
-#cloud-config
-
-packages:
-  - libvirt
-  - qemu-kvm
-  - virt-install
-  - virt-manager
-  - dnsmasq
-  - podman
-  - buildah
-  - git
-  - vim
-  - ansible-core
-  - openssl
-  - nfs-utils
-
-# Post-package installation commands
-runcmd:
-  - dnf install -y epel-release
-  - dnf install -y s3cmd awscli
-  - systemctl enable --now libvirtd
-  - newgrp libvirt
-  - usermod -aG libvirt rocky
-  - sudo growpart /dev/xvda 4
-  - sudo pvresize /dev/xvda4
-  - sudo lvextend -l +100%FREE /dev/rocky/lvroot
-  - sudo xfs_growfs /
-```
-
-##### 0.3.5.b. JetStream2
+{{< tabs "cloud-instance-templates" >}}
+{{< tab "JetStream2" >}}
+<div style="background-color: #bcc2fe; padding: 10px; border: 1px solid #ddd;">
+<b>Note:</b> The Rocky 9 JetStream2 image does not allow containers to accept TCP
+connections, which prevents connections to Quadlet services. As a mitigation,
+the below cloud-config adds/enables/starts a Systemd service that marks the
+<mark style="background-color: #dcdcdc;"> container_t </mark> type as permissive.
+</div>
+<br>
 
 In the **Advanced Options** section of the template or instance definition,
-there is a text box marked **Boot Script**. Underneath the following header:
+there is a text box marked **Boot Script**.
 
 ```
 --=================exosphere-user-data====
@@ -125,14 +104,7 @@ Content-Type: text/cloud-config
 Content-Disposition: attachment; filename="exosphere.yml"
 ```
 
-Use the following cloud-config:
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-The Rocky 9 Jetstream2 image does not allow containers to accept TCP
-connections, which prevents connections to Quadlet services. As a mitigation,
-the below cloud-config adds/enables/starts a Systemd service that marks the
-`container_t` type as permissive.
-{{< /callout >}}
+Underneath this header, use the following cloud-config:
 
 ```yaml
 #cloud-config
@@ -185,10 +157,48 @@ runcmd:
   - systemctl enable selinux-container-permissive
   - systemctl start selinux-container-permissive
 ```
+{{< /tab >}}
+{{< tab "AWS" >}}
+```yaml
+#cloud-config
 
-### 0.4. Head Node: Using Bare Metal
+packages:
+  - libvirt
+  - qemu-kvm
+  - virt-install
+  - virt-manager
+  - dnsmasq
+  - podman
+  - buildah
+  - git
+  - vim
+  - ansible-core
+  - openssl
+  - nfs-utils
 
-Setup is similar to the cloud instance setups above. Ensure the following
+# Post-package installation commands
+runcmd:
+  - dnf install -y epel-release
+  - dnf install -y s3cmd awscli
+  - systemctl enable --now libvirtd
+  - newgrp libvirt
+  - usermod -aG libvirt rocky
+  - sudo growpart /dev/xvda 4
+  - sudo pvresize /dev/xvda4
+  - sudo lvextend -l +100%FREE /dev/rocky/lvroot
+  - sudo xfs_growfs /
+```
+{{< /tab >}}
+{{< /tabs >}}
+
+
+
+
+
+
+### 0.5. Head Node: Using Bare Metal
+
+The bare metal setup is similar to the cloud instance setups above. Ensure the following
 packages are installed (Red Hat package names used):
 
 - ansible-core
@@ -212,25 +222,25 @@ Make sure that the Libvirt daemon is running:
 sudo systemctl start libvirtd
 ```
 
-### 0.5. Head Node: Using Virtual Machine
+### 0.6. Head Node: Using Virtual Machine
 
 If using a virtual machine as a head node, this tutorial assumes the following
 network layout:
 
-{{< inline-svg src="svgs/diagrams/openchami-vm-net.svg" class="svg-inline-custom" >}}
+{{< inline-svg src="svgs/diagrams/openchami-vm-head-node.svg" class="svg-inline-custom" >}}
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 This tutorial assumes Libvirt + KVM, but the concepts should also be applicable
 to other hypervisors.
 {{< /callout >}}
 
-#### 0.5.1. Prerequisites
+#### 0.6.1. Prerequisites
 
 - Running on a host that supports Libvirt with enough resources to run multiple VMs; recommended is:
   - At least 4 CPU cores
   - At least 8 GB of RAM
   - At least 20GB of free disk space
-- Sudo access on the host
+- sudo access on the host
 - A working Libvirt installation
   - `virsh`
   - `virt-install`
@@ -238,7 +248,7 @@ to other hypervisors.
   - KVM
 - Python 3 (for running a quick webserver)
 
-#### 0.5.2. Preparing Head Node VM
+#### 0.6.2. Preparing Head Node VM
 
 The head node VM will run Rocky Linux 9. In order to set it up quickly and
 automatically, a
@@ -265,7 +275,7 @@ cd openchami-vm-workdir
 
 Steps in this section occur **on the host running Libvirt**.
 
-##### 0.5.2.a. Create Kickstart Server
+##### 0.6.2.a. Create Kickstart Server
 
 Within the working directory created above, create a serve directory:
 
@@ -275,7 +285,8 @@ mkdir serve/
 
 Then, create `kickstart.conf` within that directory:
 
-```yaml {title="openchami-vm-workdir/serve/kickstart.conf",linenos=true,linenostart=1}
+```bash
+cat > serve/kickstart.conf << EOF
 #version=RHEL9
 # Use text install
 text
@@ -353,6 +364,7 @@ dnf install -y s3cmd awscli
 %end
 
 reboot
+EOF
 ```
 
 Run a temporary webserver to serve the kickstart file created above:
@@ -367,7 +379,7 @@ To ensure the Kickstart file is being served properly, `curl` it from the webser
 curl http://localhost:8000/kickstart.conf
 ```
 
-##### 0.5.2.b. Create External VM Network
+##### 0.6.2.b. Create External VM Network
 
 Create and start the external VM network:
 
@@ -404,7 +416,7 @@ Now that the network is up, ensure the Kickstart file can be retrieved over it:
 curl http://192.168.200.1:8000/kickstart.conf
 ```
 
-##### 0.5.2.c. Create Internal VM Network
+##### 0.6.2.c. Create Internal VM Network
 
 Create and start the internal VM network:
 
@@ -424,7 +436,7 @@ This is the network that access to the compute nodes from the head node will be
 through. This network is **isolated from the host** such that SSH access to the
 compute nodes must be done through the head node VM.
 
-##### 0.5.2.d. Kickstart the Head Node VM
+##### 0.6.2.d. Kickstart the Head Node VM
 
 Ensure the **edk2-ovmf** package is installed on the host, which will provide
 the VM firmware and EFI variable files for the VMs. Using the Open Virtual
@@ -525,7 +537,7 @@ again (e.g. to troubleshoot by logging in), use:
 sudo virsh console head
 ```
 
-##### 0.5.2.e. Cleanup
+##### 0.6.2.e. Cleanup
 
 The Kickstart server can now be torn down. Run:
 
@@ -550,7 +562,7 @@ the output should be:
 [1]  + terminated  python3 -m http.server -d ./serve 8000
 ```
 
-##### 0.5.2.f. Accessing the Head Node VM
+##### 0.6.2.f. Accessing the Head Node VM
 
 Login to the head node via SSH:
 
@@ -601,20 +613,11 @@ For the purposes of the tutorial, the head node will need to be able to forward
 network traffic. Configure this persistently:
 
 ```bash
-echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/90-forward.conf
+echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/90-forward.conf > /dev/null
 sudo sysctl --system
 ```
 
-#### 1.2.2 Update Hosts File
-
-Add the cluster's service domain to `/etc/hosts` so that the certificates will work:
-
-```bash
-echo "172.16.0.254 demo.openchami.cluster" | sudo tee -a /etc/hosts > /dev/null
-```
-
-
-#### 1.2.3 Create and Start Internal Network
+#### 1.2.2 Create and Start Internal Network
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 **This step is only necessary if not using [a
@@ -628,7 +631,7 @@ network interface on the head node that the virtual compute nodes will be
 attached to:
 
 ```bash
-cat <<EOF > openchami-net.xml
+cat << EOF > openchami-net.xml
 <network>
   <name>openchami-net</name>
   <bridge name="virbr-openchami" />
@@ -659,6 +662,15 @@ The output should be:
  openchami-net   active   yes         yes
 ```
 
+#### 1.2.3 Update Hosts File
+
+Add the cluster's service domain to `/etc/hosts` so that the certificates will work:
+
+```bash
+echo "172.16.0.254 demo.openchami.cluster" | sudo tee -a /etc/hosts > /dev/null
+```
+
+
 ### 1.3 Enable Non-OpenCHAMI Services
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
@@ -688,9 +700,8 @@ sudo dnf install -y ./versitygw.rpm
 For the OCI container registry, the standard docker registry is used. Once
 again, this is deployed as a quadlet.
 
-**Edit as root: `/etc/containers/systemd/registry.container`**
-
-```ini {title="/etc/containers/systemd/registry.container"}
+```bash
+sudo tee /etc/containers/systemd/registry.container > /dev/null << EOF
 [Unit]
 Description=Image OCI Registry
 After=network-online.target
@@ -709,6 +720,7 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+EOF
 ```
 
 #### 1.3.3 Reload Systemd
@@ -776,7 +788,7 @@ rpm_name=$(echo "$release_json" | jq -r '.assets[] | select(.name | endswith(".r
 curl -L -o "$rpm_name" "$rpm_url"
 
 # Install the RPM
-sudo rpm -Uvh "$rpm_name"
+sudo dnf install -y ./"$rpm_name"
 ```
 
 #### 1.4.1 Update CoreDHCP Configuration
@@ -788,7 +800,7 @@ edited for this setup:
 {{< tabs "configure-coredhcp" >}}
 {{< tab "Bare Metal Head" >}}
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/coredhcp.yaml
+cat << EOF | sudo tee /etc/openchami/configs/coredhcp.yaml > /dev/null
 server4:
   # You can configure the specific interfaces that you want OpenCHAMI to listen on by
   # uncommenting the lines below and setting the interface
@@ -811,7 +823,7 @@ EOF
 {{< /tab >}}
 {{< tab "Cloud Instance Head" >}}
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/coredhcp.yaml
+cat << EOF | sudo tee /etc/openchami/configs/coredhcp.yaml > /dev/null
 server4:
   # You can configure the specific interfaces that you want OpenCHAMI to listen on by
   # uncommenting the lines below and setting the interface
@@ -834,7 +846,7 @@ EOF
 {{< /tab >}}
 {{< tab "VM Head" >}}
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/coredhcp.yaml
+cat << EOF | sudo tee /etc/openchami/configs/coredhcp.yaml > /dev/null
 server4:
   # You can configure the specific interfaces that you want OpenCHAMI to listen on by
   # uncommenting the lines below and setting the interface
@@ -864,7 +876,7 @@ This will allow the compute node later in the tutorial to request its PXE script
 Update the CoreDNS config as well:
 
 ```bash
-cat <<EOF | sudo tee /etc/openchami/configs/Corefile
+cat << EOF | sudo tee /etc/openchami/configs/Corefile > /dev/null
 .:53 {
     # Enable readiness endpoint.
     ready
@@ -946,6 +958,7 @@ OpenCHAMI package provides a script to do this:
 
 ```bash
 sudo openchami-certificate-update update demo.openchami.cluster
+# Do NOT YET RUN the commands suggested in the output.
 ```
 
 The output should be:
@@ -1094,15 +1107,15 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.7.0
-Tag:        v0.7.0
+Version:    0.7.1
+Tag:        v0.7.1
 Branch:     HEAD
-Commit:     b0d2f7d4565d2a2668c4d1662ef85707c22fa9bf
+Commit:     08a11e6d18e6804270a0137618934810a10e470e
 Git State:  clean
-Date:       2026-03-05T18:03:55Z
-Go:         go1.26.0
+Date:       2026-03-25T18:25:04Z
+Go:         go1.26.1
 Compiler:   gc
-Build Host: runnervm0kj6c
+Build Host: runnervm46oaq
 Build User: runner
 ```
 
@@ -1134,19 +1147,23 @@ default-cluster: demo
 log:
     format: rfc3339
     level: warning
+timeout: 30s
+
 ```
 
 The cluster should now be able to be communicated with. Verify by checking the
 status of one of the services:
 
 ```bash
-ochami bss service status
+ochami bss service status | jq
 ```
 
 The output should be:
 
 ```json
-{"bss-status":"running"}
+{
+  "bss-status": "running"
+}
 ```
 
 {{< callout context="tip" title="Tip" icon="outline/bulb" >}}
@@ -1215,7 +1232,7 @@ regenerated, run the above command.
    systemctl list-dependencies openchami.target
    ```
    should yield:
-   ```bash
+   ```
    openchami.target
    ● ├─acme-deploy.service
    ● ├─acme-register.service
@@ -1236,19 +1253,25 @@ regenerated, run the above command.
    ● ├─smd.service
    ● └─step-ca.service
    ```
-1. ```
-   ochami bss service status
+2. ```bash
+   ochami bss service status | jq
    ```
    should yield:
+   ```json
+   {
+     "bss-status": "running"
+   }
    ```
-   {"bss-status":"running"}
-   ```
-1. ```
-   ochami smd service status
+
+3. ```bash
+   ochami smd service status | jq
    ```
    should yield:
-   ```
-   {"code":0,"message":"HSM is healthy"}
+   ```json
+   {
+     "code": 0,
+     "message": "HSM is healthy"
+   }
    ```
 
 ## Part 2. Configuration
@@ -1390,9 +1413,8 @@ sudo mkdir -p /etc/openchami/data
 
 Then, create a static discovery file there.
 
-**Edit as root: `/etc/openchami/data/nodes.yaml`**
-
-```yaml {title="/etc/openchami/data/nodes.yaml"}
+```bash
+sudo tee /etc/openchami/data/nodes.yaml > /dev/null << EOF
 bmcs:
 - xname: x1000c0s0b0
   mac: de:ca:fc:0f:fe:e1
@@ -1466,6 +1488,7 @@ nodes:
     ip_addrs:
     - name: management
       ip_addr: 172.16.0.5
+EOF
 ```
 
 Now, run the following to populate SMD with the node information:
@@ -1555,12 +1578,6 @@ into:
 - SquashFS images served through S3 (served to nodes)
 - Container images served through OCI registries (used as parent layers for child image layers)
 
-Create a directory for the cluster's image configs.
-
-```bash
-sudo mkdir -p /etc/openchami/data/images
-cd /etc/openchami/data/images
-```
 
 #### 2.3.1 Preparing Tools
 
@@ -1625,7 +1642,7 @@ access credentials, let's pull in the server environment file and generate
 source <(sudo cat /etc/versitygw/secrets.env)
 
 # Create the s3cmd config file
-cat <<EOF | tee "${HOME}/.s3cfg"
+cat << EOF | tee "${HOME}/.s3cfg"
 # Setup endpoint
 host_base = demo.openchami.cluster:7070
 host_bucket = demo.openchami.cluster:7070
@@ -1640,6 +1657,8 @@ secret_key = ${ROOT_SECRET_KEY}
 signature_v2 = False
 EOF
 ```
+
+In the output, verify that the keys were set with the variables' contents.
 
 We also will briefly need to use the `aws` CLI to ensure proper configuration
 of ACLs for `versitygw` buckets as the XML schema used by `s3cmd` for this
@@ -1670,9 +1689,8 @@ s3://boot-images/: Bucket Object Ownership updated
 
 Set the policy to allow public downloads from the `boot-images` bucket:
 
-**Edit as normal user: `/opt/workdir/s3-public-read-boot.json`**
-
-```json {title="/opt/workdir/s3-public-read-boot.json"}
+```bash
+cat << EOF > /opt/workdir/s3-public-read-boot.json
 {
   "Version":"2012-10-17",
   "Statement":[
@@ -1684,6 +1702,7 @@ Set the policy to allow public downloads from the `boot-images` bucket:
     }
   ]
 }
+EOF
 ```
 
 Apply the policy in S3:
@@ -1776,6 +1795,7 @@ Create a working directory for the image configs:
 
 ```bash
 sudo mkdir -p /etc/openchami/data/images
+cd /etc/openchami/data/images
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
@@ -1816,9 +1836,8 @@ When pasting, you may have to configure your editor to not apply indentation
 rules (`:set paste` in Vim, `:set nopaste` to switch back).
 {{< /callout >}}
 
-**Edit as root: `/etc/openchami/data/images/rocky-base-9.yaml`**
-
-```yaml {{title="/etc/openchami/data/images/rocky-base-9.yaml"}
+```bash
+sudo tee /etc/openchami/data/images/rocky-base-9.yaml > /dev/null << EOF
 options:
   layer_type: 'base'
   name: 'rocky-base'
@@ -1851,8 +1870,9 @@ packages:
   - wget
 
 cmds:
-  - cmd: 'dracut --add "dmsquash-live livenet network-manager" --kver $(basename /lib/modules/*) -N -f --logfile /tmp/dracut.log 2>/dev/null'
+  - cmd: 'dracut --add "dmsquash-live livenet network-manager" --kver \$(basename /lib/modules/*) -N -f --logfile /tmp/dracut.log 2>/dev/null'
   - cmd: 'echo DRACUT LOG:; cat /tmp/dracut.log'
+EOF
 ```
 
 Notice that this image is pushed to the OCI registry, but not S3. This is
@@ -1932,9 +1952,8 @@ built before as the parent layer. In this compute image layer, the stock Rocky
 9 image is being pulled and packages are added on top of it that will be common
 for all compute nodes.
 
-**Edit as root: `/etc/openchami/data/images/compute-base-rocky9.yaml`**
-
-```yaml {title="/etc/openchami/data/images/compute-base-rocky9.yaml"}
+```bash
+sudo tee /etc/openchami/data/images/compute-base-rocky9.yaml > /dev/null << EOF
 options:
   layer_type: 'base'
   name: 'compute-base'
@@ -1973,6 +1992,7 @@ packages:
   - tcpdump
   - traceroute
   - vim
+EOF
 ```
 
 Notice that this time, the image is pushed both to the OCI registry _and_ S3.
@@ -2089,9 +2109,8 @@ console. This will be useful later on when debugging potential post-boot
 configuration issues (e.g. SSH keys weren't provisioned and so login is
 impossible).
 
-**Edit as root: `/etc/openchami/data/images/compute-debug-rocky9.yaml`**
-
-```yaml {title="/etc/openchami/data/images/compute-debug-rocky9.yaml"}
+```bash
+sudo tee /etc/openchami/data/images/compute-debug-rocky9.yaml > /dev/null << EOF
 options:
   layer_type: base
   name: compute-debug
@@ -2111,7 +2130,8 @@ packages:
   - shadow-utils
 
 cmds:
-  - cmd: "useradd -mG wheel -p '$6$VHdSKZNm$O3iFYmRiaFQCemQJjhfrpqqV7DdHBi5YpY6Aq06JSQpABPw.3d8PQ8bNY9NuZSmDv7IL/TsrhRJ6btkgKaonT.' testuser"
+  - cmd: "useradd -mG wheel -p '\$6\$VHdSKZNm\$O3iFYmRiaFQCemQJjhfrpqqV7DdHBi5YpY6Aq06JSQpABPw.3d8PQ8bNY9NuZSmDv7IL/TsrhRJ6btkgKaonT.' testuser"
+EOF
 ```
 
 The debug image uses a few different directives that are worth drawing attention to:
@@ -2373,7 +2393,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | s
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
@@ -2744,7 +2764,7 @@ Create `ci-defaults.yaml`, setting the cluster-wide default values including
 the SSH key created above:
 
 ```bash
-cat <<EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
+cat << EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
 ---
 base-url: "http://172.16.0.254:8081/cloud-init"
 cluster-name: "demo"
@@ -2788,7 +2808,7 @@ The output should be:
   "public-keys": [
     "<YOUR SSH KEY>"
   ],
-  "short-name": "nid"
+  "short-name": "de"
 }
 ```
 
@@ -2801,9 +2821,8 @@ simple config that only sets created SSH key for the root user can be created.
 First, create a templated cloud-config file. Create `ci-group-compute.yaml`
 with the following contents:
 
-**Edit as root: `/etc/openchami/data/cloud-init/ci-group-compute.yaml`**
-
-```yaml {title="/etc/openchami/data/cloud-init/ci-group-compute.yaml"}
+```bash
+sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml > /dev/null << EOF
 - name: compute
   description: "compute config"
   file:
@@ -2820,6 +2839,7 @@ with the following contents:
         - name: root
           ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
       disable_root: false
+EOF
 ```
 
 Now, set this configuration for the compute group:
@@ -2876,6 +2896,7 @@ merge_how:
 users:
   - name: root
     ssh_authorized_keys: ['<SSH_KEY>']
+disable_root: false
 ```
 
 ### 2.7.3 (_OPTIONAL_) Configure Node-Specific Meta-Data
@@ -2970,7 +2991,7 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/base | awk '{print $4}' | se
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat <<EOF | sudo tee /etc/openchami/data/boot/bss/compute-base-rocky9.yaml
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-base-rocky9.yaml
 ---
 kernel: '${URI_KERNEL}'
 initrd: '${URI_INITRAMFS}'
