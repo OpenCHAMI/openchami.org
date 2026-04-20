@@ -1,5 +1,13 @@
 # OpenCHAMI.org website
 
+## Container (optional)
+
+A container can be used to perform development.
+
+```bash
+docker run -p 8080:8080 -u node -it node:22 bash
+```
+
 ## To develop locally
 
 1. Clone this repository
