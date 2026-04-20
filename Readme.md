@@ -4,6 +4,14 @@
 
 A container can be used to perform development.
 
+For development:
+
+```bash
+docker run -p 1313:1313 -u node -it node:22 bash
+```
+
+For preview:
+
 ```bash
 docker run -p 8080:8080 -u node -it node:22 bash
 ```
@@ -42,6 +50,7 @@ npm run build
 
 Preview production build
 ```bash
+npm install http-server
 npm run preview
 ```
 
