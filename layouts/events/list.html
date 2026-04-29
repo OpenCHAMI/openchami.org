@@ -4,7 +4,15 @@
   <h1 style="margin-bottom: 40px;">Events</h1>
 
   {{ $now := now }}
-  {{ $events := where site.RegularPages "Section" "events" }}
+  {{/* Include leaf pages and branch bundle _index.md pages under events that have start/end dates */}}
+  {{ $regularEvents := where site.RegularPages "Section" "events" }}
+  {{ $sectionEvents := slice }}
+  {{ range where site.Pages "Kind" "section" }}
+    {{ if and (eq .Section "events") (ne .RelPermalink "/events/") .Params.start_date .Params.end_date }}
+      {{ $sectionEvents = $sectionEvents | append . }}
+    {{ end }}
+  {{ end }}
+  {{ $events := union $regularEvents $sectionEvents }}
 
   <!-- Upcoming Events -->
   <h2 style="margin-top: 40px; margin-bottom: 20px;">Upcoming Events</h2>
@@ -36,7 +44,7 @@
   <h2 style="margin-top: 60px; margin-bottom: 20px;">Past Events</h2>
   {{ $past := slice }}
   {{ range $events }}
-    {{ if or (not .Params.start_date) (not .Params.end_date) (lt (time .Params.end_date) $now) }}
+    {{ if and (.Params.start_date) (.Params.end_date) (lt (time .Params.end_date) $now) }}
       {{ $past = $past | append . }}
     {{ end }}
   {{ end }}
