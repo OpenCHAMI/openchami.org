@@ -41,6 +41,8 @@ contributors = ["Alex Lovell-Troy",]
 **Venue:** Elvin Hall, UCL Institute of Education  
 **Morning Chair:** Camilla Harris | **Afternoon Chair:** Tom Green
 
+**Sponsored Dinner hosted by Cosmic Labs** Register with [Luma](https://luma.com/pzhh6qt2)
+
 | Time | Session | Speaker(s) |
 |---|---|---|
 | 09:00–09:40 | Host Welcome and Logistics | Hosts (UCL, Bristol, Cambridge) |
@@ -78,12 +80,12 @@ contributors = ["Alex Lovell-Troy",]
 | 09:00–09:20 | Host Session: Day 2 Welcome and Objectives | Hosts (UCL, Bristol, Cambridge) |
 | 09:20–09:40 | How Cambridge Manages Systems Today | Wojciech Turek |
 | 09:40–10:00 | Converting from CSM to OpenCHAMI | Alex Lovell-Troy |
-| 10:00–10:20 | Deploying OpenCHAMI with Kubernetes | Chris Harris |
+| 10:00-10:20 | Operational Discussion: Migration Risks and Recovery Plans | Alex Lovell-Troy |
 | 10:20–10:40 | UK/EU Research Needs Discussion (including TRE requirements) | Camilla Harris |
 | 10:40–11:00 | Morning Break | — |
 | 11:00–11:20 | Sovereign AI in UK/EU: Operational Requirements | Tom Green |
-| 11:20–11:40 | Operational Discussion: Migration Risks and Recovery Plans | Panel |
-| 11:40–12:00 | Operational Q&A and Day 2 Midday Summary | Panel |
+| 11:20–11:40 | Deploying OpenCHAMI with Kubernetes | Chris Harris |
+| 11:40–12:00 | Operational Q&A | Panel |
 | 12:00–13:00 | Lunch | — |
 | 13:00–13:40 | AI Session Kickoff: Objectives and Scope | Alex Lovell-Troy and Alexandre Escoubas |
 | 13:40–14:00 | Claude Code Demo | Alex Lovell-Troy and Alexandre Escoubas |
