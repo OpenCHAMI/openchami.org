@@ -47,8 +47,8 @@ contributors = ["Alex Lovell-Troy",]
 |---|---|---|
 | 09:00–09:40 | Host Welcome and Logistics | Hosts (UCL, Bristol, Cambridge) |
 | 09:40–10:00 | How UCL Runs Systems | Camilla Harris |
-| 10:00–10:20 | Vendor Lightning Session | Vendor representatives from HPE and Dell |
-| 10:20–10:40 | Site/Partner Updates | Site representatives |
+| 10:00–10:30 | Vendor Lightning Session | Vendor representatives from HPE and Dell |
+| 10:30–10:40 | Site/Partner Updates | Site representatives |
 | 10:40–11:00 | CSM to OpenCHAMI – the Non-Technical Challenges | Johnathan Hermann |
 | 11:00–11:20 | Morning Break | — |
 | 11:20–11:40 | HPSF and Linux Foundation Context for OpenCHAMI | Tom Green |
