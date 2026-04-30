@@ -27,9 +27,9 @@ contributors = ["Alex Lovell-Troy",]
 | 13:20–13:50 | HPC and AI Data Centre Infrastructure | Wojciech Turek |
 | 13:50–14:50 | Data Centre Tours | Co-chairs |
 | 14:50–15:00 | Mid-afternoon Networking Break | Co-chairs |
-| 15:00–15:30 | Cloud-native HPC and AI Stack | TBD |
+| 15:00–15:30 | Cloud-native HPC and AI Stack | Adam Walford |
 | 15:30–16:00 | AI Research Resource (AIRR) at Cambridge | Deepak Aggarwal |
-| 16:00–16:30 | Large Language Model Operations (LLMOps) | Yiannos Stathopoulos |
+| 16:00–16:30 | Large Language Model Operations (LLMOps) | Dominic Friend |
 | 16:30+ | Depart / Social Opportunity | Co-chairs |
 
 ---
