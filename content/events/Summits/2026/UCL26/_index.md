@@ -19,7 +19,6 @@ aliases = ["/events/summits/ucl-2026/", "/ucl26/"]
 | **Main Summit** | May 7–8 at UCL |
 | **Venue** | UCL Institute of Education, 20 Bedford Way, London WC1H 0AL |
 | **Hosts** | UCL, Bristol, Cambridge |
-| **Registration** | [Register on Pretix](https://pretix.eu/ARC/ochami-ucl-2026/) — capacity is limited |
 | **Slack** | [#2026-uk-dev-summit](https://openchami.slack.com/archives/C09V62C7DGX) |
 
 **→ [Full Schedule](schedule/)** | **→ [Location & Travel](location/)**

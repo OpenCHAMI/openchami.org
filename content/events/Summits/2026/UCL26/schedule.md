@@ -46,7 +46,7 @@ contributors = ["Alex Lovell-Troy",]
 | Time | Session | Speaker(s) |
 |---|---|---|
 | 09:00–09:40 | Host Welcome and Logistics | Hosts (UCL, Bristol, Cambridge) |
-| 09:40–10:00 | How UCL Runs Systems | Camilla Harris |
+| 09:40–10:00 | UCL's TRE Project | George Svarovsky |
 | 10:00–10:30 | Vendor Lightning Session | Vendor representatives from HPE and Dell |
 | 10:30–10:40 | Site/Partner Updates | Site representatives |
 | 10:40–11:00 | CSM to OpenCHAMI – the Non-Technical Challenges | Johnathan Hermann |
@@ -56,7 +56,7 @@ contributors = ["Alex Lovell-Troy",]
 | 12:00–12:20 | Virtual Multi-Node Testing with OpenStack | Stig Telfer |
 | 12:20–13:20 | Lunch | — |
 | 13:20–13:40 | Operations Talk: Site Bring-up and Baseline Practices | Speaker TBD |
-| 13:40–14:00 | Operations Talk: Authentication and Access Patterns | Speaker TBD |
+| 13:40–14:00 | OpenCHAMI with Talos | Tiziano Mueller |
 | 14:00–14:20 | Operations Talk: Image Lifecycle and Recovery Workflow | Speaker TBD |
 | 14:20–14:40 | Operations Roundtable and Q&A | Panel |
 | 14:40–15:00 | UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1) | UK/EU site representatives |
