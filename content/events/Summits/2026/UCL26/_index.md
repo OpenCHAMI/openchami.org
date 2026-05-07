@@ -65,15 +65,11 @@ aliases = ["/events/summits/ucl-2026/", "/ucl26/"]
 
 ---
 
-## Registration
-
-Registration is required. **[Register on Pretix](https://pretix.eu/ARC/ochami-ucl-2026/)** — spots are limited, especially for the optional Day 0 at Cambridge.
-
----
-
 ## Sponsors
 
 We're grateful to our sponsors for supporting the OpenCHAMI Developer Summit. If your organization is interested in sponsoring, contact us at [contact@openchami.org](mailto:contact@openchami.org).
+
+Special thanks to CosmicLabs for hosting a dinner for summit attendees.
 
 ---
 

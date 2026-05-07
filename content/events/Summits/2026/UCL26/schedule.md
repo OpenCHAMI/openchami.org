@@ -55,7 +55,7 @@ contributors = ["Alex Lovell-Troy",]
 | 11:40–12:00 | UK/EU Growth Update for OpenCHAMI | Tom Green |
 | 12:00–12:20 | Virtual Multi-Node Testing with OpenStack | Stig Telfer |
 | 12:20–13:20 | Lunch | — |
-| 13:20–13:40 | Operations Talk: Site Bring-up and Baseline Practices | Speaker TBD |
+| 13:20–13:40 | Community Delevelopment and Discussion | Alex Lovell-Troy |
 | 13:40–14:00 | OpenCHAMI with Talos | Tiziano Mueller |
 | 14:00–14:20 | Operations Talk: Image Lifecycle and Recovery Workflow | Speaker TBD |
 | 14:20–14:40 | Operations Roundtable and Q&A | Panel |
