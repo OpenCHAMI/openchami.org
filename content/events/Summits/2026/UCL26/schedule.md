@@ -57,10 +57,7 @@ contributors = ["Alex Lovell-Troy",]
 | 12:20–13:20 | Lunch | — |
 | 13:20–13:40 | Community Delevelopment and Discussion | Alex Lovell-Troy |
 | 13:40–14:00 | OpenCHAMI with Talos | Tiziano Mueller |
-| 14:00–14:20 | Operations Talk: Image Lifecycle and Recovery Workflow | Speaker TBD |
-| 14:20–14:40 | Operations Roundtable and Q&A | Panel |
-| 14:40–15:00 | UK/EU Sites Panel: Current OpenCHAMI Experience (Part 1) | UK/EU site representatives |
-| 15:00–15:20 | UK/EU Sites Panel: Plans for the Next Year (Part 2) | UK/EU site representatives |
+| 14:00–15:20 | Community Driven Discussion | Host: Alex Lovell-Troy |
 | 15:20–15:40 | Afternoon Break | — |
 | 15:40–16:20 | Project Review: Current Developments from LANL Needs | Alex Lovell-Troy |
 | 16:20–16:40 | Open Discussion: Priorities and Risks for 2026 | Alex Lovell-Troy and Hosts |
