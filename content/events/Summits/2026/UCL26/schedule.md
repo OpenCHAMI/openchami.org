@@ -77,9 +77,8 @@ contributors = ["Alex Lovell-Troy",]
 | Time | Session | Speaker(s) |
 |---|---|---|
 | 09:00–09:20 | Host Session: Day 2 Welcome and Objectives | Hosts (UCL, Bristol, Cambridge) |
-| 09:20–09:40 | How Cambridge Manages Systems Today | Wojciech Turek |
-| 09:40–10:00 | Converting from CSM to OpenCHAMI | Alex Lovell-Troy |
-| 10:00-10:20 | Operational Discussion: Migration Risks and Recovery Plans | Alex Lovell-Troy |
+| 09:20–09:50 | How Cambridge Manages Systems Today | Wojciech Turek |
+| 09:50–10:20 | Converting from CSM to OpenCHAMI | Alex Lovell-Troy |
 | 10:20–10:40 | UK/EU Research Needs Discussion (including TRE requirements) | Camilla Harris |
 | 10:40–11:00 | Morning Break | — |
 | 11:00–11:20 | Sovereign AI in UK/EU: Operational Requirements | Tom Green |
