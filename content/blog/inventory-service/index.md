@@ -89,7 +89,7 @@ After=hydra-gen-jwks.service
 [Container]
 ContainerName=inventory-service
 HostName=inventory
-Image=localhost/inventory-service:latest
+Image=ghcr.io/openchami/inventory-service:0.1.0
 
 # Environment Variables
 EnvironmentFile=/etc/openchami/configs/openchami.env
@@ -110,44 +110,58 @@ Restart=always
 
 ### Run from local binary
 
-```
+```bash
 make build
 ```
-```
+```bash
+rm -rf data
 mkdir -p data
 ```
-```
-./bin/inventory-service-server serve --database-url "file:data/inventory-service.db?_fk=1"
+```bash
+./bin/inventory-service serve --database-url "file:data/inventory-service.db?_fk=1"
 ```
 
 See the learn by example section in [Fabrica](https://github.com/OpenCHAMI/fabrica?tab=readme-ov-file#-learn-by-example)
 
 ### Run using docker image
-```
-make build image
-```
-```
+
+```bash
+rm -rf data
 mkdir -p data
 ```
+```bash
+docker run --rm --name inventory-service -d -p 8080:8080 -v $(pwd)/data:/data ghcr.io/openchami/inventory-service:0.1.0
 ```
-docker run --rm --name inventory-service -d -p 8080:8080 -v $(pwd)/data:/data inventory-service:latest
+fabrica style
+```bash
+curl -s -X GET http://localhost:8080/components | jq
+```
+SMD style
+```bash
+curl -s -X GET http://localhost:8080/hsm/v2/State/Components | jq
+```
+
+Stop the inventory container
+```bash
+docker container stop inventory-service
 ```
 
 #### Example building locally
-```
+```bash
 make build image
 ```
-```
+```bash
+rm -rf data
 mkdir -p data
 ```
 ```
 docker run --rm --name inventory-service -d -p 8080:8080 -v $(pwd)/data:/data inventory-service:latest
 ```
 SMD style request for the component resource
-```
+```bash
 curl -s -X GET http://localhost:8080/hsm/v2/State/Components | jq
 ```
-```
+```json
 {
   "Components": []
 }
@@ -257,6 +271,7 @@ In the future we may improve this.
 `resource_id` is an internal field. For Components this contains the same value as the ID field.
 
 
+Stop the inventory container
 ```
 docker stop inventory-service
 ```
@@ -273,7 +288,7 @@ services:
 # Inventory Service Container
 ###
   inventory-service:
-    image: inventory-service:latest
+    image: ghcr.io/openchami/inventory-service:0.1.0
     container_name: inventory-service
     hostname: inventory
     networks:
@@ -294,11 +309,11 @@ This does does the following
 
 Here is an example of running the parts of this test
 
-```
+```bash
 make all
 make start-inventory-and-smd
 ```
-```
+```bash
 docker ps --no-trunc --format "table {{.Names}}\t{{.Status}}\t{{.Command}}"
 ```
 ```
@@ -312,7 +327,7 @@ rf-x0c0s4b0         Up 22 seconds             "python3 emulator.py"
 inventory-service   Up 22 seconds             "/usr/local/bin/inventory-service serve --port 8080 --database-url file:/data/inventory.db?_fk=1"
 ```
 Run the tests. SMD will discover the nodes, the resources will be POSTed to the Inventory Service, and then the Resources in SMD and Inventory Service will be compared
-```
+```bash
 docker run --rm -it --network inventory_internal inventory-test:latest
 ```
 ```
@@ -331,10 +346,10 @@ The `inventory-test:latest` image can be used to make curl calls to the Inventor
 
 SMD style REST call to Inventory
 
-```
+```bash
 docker run --rm -t --network inventory_internal inventory-test:latest sh -c 'curl -s -X GET http://inventory:8080/hsm/v2/State/Components' | jq -c '.Components[] | { "ID": .ID, "Type": .Type }'
 ```
-```
+```json
 {"ID":"x0c0s1e0","Type":"NodeEnclosure"}
 {"ID":"x0c0s1b0n0","Type":"Node"}
 {"ID":"x0c0s1b0","Type":"NodeBMC"}
@@ -353,10 +368,10 @@ docker run --rm -t --network inventory_internal inventory-test:latest sh -c 'cur
 ```
 
 OpenCHAMI (Fabrica) style REST call to Inventory
-```
+```bash
 docker run --rm -t --network inventory_internal inventory-test:latest sh -c 'curl -s -X GET http://inventory:8080/components' | jq -c '.[] | { "kind": .kind, "metadata": { "name": .metadata.name }, "spec" : {"ID": .spec.ID, "Type": .spec.Type} }'
 ```
-```
+```json
 {"kind":"Component","metadata":{"name":"x0c0s1e0"},"spec":{"ID":"x0c0s1e0","Type":"NodeEnclosure"}}
 {"kind":"Component","metadata":{"name":"x0c0s1b0n0"},"spec":{"ID":"x0c0s1b0n0","Type":"Node"}}
 {"kind":"Component","metadata":{"name":"x0c0s1b0"},"spec":{"ID":"x0c0s1b0","Type":"NodeBMC"}}
@@ -375,11 +390,11 @@ docker run --rm -t --network inventory_internal inventory-test:latest sh -c 'cur
 ```
 
 REST call to SMD
-```
+```bash
 docker run --rm -t --network inventory_internal inventory-test:latest sh -c 'curl -s -X GET http://smd:27779/hsm/v2/State/Components' | jq -c '.Components[] | { "ID": .ID, "Type": .Type }'
 ```
 
-```
+```bash
 make stop-inventory-and-smd
 ```
 
