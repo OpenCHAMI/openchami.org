@@ -6,28 +6,62 @@
       {{ with .Content }}<div class="lead">{{ . }}</div>{{ end }}
     </header>
 
-    {{/* Collect pages from content/news/weekly (this branch) */}}
+    {{/* Collect pages from content/news/weekly (this branch only — excludes any
+         pages under sub-sections like /news/weekly/archive/) */}}
     {{ $weekly := where (where site.RegularPages "File.Dir" "in" "/news/weekly/") "Section" "news" }}
     {{ $sorted := sort $weekly "Date" "desc" }}
 
     {{ if not (gt (len $weekly) 0) }}
       <p>No weekly updates found yet.</p>
     {{ else }}
-      <div class="list-group list-group-flush">
-        {{ range $sorted }}
-          <article class="list-group-item px-0">
-            <h2 class="h5 mb-1"><a class="stretched-link text-decoration-none" href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-            <div class="post-meta small text-muted mb-2">
-              <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
-            </div>
-            {{ with .Params.summary }}
-              <p class="mb-0">{{ . }}</p>
-            {{ else }}
-              {{ with .Summary }}<p class="mb-0">{{ . }}</p>{{ end }}
-            {{ end }}
-          </article>
-        {{ end }}
+      {{ $latest := index $sorted 0 }}
+      {{ $recent := after 1 $sorted | first 5 }}
+
+      {{/* Latest update — rendered in full */}}
+      <article class="latest-update mb-5">
+        <h2 class="mb-2">
+          <a href="{{ $latest.RelPermalink }}" class="text-decoration-none">{{ $latest.Title }}</a>
+        </h2>
+        <div class="post-meta small text-muted mb-3">
+          <time datetime="{{ $latest.Date.Format "2006-01-02" }}">{{ $latest.Date.Format "Jan 2, 2006" }}</time>
+        </div>
+        <div class="content">
+          {{ $latest.Content }}
+        </div>
+      </article>
+
+      {{/* Recent updates list */}}
+      {{ if gt (len $recent) 0 }}
+      <section class="recent-updates mt-5 pt-4 border-top">
+        <h2 class="h4 mb-3">Recent updates</h2>
+        <div class="list-group list-group-flush">
+          {{ range $recent }}
+            <article class="list-group-item px-0">
+              <h3 class="h5 mb-1"><a class="stretched-link text-decoration-none" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+              <div class="post-meta small text-muted mb-2">
+                <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+              </div>
+              {{ with .Params.summary }}
+                <p class="mb-0">{{ . }}</p>
+              {{ else }}
+                {{/* Skip the leading "OpenCHAMI Weekly Digest" H1 (3 words), then take ~40 words. */}}
+                {{ $excerpt := delimit (first 40 (after 3 .PlainWords)) " " }}
+                {{ with $excerpt }}<p class="mb-0 text-muted">{{ . }}…</p>{{ end }}
+              {{ end }}
+            </article>
+          {{ end }}
+        </div>
+      </section>
+      {{ end }}
+
+      {{/* Archive link — only when there are older digests beyond the latest + recent */}}
+      {{ if gt (len $sorted) 6 }}
+      <div class="archive-link mt-4 text-center">
+        <a href="/news/weekly/archive/" class="btn btn-outline-primary">
+          Browse the full archive ({{ len $sorted }} updates) &rarr;
+        </a>
       </div>
+      {{ end }}
     {{ end }}
   </div>
 </div>
