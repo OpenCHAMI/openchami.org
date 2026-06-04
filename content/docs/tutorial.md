@@ -1187,7 +1187,7 @@ The cluster should now be able to be communicated with. Verify by checking the
 status of one of the services:
 
 ```bash
-curl https://demo.openchami.cluster:8443/boot-service/health
+ochami boot service status
 ```
 
 The output should be:
@@ -1243,7 +1243,7 @@ export DEMO_ACCESS_TOKEN=$(sudo podman exec tokensmith /bin/sh -c "/usr/local/bi
 ```
 
 {{< callout context="tip" title="Tip" icon="outline/bulb" >}}
-**Keep this command handy! Tokens expire after a short period of time.**
+**Keep this command handy! Tokens expire after an hour.**
 
 If the following output is observed:
 ```
@@ -2397,7 +2397,7 @@ To set boot parameters using the BSS backend, it's necessary to pass:
 
    ***OR:***
 
-   4. A file containing the boot parameter data (this method will be used here)
+   4. A file containing the boot parameter data in YAML or JSON (this method will be used here)
 
 #### 2.5.1 Create the Boot Configuration
 
@@ -2407,9 +2407,35 @@ Create a directory for the boot configs:
 sudo mkdir -p /etc/openchami/data/boot
 ```
 
-Then, create the payload for boot-service,
-**/etc/openchami/data/boot/compute-debug-rocky9.yaml**, that contains the
+Then, create the payload file for boot-service,
+either **/etc/openchami/data/boot/compute-debug-rocky9.yaml** or **/etc/openchami/boot/compute-debug-rocky9.json**, that contains the
 URIs for the boot artifacts:
+
+{{< tabs "Payload File" >}}
+{{< tab "YAML" >}}
+
+```bash
+URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
+URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
+URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
+URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
+---
+kernel: '${URI_KERNEL}'
+initrd: '${URI_INITRAMFS}'
+params: 'nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+macs:
+  - 52:54:00:be:ef:01
+  - 52:54:00:be:ef:02
+  - 52:54:00:be:ef:03
+  - 52:54:00:be:ef:04
+  - 52:54:00:be:ef:05
+EOF
+```
+
+{{< /tab >}}
+
+{{< tab "JSON" >}}
 
 ```bash
 URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
@@ -2432,12 +2458,18 @@ cat << EOF | sudo tee /etc/openchami/data/boot/compute-debug-rocky9.json
 EOF
 ```
 
+{{< /tab >}}
+{{< /tabs >}}
+
 Examine the `tee` output to make sure that the URIs got populated properly. For example:
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
 The file will not look like the one below due to differences in kernel versions
 over time. Be sure to update with the output of `s3cmd ls` as stated above!
 {{< /callout >}}
+
+{{< tabs "Output verification" >}}
+{{< tab "JSON" >}}
 
 ```json
 {
@@ -2452,10 +2484,25 @@ over time. Be sure to update with the output of `s3cmd ls` as stated above!
   "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.47.1.el9_7.x86_64",
   "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.47.1.el9_7.x86_64.img"
 }
-
 ```
 
-Now, we set the boot configuration using one of the backends below.
+{{< /tab >}}
+{{ tab "YAML" }}
+
+```yaml
+kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
+initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
+params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+macs:
+  - 52:54:00:be:ef:01
+  - 52:54:00:be:ef:02
+  - 52:54:00:be:ef:03
+  - 52:54:00:be:ef:04
+  - 52:54:00:be:ef:05
+```
+
+{{ /tab }}
+{{< /tabs >}}
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 `ochami` supports both `add` and `set`.  The difference is idempotency.  If
@@ -2463,70 +2510,71 @@ using the `add` command, `boot-service` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
 
+Now, we set the boot configuration using one of the backends below.
+
+{{< tabs "Set Boot Config" >}}
+
+{{< tab "Using YAML" >}}
+
+If you created the payload file in YAML, you can only use `ochami` to set the
+boot config since the `boot-service` CLI can only be set in JSON.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" > }}
+
 Update the `ochami` config to set the `boot-service` URI. We will need set this
-to make requests to `boot-service` through haproxy.
+to make requests to `boot-service` through haproxy with `ochami`.
 
 ```bash
-sudo ochami config --system cluster set demo boot-service.uri: /boot-service
+sudo ochami config --system cluster set demo boot-service.uri /boot-service
 ```
 
-Setting the boot configuration with the `boot-service` backend is a little
-different than with the BSS backend. Instead of using the `ochami` client, we
-will be using the client generated for `boot-service` with `fabrica`.
-Unfortunately, the client command can only take a JSON value with the `--spec`
-flag and cannot be set using a file. However, for the purpose of this tutorial,
-we will create a file to make comparing this method to the `ochami` easier.
-
-**Edit as root:** **`/etc/openchami/data/boot/compute-debug-rocky9.json`**
-
-```json
-{
-  "macs": [
-    "52:54:00:be:ef:01",
-    "52:54:00:be:ef:02",
-    "52:54:00:be:ef:03",
-    "52:54:00:be:ef:04",
-    "52:54:00:be:ef:05"
-  ],
-  "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
-  "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64",
-  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img"
-
-}
-```
-
-Notice that the values in this file should be the same values from section
-2.5.2.a but in JSON.
-
-The things to check are:
-
-- `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
-- `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
-- `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
-
-Set the boot configuration and verify with the `ochami` or `boot-service` client.
-
-Using the `ochami` CLI:
+{{< /callout >}}
 
 ```bash
-# Set/add the boot configuration
 ochami boot config add -d @/etc/openchami/data/boot/compute-debug-rocky9.json --uri https://demo.openchami.cluster:8443 -l debug
+```
 
-# Verify that it was set properly
+Verify that it was set properly.You should see the contents in JSON.
+
+```bash
 ochami boot config list -F json-pretty
 ```
 
-Or using the generated `boot-service` CLI:
+{{< /tab >}}
+
+{{< tab "Using JSON" >}}
+
+If you created the payload file in JSON, you can use either `ochami` with the
+`-f json` flag or the `boot-service` CLI to set the boot config.
+
+To set with `ochami` using the `config add` subcommand:
 
 ```bash
 # Set/add the boot configuration
-boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.json) --server https://demo.openchami.cluster:8443
-
-# Verify that it was set properly
-boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
+ochami boot config add -d @/etc/openchami/data/boot/compute-debug-rocky9.json --uri https://demo.openchami.cluster:8443 -l debug -f json
 ```
 
+Verify that it was set properly.You should see the contents in JSON.
 
+```bash
+ochami boot config list -F json-pretty
+```
+
+To set with the `boot-service` CLI with the `create` subcommand:
+
+```bash
+boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.json) --server https://demo.openchami.cluster:8443
+```
+
+Verify that it was set properly
+
+```bash
+boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
+```
+{{< /tab >}}
+
+{{< /tabs >}}
+ 
 The things to check are:
 
 - `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
