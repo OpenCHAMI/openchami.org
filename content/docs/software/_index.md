@@ -13,7 +13,7 @@ sidebar:
 ---
 
 {{< callout context="tip" title="Did you know?" icon="rocket" >}}
-The [OpenCHAMI quickstart](https://github.com/openchami/deployment-recipes/) has been used to boot over 600 compute nodes in about five minutes, including POST!.
+The [OpenCHAMI Tutorial](/docs/tutorial/) has been used to boot over 600 compute nodes in about five minutes, including POST!
 {{< /callout >}}
 
 

@@ -37,12 +37,15 @@ You want to see OpenCHAMI running today, not next month. This mini bootcamp is t
 
 ## Configure once, then run
 
-The deployment recipes use a small, readable inventory and a few group_vars files. You’ll set your hostname, cluster shortname, and one or two items like an SSH pubkey if you plan to use cloud‑init to inject keys later. Everything else is sane defaults for a local install.
+The deployment recipes use a small, readable inventory and a few group_vars files. You'll set your hostname, cluster shortname, and one or two items like an SSH pubkey if you plan to use cloud‑init to inject keys later. Everything else is sane defaults for a local install.
+
+**Note**: This blog post describes a legacy LANL-specific deployment. For current instructions, see the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/).
 
 The only commands you need (≤4)
 We keep this tight. Clone the recipes, apply configs, then bring everything up.
 
 ```bash
+# Legacy LANL deployment (deprecated - see tutorial for current instructions)
 git clone https://github.com/OpenCHAMI/deployment-recipes.git && cd deployment-recipes/lanl/podman-quadlets
 ansible-playbook -l $HOSTNAME -c local -i inventory -t configs ochami_playbook.yaml
 ansible-playbook -l $HOSTNAME -c local -i inventory ochami_playbook.yaml
@@ -101,7 +104,8 @@ This isn’t image building or full cluster operations. It’s the shortest path
 
 ## References
 
-- Recipes: https://github.com/OpenCHAMI/deployment-recipes
+- Tutorial (recommended): https://openchami.org/docs/tutorial/
+- Recipes (legacy): https://github.com/OpenCHAMI/deployment-recipes
 - Org: https://github.com/OpenCHAMI
 - Docs: https://openchami.org/docs
 

@@ -17,9 +17,18 @@ toc: true
 
 ### 0.1. Overview
 
-This tutorial focuses on setting up OpenCHAMI in a virtual environment such that
-the reader may become familiar with the basics of using OpenCHAMI and apply
-learned concepts to real deployments.
+This tutorial is the **recommended starting point** for new users. It focuses on
+setting up OpenCHAMI in a virtual environment such that the reader may become
+familiar with the basics of using OpenCHAMI and apply learned concepts to real
+deployments.
+
+OpenCHAMI supports multiple deployment methods. This tutorial uses Podman
+Quadlets and the [Release RPM](https://github.com/OpenCHAMI/release), but you
+can also deploy using:
+
+- [Kubernetes (kube-deploy)](https://github.com/OpenCHAMI/kube-deploy)
+- [Kubernetes Operator (openchami-operator)](https://github.com/OpenCHAMI/openchami-operator)
+- Organization-specific recipes in [deployment-recipes](https://github.com/OpenCHAMI/deployment-recipes) *(not recommended for new users)*
 
 ### 0.2. Setup
 

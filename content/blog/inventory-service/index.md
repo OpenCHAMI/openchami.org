@@ -278,7 +278,7 @@ docker stop inventory-service
 
 ### Run in the quickstart
 
-This shows how to run in the [quickstart guide](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart)
+This shows how to run in the [legacy quickstart guide](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart) (deprecated - see the [OpenCHAMI Tutorial](/docs/tutorial/) for current instructions).
 
 Replace the `SMD Init and Server Containers` with the following
 
