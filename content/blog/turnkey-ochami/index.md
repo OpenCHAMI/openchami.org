@@ -14,6 +14,10 @@ canonical = "/blog/turnkey-ochami/"
 
 You want to try OpenCHAMI without a long project. This guide walks you through a small, safe deployment that fits a weekend. You will deploy core services, register a few nodes, and power one on. If it works for you, you can grow from here.
 
+{{< callout context="caution" title="Legacy Content" icon="outline/alert-triangle" >}}
+**This blog post describes a legacy deployment approach that is no longer supported.** For current instructions, please see the **[OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/)**.
+{{< /callout >}}
+
 ## What you get
 
 You will run a handful of services with docker-compose. You will have inventory, boot scripts, and a simple way to control a node. You will also have a clean place to put secrets.
@@ -21,12 +25,9 @@ You will run a handful of services with docker-compose. You will have inventory,
 ## Key repos
 
 - **Tutorial (recommended)**: https://openchami.org/docs/tutorial/
-- Deployment recipes (legacy): https://github.com/OpenCHAMI/deployment-recipes
 - SMD (inventory): https://github.com/OpenCHAMI/smd
 - BSS (boot scripts): https://github.com/OpenCHAMI/bss
 - Magellan (discovery): https://github.com/OpenCHAMI/magellan
-
-**Note**: This blog post describes a legacy Docker Compose deployment. For current instructions, see the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/).
 
 ## Before you start
 
@@ -81,7 +82,6 @@ This weekend deploy is not a full site. It is a small, safe start. It helps you 
 ## References
 
 - Tutorial (recommended): https://openchami.org/docs/tutorial/
-- Deployment recipes (legacy): https://github.com/OpenCHAMI/deployment-recipes
 - SMD: https://github.com/OpenCHAMI/smd
 - BSS: https://github.com/OpenCHAMI/bss
 - Magellan: https://github.com/OpenCHAMI/magellan

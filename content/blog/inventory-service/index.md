@@ -276,9 +276,13 @@ Stop the inventory container
 docker stop inventory-service
 ```
 
-### Run in the quickstart
+### Run in a deployment
 
-This shows how to run in the [legacy quickstart guide](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart) (deprecated - see the [OpenCHAMI Tutorial](/docs/tutorial/) for current instructions).
+For current deployment instructions, see the [OpenCHAMI Tutorial](/docs/tutorial/).
+
+This blog post describes development and testing of the inventory-service. For production deployments, use the tutorial instead of the Docker Compose examples below.
+
+#### Development Example
 
 Replace the `SMD Init and Server Containers` with the following
 

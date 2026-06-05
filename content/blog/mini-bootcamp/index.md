@@ -15,6 +15,11 @@ canonical = "/blog/mini-bootcamp/"
 
 You want to see OpenCHAMI running today, not next month. This mini bootcamp is the shortest path we use to get new operators hands‑on: deploy the core services on a single host, confirm they’re healthy, and prep for your first node boot. We’ll keep concepts light, steps clear, and commands under four.
 
+{{< callout context="caution" title="Legacy Content" icon="outline/alert-triangle" >}}
+**This blog post describes a legacy LANL-specific deployment that is no longer available.** For current instructions, please see the **[OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/)**.
+{{< /callout >}}
+
+
 ## What you’ll accomplish
 
 - Deploy OpenCHAMI’s core microservices locally using Podman quadlets

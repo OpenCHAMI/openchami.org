@@ -10,6 +10,11 @@ contributors = ["Alex Lovell-Troy"]
 
 One of the key strengths of OpenCHAMI is its flexibility. The software is fully containerized and can be deployed using a variety of methods. Our goal was to ensure sysadmins have the freedom to deploy it in a way that best fits their infrastructure, whether that’s through Docker, Podman, or another container management system.
 
+{{< callout context="caution" title="Legacy Content" icon="outline/alert-triangle" >}}
+**This blog post describes a legacy LANL-specific deployment that is no longer available.** For current instructions, please see the **[OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/)**.
+{{< /callout >}}
+
+
 ### Docker Compose Quickstart
 
 For those looking to get started quickly, we recommend using our [quickstart](https://openchami.org/guides/getting_started/) which leverages `docker-compose` to spin up the services and infrastructure needed for OpenCHAMI.  The
