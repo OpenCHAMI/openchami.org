@@ -57,7 +57,9 @@ This approach allowed us to take advantage of systemd's service management while
 
 At LANL, we leverage Ansible for a lot of our sysadmin tasks.  In order for our sysadmins to deploy OpenCHAMI without developer support, we needed to meet them where they were, not force them to learn a new technology.  We built on our work with quadlets and created a set of ansible roles using the [podman container module](https://docs.ansible.com/ansible/latest/collections/containers/podman/podman_container_module.html)that set up each of the microservices in the right order using a simple ansible command to create and start the unit files.
 
-> [Our Ansible Repository](https://github.com/OpenCHAMI/deployment-recipes/tree/trcotton/podman-quadlets/lanl/podman-quadlets)
+> [Our Ansible Repository (legacy LANL-specific)](https://github.com/OpenCHAMI/deployment-recipes/tree/trcotton/podman-quadlets/lanl/podman-quadlets)
+
+**Note**: This blog post describes a legacy LANL-specific deployment. For current instructions, see the [OpenCHAMI Tutorial](https://openchami.org/docs/tutorial/).
 
 Once created and started, the Units behave like any others on the system.  Our admins could troubleshoot them with tools they understand and even trace dependencies as they would any other system in the datacenter.
 

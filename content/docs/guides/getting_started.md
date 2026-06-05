@@ -14,9 +14,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-  In the guide below, we'll show you how to install and run the OpenCHAMI services with all the containers you need to generate an inventory of your compute nodes and boot them.
-
-  Things move quickly, so the official guide on GitHub may have updated information. See the [quickstart README on GitHub](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart#readme) for the most current documentation.
+  For the most up-to-date instructions on deploying OpenCHAMI, follow the **[OpenCHAMI Tutorial](/docs/tutorial/)**. It provides step-by-step guidance for setting up OpenCHAMI in a controlled environment using Podman Quadlets.
 
 Happy HPC!
 
@@ -25,91 +23,37 @@ Happy HPC!
 
 ## Start OpenCHAMI Services
 
-All the OpenCHAMI services come pre-configured to work together using docker-compose.  Using the directions below, you can clone the repos and run the containers in about five minutes without any external dependencies.  See [What's Next](#whats-next) for customization options and running jobs.
+The **[OpenCHAMI Tutorial](/docs/tutorial/)** provides the most current and detailed instructions for deploying OpenCHAMI. Follow the tutorial to set up your environment and start the services using Podman Quadlets and the [Release RPM](https://github.com/OpenCHAMI/release).
 
-{{< callout context="note" title="Quickstart" icon="rocket" >}}
-The quickstart is meant to be used on a dedicated node or VM running an RPM-based Linux system with an x86 processor.
-
-The minimum tested configuration is 4 vCPUs and 8 Gigabytes of memory
-
-```bash {title="Download, Configure, and Run the Quickstart…"}
-# Clone the repository
-git clone https://github.com/OpenCHAMI/deployment-recipes.git
-# Enter the quickstart directory
-cd deployment-recipes/quickstart/
-# Create the secrets in the .env file.  Do not share them with anyone. 
-# This also sets the system name for your certificates.  The system will be called "foobar" and the full url will be https://foobar.openchami.cluster which can be set in /etc/hosts to make life easier for you later
-./generate-configs.sh
-# Start the services
-docker compose -f base.yml -f postgres.yml -f jwt-security.yml -f haproxy-api-gateway.yml -f  openchami-svcs.yml -f autocert.yml -f configurator.yml up -d
-# This shouldn't take too long.  A minute or two depending on how long pulling containers takes.
-```
-
-Once you get the prompt back, you can download the public certificate from your ca and generate your access token.
-```bash {title="Obtain your rootca and tokens"}
-# Assuming you're using bash as your shell, you can use the included functions to simplify interactions with your new OpenCHAMI system.
-source bash_functions.sh
-# Download the root ca so you can validate the ssl certificates included with your system
-get_ca_cert > cacert.pem
-# Create a jwt access token for use with the apis.
-ACCESS_TOKEN=$(gen_access_token)
-# If you're curious about that token, you can safely copy and paste it into https://jwt.io to learn more.
-# Add an entry to /etc/hosts for the cluster
-echo '127.0.0.1  foobar.openchami.cluster' | sudo tee -a /etc/hosts
-# Use curl to confirm that everything is working
-curl --cacert cacert.pem -H "Authorization: Bearer $ACCESS_TOKEN" https://foobar.openchami.cluster:8443/hsm/v2/State/Components
-# This should respond with an empty set of Components: {"Components":[]}
-```
-
-Explore the environment on [GitHub](https://github.com/openchami/deployment-recipes/tree/main/quickstart/).
-
-Also, take a look at the [`ochami` command line tool](https://github.com/OpenCHAMI/ochami) for interacting with OpenCHAMI beyond using cURL.
+{{< callout context="note" title="Legacy Docker Compose" icon="rocket" >}}
+For legacy Docker Compose deployments, see the [deployment-recipes repository](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart). Note that these recipes are deprecated and not recommended for new users.
 {{< /callout >}}
 
 ### Dependencies and Assumptions
 
-The OpenCHAMI services themselves are all containerized and tested running under `docker compose`.  It should be possible to run OpenCHAMI services on any system with Docker installed.
+The **[OpenCHAMI Tutorial](/docs/tutorial/)** uses Podman Quadlets for container management and is tested on Rocky Linux 9 with x86 processors.
 
-This quickstart makes a few assumptions about the target operating system and is only tested on Rocky Linux 9.3 running on x86 processors.  Feel free to file bugs about other configurations, but we will prioritize support for systems that we can directly test at LANL.
+For Docker Compose deployments (legacy), the OpenCHAMI services are containerized and tested running under `docker compose`. See the [deployment-recipes repository](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart) for details (not recommended for new users).
 
 #### Assumptions
 
-* Linux - The quickstart automation makes several assumptions about the behavior Unix tools and their operation under bash from Rocky Linux 9.3.
-* x86_64 - Some of the containers involved are built and tested for alternative operating systems and architectures, but the solution as a whole is only tested with x86 containers.
-* Dedicated System - The `docker compose` setup assumes that it can take control of several TCP ports and interact with the host network for DHCP and TFTP.  It is tested on a dedicated virtual machine.
-* Local Name Registration - The quickstart bootstraps a Certificate Authority and issues an SSL certificate with a predictable name.  For access, you will need to add that name/IP to /etc/hosts on all clients or make it resolvable through your site DNS.
+See the **[OpenCHAMI Tutorial](/docs/tutorial/)** for current system requirements and assumptions.
 
 #### Dependencies
 
-* Docker - This quickstart assumes that the target operating system is Rocky Linux 9.3, which by default does not come pre-installed with Docker. Rocky also does not by default have access to Docker's repositories, and will install an alternaitve that's incompatible with OpenCHAMI, Podman, when a user attempts to install `docker` from yum. We've provided steps from [Docker's installation guide](https://docs.docker.com/engine/install/rhel/) to make sure you can get your containers up and running with ease:
-
-Install yum-utils and point your machine at Docker's repo:
-```bash {title="Install yum-utils"}
-sudo yum install -y yum-utils
-```
-```bash {title="Add Docker's repository to your machine"}
-sudo yum-config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
-```
-Install Docker and start Docker's service:
-```bash {title="Install Docker and related utilities"}
-sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
-```bash {title="Start the Docker daemon"}
-sudo systemctl start docker
-```
-Additional verification and troubleshooting steps available at the page linked above if needed.
+See the **[OpenCHAMI Tutorial](/docs/tutorial/)** for current dependencies and installation instructions.
 
 
 
 ## What's next
 
-Now that you've got a set of containers up and running that provide OpenCHAMI services, it's time to use them.  We've got a set of administration guides and user guides for you to choose from.
+Now that you know where to find the current OpenCHAMI deployment instructions, explore the tutorial and related guides.
 
 {{< card-grid >}}
 {{< link-card
-  title="Docker Compose Tour"
-  description="Learn just enough docker compose to explore our quickstart files"
-  href="/guides/docker_tour/"
+  title="OpenCHAMI Tutorial"
+  description="Step-by-step guide for deploying OpenCHAMI"
+  href="/docs/tutorial/"
 >}}
 {{< link-card
   title="Run a job"
@@ -126,9 +70,9 @@ Now that you've got a set of containers up and running that provide OpenCHAMI se
 {{< /card-grid >}}
 
 
-## Helpful docker compose cheatsheet
+## Helpful references
 
-This quickstart uses `docker compose` to start up services and define dependencies.  If you have a basic understanding of Docker, you should be able to work with the included services.  Some handy items to remember for when you are exploring the deployment are below.
+For Docker Compose deployments (legacy), this quickstart uses `docker compose` to start up services and define dependencies. If you have a basic understanding of Docker, you should be able to work with the included services. Some handy items to remember for when you are exploring the deployment are below.
 
 
 * `docker volume list` This lists all the volumes.  If they exist, the project will try to reuse them.  That might not be what you want.

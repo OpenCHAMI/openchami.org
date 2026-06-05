@@ -13,45 +13,40 @@ homepage: false
 <!-- vi: set tw=80 sw=2 sts=2: -->
 
 Since OpenCHAMI is composable and adaptable, it can be installed and deployed in
-a variety of ways: bare-metal, via Docker/Docker Compose, via [Podman
-Quadlets](https://www.redhat.com/en/blog/quadlet-podman), and even Kubernetes.
-This page provides an index to some of them.
+a variety of ways. The best method for you depends on your environment and use
+case.
 
-## 1.1. Deployment Recipes
+We recommend starting with the **[OpenCHAMI Tutorial](/docs/tutorial/)**, which
+provides a standardized way to learn OpenCHAMI using Podman Quadlets. Once you
+are familiar with the basics, you can explore other deployment methods.
 
-The OpenCHAMI organization maintains a Git repository containing [deployment
-recipes](https://github.com/OpenCHAMI/deployment-recipes) used by various sites.
-It is ever-evolving, but currently it has recipes for Docker Compose, Podman
-Quadlets, and Helm for Kubernetes.
+## 1.1. Recommended for New Users
 
-## 1.2. Release RPM
+- **Tutorial (Podman Quadlets)** -- The best way to learn OpenCHAMI. Uses the
+  [Release RPM](https://github.com/OpenCHAMI/release) for a unified deployment.
+  - [**Guide**](/docs/tutorial/)
 
-There is also an official [release](https://github.com/OpenCHAMI/release) Git
-repository that houses an RPM package that installs OpenCHAMI services as Podman
-Quadlets and installs configuration files in standard filesystem locations. It
-is meant to be a "quickstart for quadlets" on Red Hat systems since, by
-installing the package and running an additional command, it configures and
-starts a base OpenCHAMI installation that is ready to boot nodes.
+## 1.2. Alternative Deployment Methods
 
-Currently, only RPM is supported and there is only one package that contains all
-of the necessary services. This is obviously not very composable, so future work
-entails supporting more packaging options. Contributions are welcome!
-
-To fill any gaps, the deployment recipes repository mentioned above is a good
-starting point.
-
-## 1.3. Deployment Guide Index
-
-Here is an index of common OpenCHAMI deployment strategies with links to
-guides/resources:
-
-- **Docker Compose (Quickstart)** -- Use Docker Compose to quickly get started
-  with OpenCHAMI by setting up base services.
-  - [**Guide/Repo**](https://github.com/OpenCHAMI/deployment-recipes/tree/main/quickstart)
-- **Podman Quadlets (Release RPM)** -- Use the OpenCHAMI release RPM to run
-  OpenCHAMI services using Podman Quadlets.
-  - [**Guide**](/docs/tutorial/#14-install-openchami)
+- **Release RPM (Quadlet-Based)** -- Deploy OpenCHAMI as Podman Quadlets on Red
+  Hat-based systems. Companion to the tutorial.
   - [**Repo**](https://github.com/OpenCHAMI/release)
+- **Kubernetes (kube-deploy)** -- Deploy OpenCHAMI on Kubernetes using Helm
+  charts.
+  - [**Repo**](https://github.com/OpenCHAMI/kube-deploy)
+- **Kubernetes Operator (openchami-operator)** -- Use the OpenCHAMI operator for
+  advanced Kubernetes orchestration.
+  - [**Repo**](https://github.com/OpenCHAMI/openchami-operator)
+- **Integration Sandbox** -- Test OpenCHAMI in a sandbox environment.
+  - [**Repo**](https://github.com/OpenCHAMI/integration-sandbox)
 - **Libvirt Virtual Machines** -- Boot Libvirt VMs using OpenCHAMI and Podman
   Quadlets.
   - [**Guide**](/docs/guides/libvirt)
+
+## 1.3. Organization-Specific Recipes
+
+The OpenCHAMI organization maintains a Git repository containing
+[deployment recipes](https://github.com/OpenCHAMI/deployment-recipes) with
+organization-specific patterns (e.g., Dell, LBNL). These are **not officially
+supported** for general use and may require customization. New users should
+start with the tutorial instead.
