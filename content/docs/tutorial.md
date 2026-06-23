@@ -992,7 +992,7 @@ Since OpenCHAMI is running for the first time, the former should be run, but
 To see what the script changed, run:
 
 ```bash
-grep -RnE 'demo|openchami\.cluster' /etc/openchami/configs/openchami.env /etc/containers/systemd/
+grep -RnE 'demo|openchami\.cluster' /etc/openchami/configs/openchami.env /usr/share/containers/systemd/
 ```
 
 Whether this worked or not will be able to be verified shortly.
@@ -1067,7 +1067,7 @@ service not started) and grey arrows are soft dependencies.
 
 One common issue is with certificates. If TLS errors are occurring, **make sure
 the domain in the `acme-register.container` and `acme-deploy.container` files
-within `/etc/containers/systemd/` (argument to `-d` flag) match the cluster
+within `/usr/share/containers/systemd/` (argument to `-d` flag) match the cluster
 domain set in `/etc/hosts`.**
 
 Since the release RPM automatically sets the FQDN, it may be necessary to
