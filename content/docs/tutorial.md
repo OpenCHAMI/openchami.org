@@ -2664,7 +2664,7 @@ If the VM needs to be destroyed and restarted, first exit the console with
 1. Rerun the `virt-install` command above.
 {{< /callout >}}
 
-Watch it boot. First, it should PXE:
+Watch it boot. First, it should show PXE output:
 
 ```
 >>Start PXE over IPv4.
@@ -2687,7 +2687,7 @@ iPXE 1.21.1+ (ge9a2) -- Open Source Network Boot Firmware -- https://ipxe.org
 Features: DNS HTTP HTTPS iSCSI TFTP VLAN SRP AoE EFI Menu
 ```
 
-Then, we should see it get it's boot script from TFTP, then BSS (the `/boot/v1` URL), then download it's kernel/initramfs and boot into Linux.
+Then, we should see it get it's boot script from TFTP, then boot-service, then download it's kernel/initramfs and boot into Linux.
 
 ```
 Configuring (net0 52:54:00:be:ef:01)...... ok
@@ -2744,31 +2744,30 @@ TARGET SOURCE        FSTYPE  OPTIONS
 It works! Play around a bit more and then logout. Use `Ctrl`+`]` to exit the Virsh console.
 
 
-### 2.7 OpenCHAMI's Cloud-Init Metadata Server
+### 2.7 OpenCHAMI's Metadata Service
 
 [Cloud-Init](https://cloudinit.readthedocs.io/en/latest/index.html) is the way
 that OpenCHAMI provides post-boot configuration. The idea is to keep the image
 generic without any sensitive data like secrets and let cloud-init take care of
 that data.
 
-Cloud-Init works by having an API server that keeps track of the configuration
+The metadata-service works by having an API server that keeps track of the configuration
 for all nodes, and nodes fetch their configuration from the server via a
 cloud-init client installed in the node image. The node configuration is split
 up into meta-data (variables) and a configuration specification that can
 optionally be templated using the meta-data.
 
-OpenCHAMI [has its own flavor](https://github.com/OpenCHAMI/cloud-init) of
-Cloud-Init server that utilizes groups in SMD to provide the appropriate
-configuration. (This is why we added our compute nodes to a "compute" group
-during discovery.)
+The [OpenCHAMI metadata-service](https://github.com/OpenCHAMI/metadata-service)
+utilizes groups in SMD to provide the appropriate configuration. (This is why we
+added our compute nodes to a "compute" group during discovery.)
 
-In a typical OpenCHAMI Cloud-Init setup, the configuration is set up in three phases:
+In a typical metadata-service setup, the configuration is set up in three phases:
 
 1. Configure cluster-wide default meta-data
 2. Configure group-level cloud-init configuration with optional group meta-data
 3. (_OPTIONAL_) Configure node-specific cloud-init configuration and meta-data
 
-This tutorial will use the OpenCHAMI Cloud-Init server for node post-boot configuration.
+This tutorial will use the OpenCHAMI metadata-service for node post-boot configuration.
 
 #### 2.7.1 Configure Cluster Meta-Data
 
@@ -2806,45 +2805,49 @@ public-keys:
 short-name: "de"
 EOF
 ```
+
 The content should be, e.g:
 
 ```yaml
 ---
-base-url: "http://172.16.0.254:8081/cloud-init"
-cluster-name: "demo"
-nid-length: 2
-public-keys:
-- "ssh-ed25519 AAAA... rocky@head"
-short-name: "de"
+spec:
+  base_url: "http://172.16.0.254:8081/metadata-service"
+  cluster_name: "demo"
+  nid_length: 2
+  public_keys:
+  - "ssh-ed25519 AAAA... rocky@head"
+  short-name: "de"
 ```
 
 Then, set the cloud-init defaults using the `ochami` CLI:
 
 ```bash
-ochami cloud-init defaults set -f yaml -d @/etc/openchami/data/cloud-init/ci-defaults.yaml
+ochami metadata defaults add -f yaml -d @/etc/openchami/data/cloud-init/ci-defaults.yaml
 ```
 
 Verify that these values were set with:
 
 ```bash
-ochami cloud-init defaults get -F json-pretty
+ochami metadata defaults list -F json-pretty
 ```
 
 The output should be:
 
 ```json
 {
-  "base-url": "http://172.16.0.254:8081/cloud-init",
-  "cluster-name": "demo",
-  "nid-length": 2,
-  "public-keys": [
-    "<YOUR SSH KEY>"
-  ],
-  "short-name": "de"
+  "spec": {
+    "base-url": "http://172.16.0.254:8081/metadata-service",
+    "cluster-name": "demo",
+    "nid-length": 2,
+    "public-keys": [
+      "<YOUR SSH KEY>"
+    ],
+    "short-name": "de"
+  }
 }
 ```
 
-#### 2.7.2 Configure Group-Level Cloud-Init
+#### 2.7.2 Configure Group-Level Metadata
 
 Now, the cloud-init configuration needs to be set for the `compute` group,
 which is the SMD group that all of the virtual compute nodes are in. For now, a
@@ -2855,35 +2858,33 @@ with the following contents:
 
 ```bash
 sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml > /dev/null << EOF
-- name: compute
+spec:
+  name: compute
   description: "compute config"
-  file:
-    encoding: plain
-    content: |
-      ## template: jinja
-      #cloud-config
-      merge_how:
-      - name: list
-        settings: [append]
-      - name: dict
-        settings: [no_replace, recurse_list]
-      users:
-        - name: root
-          ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
-      disable_root: false
+  template: |
+    #cloud-config
+    merge_how:
+    - name: list
+      settings: [append]
+    - name: dict
+      settings: [no_replace, recurse_list]
+    users:
+      - name: root
+        ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+    disable_root: false
 EOF
 ```
 
 Now, set this configuration for the compute group:
 
 ```bash
-ochami cloud-init group set -f yaml -d @/etc/openchami/data/cloud-init/ci-group-compute.yaml
+ochami metadata group add -f yaml -d @/etc/openchami/data/cloud-init/ci-group-compute.yaml
 ```
 
 Check that it got added with:
 
 ```bash
-ochami cloud-init group get config compute
+ochami metadata group list -F yaml
 ```
 
 The cloud-config file created within the YAML above should get print out:
@@ -2907,7 +2908,7 @@ check that the Jinja2 is rendering properly for a node. Check if for the first
 compute node (x1000c0s0b0n0):
 
 ```bash
-ochami cloud-init group render compute x1000c0s0b0n0
+ochami metadata group render compute x1000c0s0b0n0
 ```
 
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
