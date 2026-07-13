@@ -14,7 +14,7 @@ tags: ["Cloud-Init", "WireGuard", "VPN", "Security", "Networking"]
 
 OpenCHAMI's cloud-init server supports **WireGuard** to encrypt and isolate cloud-init traffic between compute nodes and the cloud-init server. This ensures that sensitive metadata, user data, and vendor data exchanged during node provisioning are transmitted over an encrypted tunnel.
 
-The cloud-init server embeds a WireGuard server that dynamically assigns VPN IPs to compute nodes, manages peer configurations, and can optionally restrict cloud-init data access to only those nodes connected via the WireGuard tunnel.
+The cloud-init server embeds a WireGuard server that dynamically assigns VPN IPs to compute nodes, manages peer configurations, and can optionally restrict cloud-init data access to only those nodes connected via the WireGuard tunnel. This helps protects against users making HTTPS requests directly to the API endpoints to obtain secrets delivered by the cloud-init-server.
 
 ## Architecture
 
@@ -24,17 +24,17 @@ The WireGuard integration works in two phases:
 2. **Secure data fetch** — Once the tunnel is up, cloud-init fetches `/meta-data`, `/user-data`, `/vendor-data`, and group YAML files over the encrypted WireGuard link.
 
 ```text
-┌──────────────┐     WireGuard Tunnel      ┌──────────────────┐
+┌──────────────┐     WireGuard Tunnel       ┌──────────────────┐
 │  Compute     │ ◄────────────────────────► │  cloud-init      │
-│  Node        │     wg0: 100.97.0.x/32    │  Server          │
+│  Node        │     wg0: 100.97.0.x/32     │  Server          │
 │              │                            │  wg0: 100.97.0.1 │
 └──────────────┘                            └──────────────────┘
        │                                           │
        │ 1. POST /cloud-init/wg-init               │
-       │    (before cloud-init starts)              │
+       │    (before cloud-init starts)             │
        │                                           │
        │ 2. GET /meta-data, /vendor-data           │
-       │    (over WireGuard tunnel)                 │
+       │    (over WireGuard tunnel)                │
        └───────────────────────────────────────────┘
 ```
 
@@ -53,7 +53,7 @@ The WireGuard integration works in two phases:
 When `WIREGUARD_ONLY=true` is set, the cloud-init server restricts access to data-bearing endpoints (`/meta-data`, `/user-data`, `/vendor-data`, `/{group}.yaml`) to clients whose IP falls within the WireGuard subnet **or** whose request arrives on the server's WireGuard interface.
 
 {{< callout context="note" title="Important" icon="info-circle" >}}
-The `/cloud-init/wg-init` and `/cloud-init/phone-home/{id}` endpoints are **never** restricted by the WireGuard middleware, even when `WIREGUARD_ONLY=true`. This allows nodes to establish their WireGuard tunnel before fetching cloud-init data.
+The `/cloud-init/wg-init`, `/cloud-init/admin/*`, and `/cloud-init/phone-home/{id}` endpoints are **never** restricted by the WireGuard middleware, even when `WIREGUARD_ONLY=true`. This allows nodes to establish their WireGuard tunnel before fetching cloud-init data.
 {{< /callout >}}
 
 ### Network Setup
@@ -85,6 +85,7 @@ If using HAProxy in front of the cloud-init server, ensure the backend routes tr
 ```haproxy
 backend cloud-init
   server cloud-init-server cloud-init-int:27777
+  http-request set-path %[path,regsub(^/cloud-init/,/)]
 ```
 
 ## Client-Side Configuration
