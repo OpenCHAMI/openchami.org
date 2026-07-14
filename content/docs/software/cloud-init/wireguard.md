@@ -14,7 +14,7 @@ tags: ["Cloud-Init", "WireGuard", "VPN", "Security", "Networking"]
 
 OpenCHAMI's cloud-init server supports **WireGuard** to encrypt and isolate cloud-init traffic between compute nodes and the cloud-init server. This ensures that sensitive metadata, user data, and vendor data exchanged during node provisioning are transmitted over an encrypted tunnel.
 
-The cloud-init server embeds a WireGuard server that dynamically assigns VPN IPs to compute nodes, manages peer configurations, and can optionally restrict cloud-init data access to only those nodes connected via the WireGuard tunnel. This helps protects against users making HTTPS requests directly to the API endpoints to obtain secrets delivered by the cloud-init-server.
+The cloud-init server embeds a WireGuard server that dynamically assigns VPN IPs to compute nodes, manages peer configurations, and can optionally restrict cloud-init data access to only those nodes connected via the WireGuard tunnel. This protects against users making HTTPS requests directly to the API endpoints to obtain secrets delivered by the cloud-init-server.
 
 ## Architecture
 
@@ -221,7 +221,7 @@ On the cloud-init server, check that the WireGuard interface is active:
 
 ```bash
 # List WireGuard peers
-wg show wg0
+podman exec cloud-init-server wg show wg0
 
 # Check debug logs for connection metadata
 journalctl -u cloud-init-server
