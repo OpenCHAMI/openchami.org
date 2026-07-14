@@ -295,7 +295,7 @@ mkdir serve/
 Then, create `kickstart.conf` within that directory:
 
 ```bash
-cat > serve/kickstart.conf << EOF
+cat > serve/kickstart.conf << 'EOF'
 #version=RHEL9
 # Use text install
 text
