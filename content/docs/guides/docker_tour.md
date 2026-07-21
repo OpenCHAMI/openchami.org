@@ -44,22 +44,16 @@ Containers specify which volumes they need access to in a `volumes:` section of 
 
 Docker networks are specified in a top-level construct `networks:` within the compose format, and used by individual services.  They must be defined before they can be used.  Containers that share a network may communicate freely across any port, using just the name of the service as the hostname.  It is helpful to think of each docker network as a shared localhost network between containers.  These networks also provide a degree of isolation between services.  Without a specific directive to expose a port or service, it is inaccessible outside it's network(s).
 
-In the following example excerpt, we show a chain of services.  `hydra` is our secure service for managing credentials.  We don't want other services calling it directly.  We built `opaal` specifically to implement only the very few client operations necessary for our system.  All access from outside docker compose to internal services must go through `haproxy` which has access to the outside world.  `haproxy` has access to both `internal` and `external` networks which allows it to act as a proxy for `opaal`.
+In the following example excerpt, we show a chain of services.  `tokensmith` is our secure service for managing credentials.  We don't want other services calling it directly.  All access from outside docker to internal services must go through `haproxy` which has access to the outside world.  `haproxy` has access to both `internal` and `external` networks which allows it to act as a proxy for `tokensmith`.
 
 ```yaml
 networks:
   external:
   internal:
-  hydra-only:
 
 services:
-  hydra:
+  tokensmith:
     networks:
-      - hydra-only
-
-  opaal:
-    networks:
-      - hydra-only
       - internal
 
   haproxy:
