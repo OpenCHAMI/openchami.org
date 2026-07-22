@@ -2525,15 +2525,12 @@ Now, we set the boot configuration using one of the backends below.
 If you created the payload file in YAML, you must use `ochami` to set the
 boot config, since the alternative `boot-service` CLI only accepts JSON.
 
-{{< callout context="note" title="Note" icon="outline/info-circle" > }}
-
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
 Update the `ochami` config to set the `boot-service` URI. We will need set this
 to make requests to `boot-service` through haproxy with `ochami`.
-
 ```bash
 sudo ochami config --system cluster set demo boot-service.uri /boot-service
 ```
-
 {{< /callout >}}
 
 ```bash
