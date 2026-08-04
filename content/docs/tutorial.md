@@ -1253,7 +1253,7 @@ internal one will be used. The RPM that was installed comes with some shell
 functions that allow one to do this.
 
 ```bash
-export DEMO_ACCESS_TOKEN=$(sudo podman exec tokensmith /bin/sh -c "/usr/local/bin/tokensmith user-token create --audience smd --key-file /tokensmith/data/keys/private.pem --issuer \"\$TOKENSMITH_ISSUER\" --subject 'admin@example.com' --scopes 'admin' --enable-local-user-mint")
+export DEMO_ACCESS_TOKEN=$(sudo bash -lc gen_access_token)
 ```
 
 {{< callout context="tip" title="Tip" icon="outline/bulb" >}}
