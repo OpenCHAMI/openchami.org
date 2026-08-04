@@ -297,10 +297,8 @@ repo --name="appstream" --baseurl="https://download.rockylinux.org/pub/rocky/9/A
 %packages
 @^minimal-environment
 bash-completion
-buildah
 kexec-tools
 man-pages
-podman
 tar
 tmux
 vim
@@ -360,7 +358,13 @@ systemctl enable tmp.mount
 dnf install -y epel-release
 
 # Install some other useful packages
-dnf install -y s3cmd awscli
+dnf install -y epel-release
+dnf install -y \
+  awscli \
+  buildah \
+  podman \
+  s3cmd \
+  vim
 %end
 
 reboot
