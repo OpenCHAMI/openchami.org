@@ -1145,16 +1145,14 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.7.1
-Tag:        v0.7.1
-Branch:     HEAD
-Commit:     08a11e6d18e6804270a0137618934810a10e470e
-Git State:  clean
-Date:       2026-03-25T18:25:04Z
-Go:         go1.26.1
+Version:    v0.10.0
+Tag:        v0.10.0
+Branch:     chore/fabrica-services
+Commit:     d4b3cfac59bdae6390f8db69d65f6ddd87883716
+Git State:  dirty
+Date:       2026-08-04T17:42:59-04:00
+Go:         go1.26.5 (Red Hat 1.26.5-1.el9_8)
 Compiler:   gc
-Build Host: runnervm46oaq
-Build User: runner
 ```
 
 #### 1.7.2 Configuration
@@ -1183,6 +1181,7 @@ clusters:
       name: demo
 default-cluster: demo
 log:
+    color: auto
     format: rfc3339
     level: warning
 timeout: 30s
@@ -1236,7 +1235,9 @@ ochami-cloud-init (1) - Communicate with the cloud-init server
 ochami-config (1)    - Manage configuration for ochami CLI
 ochami-config (5)    - ochami CLI configuration file
 ochami-discover (1)  - Populate SMD using a file
+ochami-metadata (1)  - Communicate with the Metadata Service
 ochami-pcs (1)       - Communicate with the Power Control Service (PCS)
+ochami-rcs (1)       - Communicate with the remote-console service
 ochami-smd (1)       - Communicate with the State Management Database (SMD)
 ```
 
