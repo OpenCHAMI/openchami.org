@@ -13,6 +13,17 @@ toc: true
 ---
 <!-- vi: set tw=80 sw=2 sts=2: -->
 
+{{< callout context="note" title="Update (08/04/2026)" icon="outline/info-circle" >}}
+As of **OpenCHAMI v0.2.0**, this tutorial uses the new
+[fabrica](https://github.com/openchami/fabrica)-based services:
+[boot-service](https://github.com/openchami/boot-service) over
+[BSS](https://github.com/openchami/bss), and
+[metadata-service](https://github.com/openchami/metadata-service) over
+[cloud-init](https://github.com/openchami/cloud-init).
+
+See [here](https://github.com/OpenCHAMI/release/pull/50) for more info.
+{{< /callout >}}
+
 ## Part 0. Prerequisites
 
 ### 0.1. Overview
@@ -822,7 +833,7 @@ server4:
     # mac addresses stored in SMD
     - coresmd: |
         svc_base_uri=https://demo.openchami.cluster:8443
-        ipxe_base_uri=http://172.16.0.254:8081
+        ipxe_uri=http://172.16.0.254:8081/boot-service/bootscript
         ca_cert=/root_ca/root_ca.crt
         cache_valid=30s
         lease_time=1h
@@ -856,7 +867,7 @@ server4:
     # mac addresses stored in SMD
     - coresmd: |
         svc_base_uri=https://demo.openchami.cluster:8443
-        ipxe_base_uri=http://172.16.0.254:8081
+        ipxe_uri=http://172.16.0.254:8081/boot-service/bootscript
         ca_cert=/root_ca/root_ca.crt
         cache_valid=30s
         lease_time=1h
@@ -890,7 +901,7 @@ server4:
     # mac addresses stored in SMD
     - coresmd: |
         svc_base_uri=https://demo.openchami.cluster:8443
-        ipxe_base_uri=http://172.16.0.254:8081
+        ipxe_uri=http://172.16.0.254:8081/boot-service/bootscript
         ca_cert=/root_ca/root_ca.crt
         cache_valid=30s
         lease_time=1h
