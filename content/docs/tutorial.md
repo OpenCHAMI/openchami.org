@@ -2423,11 +2423,8 @@ sudo mkdir -p /etc/openchami/data/boot
 ```
 
 Then, create the payload file for boot-service,
-either **/etc/openchami/data/boot/compute-debug-rocky9.yaml** or **/etc/openchami/boot/compute-debug-rocky9.json**, that contains the
-URIs for the boot artifacts:
-
-{{< tabs "Payload File" >}}
-{{< tab "YAML" >}}
+**/etc/openchami/data/boot/compute-debug-rocky9.yaml**, that contains the URIs
+for the boot artifacts:
 
 ```bash
 URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
@@ -2436,7 +2433,7 @@ URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
 cat << EOF | sudo tee /etc/openchami/data/boot/compute-debug-rocky9.yaml
 ---
-spec:
+- name: 'compute-debug-rocky9'
   kernel: '${URI_KERNEL}'
   initrd: '${URI_INITRAMFS}'
   params: 'nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service'
@@ -2449,36 +2446,6 @@ spec:
 EOF
 ```
 
-{{< /tab >}}
-
-{{< tab "JSON" >}}
-
-```bash
-URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
-URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
-URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
-URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat << EOF | sudo tee /etc/openchami/data/boot/compute-debug-rocky9.json
-{
-  "spec": {
-    "macs": [
-      "52:54:00:be:ef:01",
-      "52:54:00:be:ef:02",
-      "52:54:00:be:ef:03",
-      "52:54:00:be:ef:04",
-      "52:54:00:be:ef:05"
-    ],
-    "params": "nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service",
-    "kernel": "${URI_KERNEL}",
-    "initrd": "${URI_INITRAMFS}"
-  }
-}
-EOF
-```
-
-{{< /tab >}}
-{{< /tabs >}}
-
 Examine the `tee` output to make sure that the URIs got populated properly. For example:
 
 {{< callout context="caution" title="Warning" icon="outline/alert-triangle" >}}
@@ -2486,32 +2453,9 @@ The file will not look like the one below due to differences in kernel versions
 over time. Be sure to update with the output of `s3cmd ls` as stated above!
 {{< /callout >}}
 
-{{< tabs "Output verification" >}}
-{{< tab "JSON" >}}
-
-```json
-{
-  "spec": {
-    "macs": [
-      "52:54:00:be:ef:01",
-      "52:54:00:be:ef:02",
-      "52:54:00:be:ef:03",
-      "52:54:00:be:ef:04",
-      "52:54:00:be:ef:05"
-    ],
-    "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service",
-    "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.47.1.el9_7.x86_64",
-    "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.47.1.el9_7.x86_64.img"
-  }
-}
-```
-
-{{< /tab >}}
-{{ tab "YAML" }}
-
 ```yaml
 ---
-spec:
+- name: 'compute-debug-rocky9'
   kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
   initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
   params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service'
@@ -2523,76 +2467,23 @@ spec:
     - 52:54:00:be:ef:05
 ```
 
-{{ /tab }}
-{{< /tabs >}}
-
 {{< callout context="note" title="Note" icon="outline/info-circle" >}}
 `ochami` supports both `add` and `set`.  The difference is idempotency.  If
 using the `add` command, `boot-service` will reject replacing an existing boot
 configuration.
 {{< /callout >}}
 
-Now, we set the boot configuration using one of the backends below.
-
-{{< tabs "Set Boot Config" >}}
-
-{{< tab "Using YAML" >}}
-
-If you created the payload file in YAML, you must use `ochami` to set the
-boot config, since the alternative `boot-service` CLI only accepts JSON.
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-Update the `ochami` config to set the `boot-service` URI. We will need set this
-to make requests to `boot-service` through haproxy with `ochami`.
-```bash
-sudo ochami config --system cluster set demo boot-service.uri /boot-service
-```
-{{< /callout >}}
+Now, we set the boot configuration:
 
 ```bash
 ochami boot config add -d @/etc/openchami/data/boot/compute-debug-rocky9.yaml -f yaml -l debug
 ```
 
-Verify that it was set properly. You should see the contents in JSON.
+Verify that they got set:
 
 ```bash
-ochami boot config list -F json-pretty
+ochami boot config list -F yaml
 ```
-
-{{< /tab >}}
-
-{{< tab "Using JSON" >}}
-
-If you created the payload file in JSON, you can use either `ochami` with the
-`-f json` flag or the `boot-service` CLI to set the boot config.
-
-To set with `ochami` using the `config add` subcommand:
-
-```bash
-# Set/add the boot configuration
-ochami boot config add -d @/etc/openchami/data/boot/compute-debug-rocky9.json --uri https://demo.openchami.cluster:8443 -l debug -f json
-```
-
-Verify that it was set properly. You should see the contents in JSON.
-
-```bash
-ochami boot config list -F json-pretty
-```
-
-To set with the `boot-service` CLI with the `create` subcommand:
-
-```bash
-boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.json) --server https://demo.openchami.cluster:8443
-```
-
-Verify that it was set properly.
-
-```bash
-boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
-```
-{{< /tab >}}
-
-{{< /tabs >}}
 
 The things to check are:
 
@@ -2816,13 +2707,13 @@ the SSH key created above:
 ```bash
 cat << EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
 ---
-spec:
-  base-url: "http://172.16.0.254:8081/metadata-service"
-  cluster-name: "demo"
-  nid-length: 2
-  public-keys:
+- name: 'cluster-defaults'
+  base_url: "http://172.16.0.254:8081/metadata-service"
+  cluster_name: "demo"
+  nid_length: 2
+  public_keys:
     - "$(cat ~/.ssh/id_ed25519.pub)"
-  short-name: "de"
+  short_name: "de"
 EOF
 ```
 
@@ -2830,7 +2721,7 @@ The content should be, e.g:
 
 ```yaml
 ---
-spec:
+- name: 'cluster-defaults'
   base_url: "http://172.16.0.254:8081/metadata-service"
   cluster_name: "demo"
   nid_length: 2
@@ -2848,23 +2739,26 @@ ochami metadata defaults add -f yaml -d @/etc/openchami/data/cloud-init/ci-defau
 Verify that these values were set with:
 
 ```bash
-ochami metadata defaults list -F json-pretty
+ochami metadata defaults list -F yaml
 ```
 
 The output should be:
 
-```json
-{
-  "spec": {
-    "base-url": "http://172.16.0.254:8081/metadata-service",
-    "cluster-name": "demo",
-    "nid-length": 2,
-    "public-keys": [
-      "<YOUR SSH KEY>"
-    ],
-    "short-name": "de"
-  }
-}
+```yaml
+- apiVersion: v1
+  kind: ClusterDefaults
+  metadata:
+    name: cluster-defaults
+    uid: clusterdefaults-75f3f304
+    createdAt: ...
+    updatedAt: ...
+  spec:
+    base_url: http://172.16.0.254:8081/metadata-service
+    cluster_name: demo
+    short_name: de
+    nid_length: 2
+    public_keys:
+        - ssh-ed25519 AAAA... rocky@db-head
 ```
 
 #### 2.7.2 Configure Group-Level Metadata
@@ -2878,22 +2772,20 @@ with the following contents:
 
 ```bash
 sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml > /dev/null << EOF
-- metadata:
-    name: compute
-  spec:
-    description: "compute config"
-    template: |
-      ## template: jinja
-      #cloud-config
-      merge_how:
-        - name: list
-          settings: [append]
-        - name: dict
-          settings: [no_replace, recurse_list]
-      users:
-        - name: root
-          ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
-      disable_root: false
+- name: compute
+  description: "compute config"
+  template: |
+    ## template: jinja
+    #cloud-config
+    merge_how:
+      - name: list
+        settings: [append]
+      - name: dict
+        settings: [no_replace, recurse_list]
+    users:
+      - name: root
+        ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+    disable_root: false
 EOF
 ```
 
