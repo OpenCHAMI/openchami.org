@@ -672,22 +672,17 @@ If the services started correctly, we should see:
 openchami.target
 ● ├─acme-deploy.service
 ● ├─acme-register.service
-● ├─bss-init.service
-● ├─bss.service
-● ├─cloud-init-server.service
+● ├─boot-service.service
 ● ├─coresmd-coredhcp.service
 ● ├─coresmd-coredns.service
 ● ├─haproxy.service
-● ├─hydra-gen-jwks.service
-● ├─hydra-migrate.service
-● ├─hydra.service
-● ├─opaal-idp.service
-● ├─opaal.service
+● ├─metadata-service.service
 ● ├─openchami-cert-trust.service
 ● ├─postgres.service
 ● ├─smd-init.service
 ● ├─smd.service
-● └─step-ca.service
+● ├─step-ca.service
+● └─tokensmith.service
 ```
 
 If not, examine the logs for any problematic services with:
