@@ -1,10 +1,10 @@
 ---
-title: "OpenCHAMI Tutorial"
-linktitle: "Tutorial"
-description: "Learn about OpenCHAMI by setting it up in a controlled environment."
+title: "OpenCHAMI Tutorial (Legacy)"
+linktitle: "Old Tutorial"
+description: "Learn about OpenCHAMI by setting it up in a controlled environment. Uses legacy services (BSS, cloud-init, SMD)."
 slug: "tutorial"
 summary: ""
-date: 2026-08-06T09:32:06-06:00
+date: 2025-10-06T15:34:25-06:00
 lastmod: 2026-08-06T09:32:06-06:00
 contributors: ["Devon Bautista", "David Allen"]
 draft: false
@@ -12,17 +12,6 @@ weight: 100
 toc: true
 ---
 <!-- vi: set tw=80 sw=2 sts=2: -->
-
-{{< callout context="note" title="Update (08/04/2026)" icon="outline/info-circle" >}}
-As of **OpenCHAMI v0.2.0**, this tutorial uses the new
-[fabrica](https://github.com/openchami/fabrica)-based services:
-[boot-service](https://github.com/openchami/boot-service) over
-[BSS](https://github.com/openchami/bss), and
-[metadata-service](https://github.com/openchami/metadata-service) over
-[cloud-init](https://github.com/openchami/cloud-init).
-
-See [here](https://github.com/OpenCHAMI/release/pull/50) for more info.
-{{< /callout >}}
 
 ## Part 0. Prerequisites
 
@@ -317,8 +306,10 @@ repo --name="appstream" --baseurl="https://download.rockylinux.org/pub/rocky/9/A
 %packages
 @^minimal-environment
 bash-completion
+buildah
 kexec-tools
 man-pages
+podman
 tar
 tmux
 vim
@@ -378,13 +369,7 @@ systemctl enable tmp.mount
 dnf install -y epel-release
 
 # Install some other useful packages
-dnf install -y epel-release
-dnf install -y \
-  awscli \
-  buildah \
-  podman \
-  s3cmd \
-  vim
+dnf install -y s3cmd awscli
 %end
 
 reboot
@@ -840,19 +825,8 @@ server4:
     - netmask: 255.255.255.0
     # The lines below define where the system should assign ip addresses for systems that do not have
     # mac addresses stored in SMD
-    - coresmd: |
-        svc_base_uri=https://demo.openchami.cluster:8443
-        ipxe_uri=http://172.16.0.254:8081/boot-service/bootscript
-        ca_cert=/root_ca/root_ca.crt
-        cache_valid=30s
-        lease_time=1h
-        single_port=false
-    - bootloop: |
-        lease_file=/tmp/coredhcp.db
-        script_path=default
-        lease_time=5m
-        ipv4_start=172.16.0.200
-        ipv4_end=172.16.0.250
+    - coresmd: https://demo.openchami.cluster:8443 http://172.16.0.254:8081 /root_ca/root_ca.crt 30s 1h false
+    - bootloop: /tmp/coredhcp.db default 5m 172.16.0.200 172.16.0.250
 EOF
 ```
 {{< /tab >}}
@@ -874,19 +848,8 @@ server4:
     - netmask: 255.255.255.0
     # The lines below define where the system should assign ip addresses for systems that do not have
     # mac addresses stored in SMD
-    - coresmd: |
-        svc_base_uri=https://demo.openchami.cluster:8443
-        ipxe_uri=http://172.16.0.254:8081/boot-service/bootscript
-        ca_cert=/root_ca/root_ca.crt
-        cache_valid=30s
-        lease_time=1h
-        single_port=false
-    - bootloop: |
-        lease_file=/tmp/coredhcp.db
-        script_path=default
-        lease_time=5m
-        ipv4_start=172.16.0.200
-        ipv4_end=172.16.0.250
+    - coresmd: https://demo.openchami.cluster:8443 http://172.16.0.254:8081 /root_ca/root_ca.crt 30s 1h false
+    - bootloop: /tmp/coredhcp.db default 5m 172.16.0.200 172.16.0.250
 EOF
 ```
 {{< /tab >}}
@@ -908,29 +871,14 @@ server4:
     - netmask: 255.255.255.0
     # The lines below define where the system should assign ip addresses for systems that do not have
     # mac addresses stored in SMD
-    - coresmd: |
-        svc_base_uri=https://demo.openchami.cluster:8443
-        ipxe_uri=http://172.16.0.254:8081/boot-service/bootscript
-        ca_cert=/root_ca/root_ca.crt
-        cache_valid=30s
-        lease_time=1h
-        single_port=false
-    - bootloop: |
-        lease_file=/tmp/coredhcp.db
-        script_path=default
-        lease_time=5m
-        ipv4_start=172.16.0.200
-        ipv4_end=172.16.0.250
+    - coresmd: https://demo.openchami.cluster:8443 http://172.16.0.254:8081 /root_ca/root_ca.crt 30s 1h false
+    - bootloop: /tmp/coredhcp.db default 5m 172.16.0.200 172.16.0.250
 EOF
 ```
 {{< /tab >}}
 {{< /tabs >}}
 
 This will allow the compute node later in the tutorial to request its PXE script.
-
-> [!NOTE]
-> Make sure `coredhcp` is upgraded to version `v0.6.1` or later. This version
-> changed the format of the config plugin parameters.
 
 #### 1.4.2 Update CoreDNS Configuration
 
@@ -1073,18 +1021,32 @@ If the services started correctly, the second command above should yield:
 openchami.target
 ● ├─acme-deploy.service
 ● ├─acme-register.service
-● ├─boot-service.service
+● ├─bss-init.service
+● ├─bss.service
+● ├─cloud-init-server.service
 ● ├─coresmd-coredhcp.service
 ● ├─coresmd-coredns.service
 ● ├─haproxy.service
-● ├─metadata-service.service
+● ├─hydra-gen-jwks.service
+● ├─hydra-migrate.service
+● ├─hydra.service
+● ├─opaal-idp.service
+● ├─opaal.service
 ● ├─openchami-cert-trust.service
 ● ├─postgres.service
 ● ├─smd-init.service
 ● ├─smd.service
-● ├─step-ca.service
-● └─tokensmith.service
+● └─step-ca.service
 ```
+
+{{< callout context="tip" title="Tip" icon="outline/bulb" >}}
+If the `haproxy` container fails with the following error, try restarting the
+`opaal` and `haproxy` containers.
+```bash
+haproxy[363101]: [ALERT]    (3) : [/usr/local/etc/haproxy/haproxy.cfg:55] : 'server opaal/opaal' : could not resolve address 'opaal'.
+haproxy[363101]: [ALERT]    (3) : [/usr/local/etc/haproxy/haproxy.cfg:58] : 'server opaal-idp/opaal-idp' : could not resolve address 'opaal-idp'.
+```
+{{< /callout >}}
 
 Check the [**Troubleshooting**](#161-troubleshooting) subsection below if issues arise.
 
@@ -1154,14 +1116,16 @@ ochami version
 The output should look something like:
 
 ```
-Version:    v0.10.0
-Tag:        v0.10.0
-Branch:     chore/fabrica-services
-Commit:     d4b3cfac59bdae6390f8db69d65f6ddd87883716
-Git State:  dirty
-Date:       2026-08-04T17:42:59-04:00
-Go:         go1.26.5 (Red Hat 1.26.5-1.el9_8)
+Version:    0.7.1
+Tag:        v0.7.1
+Branch:     HEAD
+Commit:     08a11e6d18e6804270a0137618934810a10e470e
+Git State:  clean
+Date:       2026-03-25T18:25:04Z
+Go:         go1.26.1
 Compiler:   gc
+Build Host: runnervm46oaq
+Build User: runner
 ```
 
 #### 1.7.2 Configuration
@@ -1190,33 +1154,25 @@ clusters:
       name: demo
 default-cluster: demo
 log:
-    color: auto
     format: rfc3339
     level: warning
 timeout: 30s
+
 ```
-
-We need to update our config to point to boot-service. We can do this with the
-following command.
-
-```bash
-sudo ochami config --system cluster set demo boot-service.uri: /boot-service
-```
-
-The `/boot-service` value should reflect the base URI specified in haproxy. If
-your base URI is different, change it accordingly.
 
 The cluster should now be able to be communicated with. Verify by checking the
 status of one of the services:
 
 ```bash
-ochami boot service status
+ochami bss service status | jq
 ```
 
 The output should be:
 
 ```json
-{"service":"boot-service","status":"ok"}
+{
+  "bss-status": "running"
+}
 ```
 
 {{< callout context="tip" title="Tip" icon="outline/bulb" >}}
@@ -1238,15 +1194,12 @@ the output should be:
 
 ```
 ochami (1)           - OpenCHAMI command line interface
-ochami-boot (1)      - Communicate with the Boot Service
 ochami-bss (1)       - Communicate with the Boot Script Service (BSS)
 ochami-cloud-init (1) - Communicate with the cloud-init server
 ochami-config (1)    - Manage configuration for ochami CLI
 ochami-config (5)    - ochami CLI configuration file
 ochami-discover (1)  - Populate SMD using a file
-ochami-metadata (1)  - Communicate with the Metadata Service
 ochami-pcs (1)       - Communicate with the Power Control Service (PCS)
-ochami-rcs (1)       - Communicate with the remote-console service
 ochami-smd (1)       - Communicate with the State Management Database (SMD)
 ```
 
@@ -1262,7 +1215,7 @@ internal one will be used. The RPM that was installed comes with some shell
 functions that allow one to do this.
 
 ```bash
-export DEMO_ACCESS_TOKEN=$(sudo bash -lc gen_access_token)
+export DEMO_ACCESS_TOKEN=$(sudo bash -lc 'gen_access_token')
 ```
 
 {{< callout context="tip" title="Tip" icon="outline/bulb" >}}
@@ -1278,6 +1231,10 @@ when running the `ochami` command later, it is time to rerun this command.
 Note that `sudo` is needed because the containers are running as root and so if
 `sudo` is omitted, the containers will not be found.
 
+OpenCHAMI tokens last for an hour by default. Whenever one needs to be
+regenerated, run the above command.
+
+
 ### 1.9 Checkpoint
 
 1. ```bash
@@ -1288,26 +1245,30 @@ Note that `sudo` is needed because the containers are running as root and so if
    openchami.target
    ● ├─acme-deploy.service
    ● ├─acme-register.service
-   ● ├─boot-service.service
+   ● ├─bss-init.service
+   ● ├─bss.service
+   ● ├─cloud-init-server.service
    ● ├─coresmd-coredhcp.service
    ● ├─coresmd-coredns.service
    ● ├─haproxy.service
-   ● ├─metadata-service.service
+   ● ├─hydra-gen-jwks.service
+   ● ├─hydra-migrate.service
+   ● ├─hydra.service
+   ● ├─opaal-idp.service
+   ● ├─opaal.service
    ● ├─openchami-cert-trust.service
    ● ├─postgres.service
    ● ├─smd-init.service
    ● ├─smd.service
-   ● ├─step-ca.service
-   ● └─tokensmith.service
+   ● └─step-ca.service
    ```
 2. ```bash
-   ochami boot service status | jq
+   ochami bss service status | jq
    ```
    should yield:
    ```json
    {
-     "service": "boot-service",
-     "status": "ok"
+     "bss-status": "running"
    }
    ```
 
@@ -2262,7 +2223,7 @@ Each time an image pushed to S3, three items are pushed:
 It is important to select the right one when setting boot parameters!
 {{< /callout >}}
 
-For the debug boot artifacts, the URLs (everything after `s3://`) for the
+For the debug boot artifacts, the URLs (everthing after `s3://`) for the
 `compute/debug` items will be used. The following one-liner can be used to
 print the actual URLs:
 
@@ -2398,19 +2359,20 @@ alias build-image='build-image-rh9'
 
 ### 2.5 Managing Boot Parameters
 
-OpenCHAMI serves PXE boot scripts via the `boot-service`. Historically, the project
-has used BSS that came with CSM, but has now switched to its own fabrica-based service.
-We will use the `ochami` CLI to manage boot parameters with `boot-service` but
-the project provides a client generated by [`fabrica`](https://github.com/OpenCHAMI/fabrica).
+With the introduction of the new `boot-service` into OpenCHAMI, we now have two
+services that handle distributing PXE boot scripts. therefore, we are going to
+cover how to work with managing boot parameters with both BSS and `boot-service`.
+Managing boot parameters with BSS uses the `ochami` tool whereas `boot-service`
+has a client generated by [`fabrica`](https://github.com/OpenCHAMI/fabrica).
 The `boot-service` code generation by `fabrica` is outside of the scope of this
-tutorial, but for more information about `fabrica` and its code generation, refer to [this](https://openchami.org/blog/2025/11/using-fabrica-to-generate-a-hardware-inventory-api/) blog post
-or view the documentation in the project repository.
+tutorial, but for more information about `fabrica`, refer to [this](https://openchami.org/blog/2025/11/using-fabrica-to-generate-a-hardware-inventory-api/) blog post.
 
-Like with static discovery, the `ochami` CLI provides a convenient interface that
-we can use to change boot parameters through IaC (Infrastructure as Code). The
-desired configuration can be stored in a file and be applied with a command.
+The `ochami` tool provides a convenient interface for changing boot parameters
+through IaC (Infrastructure as Code). The desired configuration can be stored
+in a file and be applied with a command. We'll use the `ochami` tool only with
+BSS for now.
 
-To set boot parameters, it's necessary to pass:
+To set boot parameters using the BSS backend, it's necessary to pass:
 
 1. The identity of the node that the boot parameters will be applied for (MAC
    address, name, or node ID number)
@@ -2421,37 +2383,36 @@ To set boot parameters, it's necessary to pass:
 
    ***OR:***
 
-   4. A file containing the boot parameter data in YAML or JSON (this method will be used here)
+   4. A file containing the boot parameter data (this method will be used here)
 
 #### 2.5.1 Create the Boot Configuration
 
 Create a directory for the boot configs:
 
 ```bash
-sudo mkdir -p /etc/openchami/data/boot
+sudo mkdir -p /etc/openchami/data/boot/bss
 ```
 
-Then, create the payload file for boot-service,
-**/etc/openchami/data/boot/compute-debug-rocky9.yaml**, that contains the URIs
-for the boot artifacts:
+Then, create the payload for BSS,
+**/etc/openchami/data/boot/bss/compute-debug-rocky9.yaml**, that contains the
+URIs for the boot artifacts:
 
 ```bash
 URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/debug | awk '{print $4}' | sed 's-s3://-http://172.16.0.254:7070/-' | xargs)
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat << EOF | sudo tee /etc/openchami/data/boot/compute-debug-rocky9.yaml
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
 ---
-- name: 'compute-debug-rocky9'
-  kernel: '${URI_KERNEL}'
-  initrd: '${URI_INITRAMFS}'
-  params: 'nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service'
-  macs:
-    - 52:54:00:be:ef:01
-    - 52:54:00:be:ef:02
-    - 52:54:00:be:ef:03
-    - 52:54:00:be:ef:04
-    - 52:54:00:be:ef:05
+kernel: '${URI_KERNEL}'
+initrd: '${URI_INITRAMFS}'
+params: 'nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+macs:
+  - 52:54:00:be:ef:01
+  - 52:54:00:be:ef:02
+  - 52:54:00:be:ef:03
+  - 52:54:00:be:ef:04
+  - 52:54:00:be:ef:05
 EOF
 ```
 
@@ -2463,35 +2424,70 @@ over time. Be sure to update with the output of `s3cmd ls` as stated above!
 {{< /callout >}}
 
 ```yaml
----
-- name: 'compute-debug-rocky9'
-  kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
-  initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
-  params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service'
+kernel: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64'
+initrd: 'http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img'
+params: 'nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+macs:
+  - 52:54:00:be:ef:01
+  - 52:54:00:be:ef:02
+  - 52:54:00:be:ef:03
+  - 52:54:00:be:ef:04
+  - 52:54:00:be:ef:05
+```
+
+Now, we set the boot configuration using one of the backends below.
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+`ochami` supports both `add` and `set`.  The difference is idempotency.  If
+using the `add` command, `bss` will reject replacing an existing boot
+configuration.
+{{< /callout >}}
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+If using the `boot-service` backend below, you may need to update the `ochami` config to set the `boot-service` URI.
+
+```bash
+sudo ochami config --system cluster set demo boot-service.uri: /boot
+```
+{{< /callout >}}
+
+{{< tabs "set-boot-configuration" >}}
+{{< tab "BSS Backend" >}}
+
+Apply the boot parameters created above with:
+
+```bash
+ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/compute-debug-rocky9.yaml
+```
+
+Verify that the parameters were set correctly with:
+
+```bash
+ochami bss boot params get -F yaml
+```
+
+The output should be akin to:
+
+```yaml
+- cloud-init:
+    meta-data: null
+    phone-home:
+        fqdn: ""
+        hostname: ""
+        instance_id: ""
+        pub_key_dsa: ""
+        pub_key_ecdsa: ""
+        pub_key_rsa: ""
+    user-data: null
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
   macs:
     - 52:54:00:be:ef:01
     - 52:54:00:be:ef:02
     - 52:54:00:be:ef:03
     - 52:54:00:be:ef:04
     - 52:54:00:be:ef:05
-```
-
-{{< callout context="note" title="Note" icon="outline/info-circle" >}}
-`ochami` supports both `add` and `set`.  The difference is idempotency.  If
-using the `add` command, `boot-service` will reject replacing an existing boot
-configuration.
-{{< /callout >}}
-
-Now, we set the boot configuration:
-
-```bash
-ochami boot config add -d @/etc/openchami/data/boot/compute-debug-rocky9.yaml -f yaml -l debug
-```
-
-Verify that they got set:
-
-```bash
-ochami boot config list -F yaml
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 ```
 
 The things to check are:
@@ -2499,6 +2495,68 @@ The things to check are:
 - `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
 - `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
 - `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
+
+{{< /tab >}}
+{{< tab "boot-service Backend" >}}
+
+Setting the boot configuration with the `boot-service` backend is a little
+different than with the BSS backend. Instead of using the `ochami` client, we
+will be using the client generated for `boot-service` with `fabrica`.
+Unfortunately, the client command can only take a JSON value with the `--spec`
+flag and cannot be set using a file. However, for the purpose of this tutorial,
+we will create a file to make comparing this method to the `ochami` easier.
+
+**Edit as root:** **`/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml`**
+
+```json
+{
+  "macs": [
+    "52:54:00:be:ef:01",
+    "52:54:00:be:ef:02",
+    "52:54:00:be:ef:03",
+    "52:54:00:be:ef:04",
+    "52:54:00:be:ef:05"
+  ],
+  "params": "nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/debug/rocky9.7-compute-debug-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init",
+  "kernel": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/vmlinuz-5.14.0-611.24.1.el9_7.x86_64",
+  "initrd": "http://172.16.0.254:7070/boot-images/efi-images/compute/debug/initramfs-5.14.0-611.24.1.el9_7.x86_64.img"
+
+}
+```
+
+Notice that the values in this file should be the same values from section
+2.5.2.a but in JSON.
+
+The things to check are:
+
+- `initrd` URL points to debug initrd (try `curl`ing it to make sure it works)
+- `kernel` URL points to debug kernel (try `curl`ing it to make sure it works)
+- `root=live:` URL points to debug image (try `curl`ing it to make sure it works)
+
+Set the boot configuration and verify with the `ochami` or `boot-service` client.
+
+Using the `ochami` CLI:
+
+```bash
+# Set/add the boot configuration
+ochami boot config add -d @/etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml --uri https://demo.openchami.cluster:8443 -l debug
+
+# Verify that it was set properly
+ochami boot config list -F json-pretty
+```
+
+Or using the generated `boot-service` CLI:
+
+```bash
+# Set/add the boot configuration
+boot-service-client bootconfiguration create --spec $(cat /etc/openchami/data/boot/boot-service/compute-debug-rocky9.yaml) --server https://demo.openchami.cluster:8443
+
+# Verify that it was set properly
+boot-service-client bootconfiguration list --server https://demo.openchami.cluster:8443
+```
+
+{{< /tab >}}
+{{< /tabs >}}
 
 You should see output that is similar to the input JSON. At this point, you should
 be ready to boot the compute node.
@@ -2583,7 +2641,7 @@ If the VM needs to be destroyed and restarted, first exit the console with
 1. Rerun the `virt-install` command above.
 {{< /callout >}}
 
-Watch it boot. First, it should show PXE output:
+Watch it boot. First, it should PXE:
 
 ```
 >>Start PXE over IPv4.
@@ -2606,7 +2664,7 @@ iPXE 1.21.1+ (ge9a2) -- Open Source Network Boot Firmware -- https://ipxe.org
 Features: DNS HTTP HTTPS iSCSI TFTP VLAN SRP AoE EFI Menu
 ```
 
-Then, we should see it get it's boot script from TFTP, then boot-service, then download it's kernel/initramfs and boot into Linux.
+Then, we should see it get it's boot script from TFTP, then BSS (the `/boot/v1` URL), then download it's kernel/initramfs and boot into Linux.
 
 ```
 Configuring (net0 52:54:00:be:ef:01)...... ok
@@ -2663,30 +2721,31 @@ TARGET SOURCE        FSTYPE  OPTIONS
 It works! Play around a bit more and then logout. Use `Ctrl`+`]` to exit the Virsh console.
 
 
-### 2.7 OpenCHAMI's Metadata Service
+### 2.7 OpenCHAMI's Cloud-Init Metadata Server
 
 [Cloud-Init](https://cloudinit.readthedocs.io/en/latest/index.html) is the way
 that OpenCHAMI provides post-boot configuration. The idea is to keep the image
 generic without any sensitive data like secrets and let cloud-init take care of
 that data.
 
-The metadata-service works by having an API server that keeps track of the configuration
+Cloud-Init works by having an API server that keeps track of the configuration
 for all nodes, and nodes fetch their configuration from the server via a
 cloud-init client installed in the node image. The node configuration is split
 up into meta-data (variables) and a configuration specification that can
 optionally be templated using the meta-data.
 
-The [OpenCHAMI metadata-service](https://github.com/OpenCHAMI/metadata-service)
-utilizes groups in SMD to provide the appropriate configuration. (This is why we
-added our compute nodes to a "compute" group during discovery.)
+OpenCHAMI [has its own flavor](https://github.com/OpenCHAMI/cloud-init) of
+Cloud-Init server that utilizes groups in SMD to provide the appropriate
+configuration. (This is why we added our compute nodes to a "compute" group
+during discovery.)
 
-In a typical metadata-service setup, the configuration is set up in three phases:
+In a typical OpenCHAMI Cloud-Init setup, the configuration is set up in three phases:
 
 1. Configure cluster-wide default meta-data
 2. Configure group-level cloud-init configuration with optional group meta-data
 3. (_OPTIONAL_) Configure node-specific cloud-init configuration and meta-data
 
-This tutorial will use the OpenCHAMI metadata-service for node post-boot configuration.
+This tutorial will use the OpenCHAMI Cloud-Init server for node post-boot configuration.
 
 #### 2.7.1 Configure Cluster Meta-Data
 
@@ -2716,61 +2775,53 @@ the SSH key created above:
 ```bash
 cat << EOF | sudo tee /etc/openchami/data/cloud-init/ci-defaults.yaml
 ---
-- name: 'cluster-defaults'
-  base_url: "http://172.16.0.254:8081/metadata-service"
-  cluster_name: "demo"
-  nid_length: 2
-  public_keys:
-    - "$(cat ~/.ssh/id_ed25519.pub)"
-  short_name: "de"
+base-url: "http://172.16.0.254:8081/cloud-init"
+cluster-name: "demo"
+nid-length: 2
+public-keys:
+  - "$(cat ~/.ssh/id_ed25519.pub)"
+short-name: "de"
 EOF
 ```
-
 The content should be, e.g:
 
 ```yaml
 ---
-- name: 'cluster-defaults'
-  base_url: "http://172.16.0.254:8081/metadata-service"
-  cluster_name: "demo"
-  nid_length: 2
-  public_keys:
-    - "ssh-ed25519 AAAA... rocky@head"
-  short_name: "de"
+base-url: "http://172.16.0.254:8081/cloud-init"
+cluster-name: "demo"
+nid-length: 2
+public-keys:
+- "ssh-ed25519 AAAA... rocky@head"
+short-name: "de"
 ```
 
 Then, set the cloud-init defaults using the `ochami` CLI:
 
 ```bash
-ochami metadata defaults add -f yaml -d @/etc/openchami/data/cloud-init/ci-defaults.yaml
+ochami cloud-init defaults set -f yaml -d @/etc/openchami/data/cloud-init/ci-defaults.yaml
 ```
 
 Verify that these values were set with:
 
 ```bash
-ochami metadata defaults list -F yaml
+ochami cloud-init defaults get -F json-pretty
 ```
 
 The output should be:
 
-```yaml
-- apiVersion: v1
-  kind: ClusterDefaults
-  metadata:
-    name: cluster-defaults
-    uid: clusterdefaults-75f3f304
-    createdAt: ...
-    updatedAt: ...
-  spec:
-    base_url: http://172.16.0.254:8081/metadata-service
-    cluster_name: demo
-    short_name: de
-    nid_length: 2
-    public_keys:
-        - ssh-ed25519 AAAA... rocky@db-head
+```json
+{
+  "base-url": "http://172.16.0.254:8081/cloud-init",
+  "cluster-name": "demo",
+  "nid-length": 2,
+  "public-keys": [
+    "<YOUR SSH KEY>"
+  ],
+  "short-name": "de"
+}
 ```
 
-#### 2.7.2 Configure Group-Level Metadata
+#### 2.7.2 Configure Group-Level Cloud-Init
 
 Now, the cloud-init configuration needs to be set for the `compute` group,
 which is the SMD group that all of the virtual compute nodes are in. For now, a
@@ -2783,50 +2834,80 @@ with the following contents:
 sudo tee /etc/openchami/data/cloud-init/ci-group-compute.yaml > /dev/null << EOF
 - name: compute
   description: "compute config"
-  template: |
-    ## template: jinja
-    #cloud-config
-    merge_how:
+  file:
+    encoding: plain
+    content: |
+      ## template: jinja
+      #cloud-config
+      merge_how:
       - name: list
         settings: [append]
       - name: dict
         settings: [no_replace, recurse_list]
-    users:
-      - name: root
-        ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
-    disable_root: false
+      users:
+        - name: root
+          ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
+      disable_root: false
 EOF
 ```
 
 Now, set this configuration for the compute group:
 
 ```bash
-ochami metadata group add -f yaml -d @/etc/openchami/data/cloud-init/ci-group-compute.yaml
+ochami cloud-init group set -f yaml -d @/etc/openchami/data/cloud-init/ci-group-compute.yaml
 ```
 
 Check that it got added with:
 
 ```bash
-ochami metadata group list | jq .[].spec.template -r
+ochami cloud-init group get config compute
 ```
 
-The cloud-config file created within the YAML above should be displayed:
+The cloud-config file created within the YAML above should get print out:
 
 ```yaml
 ## template: jinja
 #cloud-config
 merge_how:
-  - name: list
-    settings: [append]
-  - name: dict
-    settings: [no_replace, recurse_list]
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
 users:
   - name: root
     ssh_authorized_keys: {{ ds.meta_data.instance_data.v1.public_keys }}
 disable_root: false
 ```
 
-<!-- TODO: This doesn't exist in the new metadata-service (yet?)
+`ochami` has basic per-group template rendering available that can be used to
+check that the Jinja2 is rendering properly for a node. Check if for the first
+compute node (x1000c0s0b0n0):
+
+```bash
+ochami cloud-init group render compute x1000c0s0b0n0
+```
+
+{{< callout context="note" title="Note" icon="outline/info-circle" >}}
+This feature requires that impersonation is enabled with cloud-init. Check and
+make sure that the `IMPERSONATION` environment variable is set in
+`/etc/openchami/configs/openchami.env`.
+{{< /callout >}}
+
+The SSH key that was created above should appear in the config:
+
+```yaml
+#cloud-config
+merge_how:
+- name: list
+  settings: [append]
+- name: dict
+  settings: [no_replace, recurse_list]
+users:
+  - name: root
+    ssh_authorized_keys: ['<SSH_KEY>']
+disable_root: false
+```
+
 ### 2.7.3 (_OPTIONAL_) Configure Node-Specific Meta-Data
 
 If the host naming scheme is unsatisfactory, hostnames can be changed on a
@@ -2855,17 +2936,17 @@ The output should be something like:
   instance-id: i-3903b323
   instance_data:
     v1:
-      instance_id: i-3903b323
-      local_ipv4: 172.16.0.1
-      public_keys:
-        - <SSH_KEY>
-      vendor_data:
-        cloud_init_base_url: http://172.16.0.254:8081/metadata-service
-        cluster_name: demo
-        groups:
-          compute:
-            Description: compute config
-        version: "1.0"
+        instance_id: i-3903b323
+        local_ipv4: 172.16.0.1
+        public_keys:
+            - <SSH_KEY>
+        vendor_data:
+            cloud_init_base_url: http://172.16.0.254:8081/cloud-init
+            cluster_name: demo
+            groups:
+                compute:
+                    Description: compute config
+            version: "1.0"
   local-hostname: compute1
 ```
 
@@ -2883,22 +2964,21 @@ group cloud-config endpoint for each group the node is a member of:
 
 ```
 #include
-http://172.16.0.254:8081/metadata-service/compute.yaml
+http://172.16.0.254:8081/cloud-init/compute.yaml
 ```
 
 So far, this compute node is only a member of the one group above.
--->
 
 ### 2.8 Boot Using the Compute Image
 
 #### 2.8.1 Switch from the Debug Image to the Compute Image
 
-`boot-service` still thinks that the nodes are booting the debug image, so it
-needs to be told to boot the base compute image.
+BSS still thinks that the nodes are booting the debug image, so it needs to be
+told to boot the base compute image.
 
 Just as was done for setting the boot parameters for the debug compute image,
 the URIs for the boot artifacts for the base compute image needs to be gotten
-to configure `boot-service` with them.
+to configure BSS with them.
 
 ```bash
 s3cmd ls -Hr s3://boot-images/ | awk '{print $4}' | grep compute/base
@@ -2920,37 +3000,58 @@ URIS=$(s3cmd ls -Hr s3://boot-images | grep compute/base | awk '{print $4}' | se
 URI_IMG=$(echo "$URIS" | cut -d' ' -f1)
 URI_INITRAMFS=$(echo "$URIS" | cut -d' ' -f2)
 URI_KERNEL=$(echo "$URIS" | cut -d' ' -f3)
-cat << EOF | sudo tee /etc/openchami/data/boot/compute-base-rocky9.yaml
+cat << EOF | sudo tee /etc/openchami/data/boot/bss/compute-base-rocky9.yaml
 ---
-spec:
-  kernel: '${URI_KERNEL}'
-  initrd: '${URI_INITRAMFS}'
-  params: 'nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service'
-  macs:
-    - 52:54:00:be:ef:01
-    - 52:54:00:be:ef:02
-    - 52:54:00:be:ef:03
-    - 52:54:00:be:ef:04
-    - 52:54:00:be:ef:05
+kernel: '${URI_KERNEL}'
+initrd: '${URI_INITRAMFS}'
+params: 'nomodeset ro root=live:${URI_IMG} ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init'
+macs:
+  - 52:54:00:be:ef:01
+  - 52:54:00:be:ef:02
+  - 52:54:00:be:ef:03
+  - 52:54:00:be:ef:04
+  - 52:54:00:be:ef:05
 EOF
 ```
 
 As before, it's a good idea to check that these URIs work before applying the
 config.
 
-Then, these new parameters can be patched into the existing configuration with:
+Then, these new parameters can be set with:
 
 ```bash
-ochami boot config set "$(ochami boot config list | jq -r .[].metadata.uid)" -f yaml -d @/etc/openchami/data/boot/bss/compute-base-rocky9.yaml
+ochami bss boot params set -f yaml -d @/etc/openchami/data/boot/bss/compute-base-rocky9.yaml
 ```
 
 Double-check that the params were updated:
 
 ```bash
-ochami boot config list -F yaml
+ochami bss boot params get -F yaml
 ```
 
-They should match the file above.
+They should match the file above:
+
+```yaml
+- cloud-init:
+    meta-data: null
+    phone-home:
+        fqdn: ""
+        hostname: ""
+        instance_id: ""
+        pub_key_dsa: ""
+        pub_key_ecdsa: ""
+        pub_key_rsa: ""
+    user-data: null
+  initrd: http://172.16.0.254:7070/boot-images/efi-images/compute/base/initramfs-5.14.0-611.24.1.el9_7.x86_64.img
+  kernel: http://172.16.0.254:7070/boot-images/efi-images/compute/base/vmlinuz-5.14.0-611.24.1.el9_7.x86_64
+  macs:
+    - 52:54:00:be:ef:01
+    - 52:54:00:be:ef:02
+    - 52:54:00:be:ef:03
+    - 52:54:00:be:ef:04
+    - 52:54:00:be:ef:05
+  params: nomodeset ro root=live:http://172.16.0.254:7070/boot-images/compute/base/rocky9.7-compute-base-rocky9 ip=dhcp overlayroot=tmpfs overlayroot_cfgdisk=disabled apparmor=0 selinux=0 console=ttyS0,115200 ip6=off cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+```
 
 #### 2.8.2 Booting the Compute Node
 
@@ -2961,7 +3062,7 @@ configuration, a node can now be fully booted.
 Check that the boot parameters point to the base image with:
 
 ```bash
-ochami boot config list | jq
+ochami bss boot params get | jq
 ```
 
 Then, power cycle `compute1` and attach to the console to watch it boot:
@@ -2992,7 +3093,7 @@ Just like with the debug image, the node should:
 
 1. Get its IP address (172.16.0.1)
 2. Download the iPXE bootloader binary from CoreSMD
-3. Download the `config.ipxe` script that chainloads the iPXE script from `boot-service` (http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01)
+3. Download the `config.ipxe` script that chainloads the iPXE script from BSS (http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01)
 4. Download the kernel and initramfs in S3
 5. Boot into the image, running cloud-init
 
