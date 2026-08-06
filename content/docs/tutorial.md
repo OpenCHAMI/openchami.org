@@ -22,6 +22,9 @@ As of **OpenCHAMI v0.2.0**, this tutorial uses the new
 [cloud-init](https://github.com/openchami/cloud-init).
 
 See [here](https://github.com/OpenCHAMI/release/pull/50) for more info.
+
+See [here](/docs/guides/fabrica-migration/) for a guide on how to migrate an
+existing, legacy deployment to the new fabrica-based services.
 {{< /callout >}}
 
 ## Part 0. Prerequisites
