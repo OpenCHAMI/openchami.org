@@ -14,14 +14,15 @@ toc: true
 <!-- vi: set tw=80 sw=2 sts=2: -->
 
 {{< callout context="note" title="Update (08/04/2026)" icon="outline/info-circle" >}}
-As of **OpenCHAMI v0.2.0**, this tutorial uses the new
-[fabrica](https://github.com/openchami/fabrica)-based services:
-[boot-service](https://github.com/openchami/boot-service) over
+As of [**OpenCHAMI
+v0.2.0**](https://github.com/OpenCHAMI/release/releases/tag/v0.2.0), this
+tutorial uses the new [fabrica](https://github.com/openchami/fabrica)-based
+services: [boot-service](https://github.com/openchami/boot-service) over
 [BSS](https://github.com/openchami/bss), and
 [metadata-service](https://github.com/openchami/metadata-service) over
 [cloud-init](https://github.com/openchami/cloud-init).
 
-See [here](https://github.com/OpenCHAMI/release/pull/50) for more info.
+To use the legacy tutorial, see [here](/docs/archive/tutorial-legacy/).
 
 See [here](/docs/guides/fabrica-migration/) for a guide on how to migrate an
 existing, legacy deployment to the new fabrica-based services.

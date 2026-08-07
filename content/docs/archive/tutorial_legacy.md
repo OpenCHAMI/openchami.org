@@ -1,8 +1,8 @@
 ---
 title: "OpenCHAMI Tutorial (Legacy)"
-linktitle: "Old Tutorial"
+linktitle: "Legacy Tutorial"
 description: "Learn about OpenCHAMI by setting it up in a controlled environment. Uses legacy services (BSS, cloud-init, SMD)."
-slug: "tutorial"
+slug: "tutorial-legacy"
 summary: ""
 date: 2025-10-06T15:34:25-06:00
 lastmod: 2026-08-06T09:32:06-06:00
