@@ -98,31 +98,31 @@ environment variable are already set. For the example cluster, the variable is
 Record the software versions and current health before changing anything:
 
 ```bash
-rpm -q openchami | sudo tee "${MIGRATION_DIR}/inventory/rpm-version.txt"
-ochami version | sudo tee "${MIGRATION_DIR}/inventory/ochami-version.txt"
+rpm -q openchami | tee "${MIGRATION_DIR}/inventory/rpm-version.txt"
+ochami version | tee "${MIGRATION_DIR}/inventory/ochami-version.txt"
 systemctl list-dependencies openchami.target \
-  | sudo tee "${MIGRATION_DIR}/inventory/openchami-dependencies.txt"
+  | tee "${MIGRATION_DIR}/inventory/openchami-dependencies.txt"
 systemctl --failed \
-  | sudo tee "${MIGRATION_DIR}/inventory/failed-units.txt"
+  | tee "${MIGRATION_DIR}/inventory/failed-units.txt"
 systemctl is-active firewalld \
-  | sudo tee "${MIGRATION_DIR}/inventory/firewalld-state.txt"
+  | tee "${MIGRATION_DIR}/inventory/firewalld-state.txt"
 sudo podman ps --all \
-  | sudo tee "${MIGRATION_DIR}/inventory/podman-containers.txt"
+  | tee "${MIGRATION_DIR}/inventory/podman-containers.txt"
 sudo podman volume ls \
-  | sudo tee "${MIGRATION_DIR}/inventory/podman-volumes.txt"
+  | tee "${MIGRATION_DIR}/inventory/podman-volumes.txt"
 sudo podman secret ls \
-  | sudo tee "${MIGRATION_DIR}/inventory/podman-secrets.txt"
+  | tee "${MIGRATION_DIR}/inventory/podman-secrets.txt"
 ochami config show \
-  | sudo tee "${MIGRATION_DIR}/inventory/ochami-config.yaml"
+  | tee "${MIGRATION_DIR}/inventory/ochami-config.yaml"
 ```
 
 Identify files that can shadow the v0.2.0 package:
 
 ```bash
 sudo ls -la /etc/containers/systemd \
-  | sudo tee "${MIGRATION_DIR}/inventory/etc-quadlets.txt"
+  | tee "${MIGRATION_DIR}/inventory/etc-quadlets.txt"
 sudo ls -la /etc/systemd/system \
-  | sudo tee "${MIGRATION_DIR}/inventory/etc-systemd-units.txt"
+  | tee "${MIGRATION_DIR}/inventory/etc-systemd-units.txt"
 ```
 
 Do not assume every file in these directories belongs to OpenCHAMI. Record any
@@ -138,6 +138,14 @@ ochami smd service status | jq
 ochami cloud-init defaults get -F json-pretty | jq
 ```
 
+{{< callout context="note" title="Set token" icon="outline/info-circle" >}}
+The `cloud-init` command above requires a token. Set it with:
+
+```bash
+export DEMO_ACCESS_TOKEN=$(sudo bash -lc gen_access_token)
+```
+{{< /callout >}}
+
 ## 2. Export Legacy Data
 
 Logical exports are the source of truth for the new services. Physical volume
@@ -149,11 +157,11 @@ Export all BSS boot parameter records as JSON and YAML:
 
 ```bash
 ochami bss boot params get -F json-pretty \
-  | sudo tee "${MIGRATION_DIR}/export/bss-bootparameters.json" >/dev/null
+  | tee "${MIGRATION_DIR}/export/bss-bootparameters.json" >/dev/null
 ochami bss boot params get -F yaml \
-  | sudo tee "${MIGRATION_DIR}/export/bss-bootparameters.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/bss-bootparameters.yaml" >/dev/null
 jq 'length' "${MIGRATION_DIR}/export/bss-bootparameters.json" \
-  | sudo tee "${MIGRATION_DIR}/inventory/bss-record-count.txt"
+  | tee "${MIGRATION_DIR}/inventory/bss-record-count.txt"
 ```
 
 Inspect every record. Pay particular attention to:
@@ -171,9 +179,9 @@ not be copied into a `BootConfiguration`.
 
 ```bash
 ochami cloud-init defaults get -F json-pretty \
-  | sudo tee "${MIGRATION_DIR}/export/cloud-init-defaults.json" >/dev/null
+  | tee "${MIGRATION_DIR}/export/cloud-init-defaults.json" >/dev/null
 ochami cloud-init defaults get -F yaml \
-  | sudo tee "${MIGRATION_DIR}/export/cloud-init-defaults.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/cloud-init-defaults.yaml" >/dev/null
 ```
 
 The defaults can contain SSH public keys and environment-specific URLs. Protect
@@ -190,9 +198,9 @@ curl --fail --silent --show-error \
   -H "Authorization: Bearer ${DEMO_ACCESS_TOKEN}" \
   "${CLUSTER_URL}/cloud-init/admin/groups" \
   | jq --sort-keys . \
-  | sudo tee "${MIGRATION_DIR}/export/cloud-init-groups.json" >/dev/null
+  | tee "${MIGRATION_DIR}/export/cloud-init-groups.json" >/dev/null
 jq 'length' "${MIGRATION_DIR}/export/cloud-init-groups.json" \
-  | sudo tee "${MIGRATION_DIR}/inventory/cloud-init-group-count.txt"
+  | tee "${MIGRATION_DIR}/inventory/cloud-init-group-count.txt"
 ```
 
 This relies on `openchami-cert-trust.service` having installed the OpenCHAMI CA
@@ -220,7 +228,7 @@ have overrides:
 ```bash
 NODE=x1000c0s0b0n0
 ochami cloud-init node get meta-data "${NODE}" -F yaml \
-  | sudo tee "${MIGRATION_DIR}/export/rendered-${NODE}-metadata.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/rendered-${NODE}-metadata.yaml" >/dev/null
 ```
 
 Rendered metadata combines defaults, SMD data, group data, and instance
@@ -241,9 +249,9 @@ SMD remains PostgreSQL-backed in v0.2.0 and should continue using the existing
 
 ```bash
 ochami smd component get -F json-pretty \
-  | sudo tee "${MIGRATION_DIR}/export/smd-components.json" >/dev/null
+  | tee "${MIGRATION_DIR}/export/smd-components.json" >/dev/null
 ochami smd group get -F json-pretty \
-  | sudo tee "${MIGRATION_DIR}/export/smd-groups.json" >/dev/null
+  | tee "${MIGRATION_DIR}/export/smd-groups.json" >/dev/null
 ```
 
 If the installed `ochami` version does not accept those output flags, use the
@@ -253,8 +261,8 @@ section remains the authoritative SMD backup.
 ### 2.6 Checksum the Logical Exports
 
 ```bash
-sudo sha256sum "${MIGRATION_DIR}"/export/* \
-  | sudo tee "${MIGRATION_DIR}/inventory/export-sha256.txt"
+sha256sum "${MIGRATION_DIR}"/export/* \
+  | tee "${MIGRATION_DIR}/inventory/export-sha256.txt"
 ```
 
 Copy the migration directory to storage outside the head node before the
@@ -282,6 +290,7 @@ sudo tar --acls --xattrs --selinux -C / -cpf \
   etc/containers/systemd
 sudo tar --acls --xattrs --selinux -C / -cpf \
   "${MIGRATION_DIR}/backup/etc-systemd-system.tar" etc/systemd/system
+sudo chown "$(whoami):" "${MIGRATION_DIR}"/backup/etc-{openchami,containers-systemd,systemd-system}.tar
 ```
 
 ### 3.1 Back Up PostgreSQL
@@ -291,7 +300,7 @@ Start only PostgreSQL, create a logical dump, then stop it again:
 ```bash
 sudo systemctl start postgres.service
 sudo podman exec postgres pg_dumpall -U ochami \
-  | sudo tee "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql" >/dev/null
+  > "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql"
 sudo systemctl stop postgres.service
 ```
 
@@ -300,7 +309,7 @@ the dump before continuing:
 
 ```bash
 test -s "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql"
-sudo sha256sum "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql"
+sha256sum "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql"
 ```
 
 Also back up the stopped Podman volume. Determine its actual mount point rather
@@ -309,11 +318,12 @@ than assuming a storage-driver path:
 ```bash
 POSTGRES_VOLUME=postgres-data
 sudo podman volume inspect "${POSTGRES_VOLUME}" \
-  | sudo tee "${MIGRATION_DIR}/inventory/postgres-volume.json" >/dev/null
+  | tee "${MIGRATION_DIR}/inventory/postgres-volume.json" >/dev/null
 POSTGRES_MOUNT=$(sudo podman volume inspect "${POSTGRES_VOLUME}" \
   --format '{{ .Mountpoint }}')
 sudo tar --acls --xattrs --selinux -C "${POSTGRES_MOUNT}" -cpf \
   "${MIGRATION_DIR}/backup/postgres-data.tar" .
+sudo chown "$(whoami):" "${MIGRATION_DIR}/backup/postgres-data.tar"
 ```
 
 Confirm the volume name from `podman volume ls`; some installations prefix or
@@ -332,6 +342,7 @@ for volume in cloud-init-data acme-certs haproxy-certs \
       --format '{{ .Mountpoint }}')
     sudo tar --acls --xattrs --selinux -C "${mountpoint}" -cpf \
       "${MIGRATION_DIR}/backup/${volume}.tar" .
+    sudo chown "$(whoami):" "${MIGRATION_DIR}/backup/${volume}.tar"
   fi
 done
 ```
