@@ -1158,14 +1158,16 @@ ochami version
 The output should look something like:
 
 ```
-Version:    v0.10.0
-Tag:        v0.10.0
-Branch:     chore/fabrica-services
-Commit:     d4b3cfac59bdae6390f8db69d65f6ddd87883716
-Git State:  dirty
-Date:       2026-08-04T17:42:59-04:00
-Go:         go1.26.5 (Red Hat 1.26.5-1.el9_8)
+Version:    0.10.1
+Tag:        v0.10.1
+Branch:     HEAD
+Commit:     9b9e17aea9d5b3c6cdc60a755472082464ffe4ed
+Git State:  clean
+Date:       2026-08-07T16:27:07Z
+Go:         go1.26.5
 Compiler:   gc
+Build Host: runnervmvrwv9
+Build User: runner
 ```
 
 #### 1.7.2 Configuration
