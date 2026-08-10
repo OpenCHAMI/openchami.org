@@ -144,6 +144,7 @@ The `cloud-init` command above requires a token. Set it with:
 ```bash
 export DEMO_ACCESS_TOKEN=$(sudo bash -lc gen_access_token)
 ```
+
 {{< /callout >}}
 
 ## 2. Export Legacy Data
@@ -356,7 +357,106 @@ Perform conversion before removing the old package. Keep converted resources
 under `${MIGRATION_DIR}/converted` and review them in version control or with a
 second administrator when possible.
 
-### 4.1 Convert BSS Records to Boot Configurations
+### 4.1 Run the Offline Conversion Script
+
+OpenCHAMI provides an offline converter based on the same approach as the
+`ochami-discovery-old2new.py` inventory converter. It reads the exports created
+in section 2 and does not connect to or modify either deployment.
+
+Download it from this site and inspect it before running it:
+
+```bash
+curl --fail --location \
+  https://openchami.org/scripts/openchami-resources-old2new.py \
+  -o "${MIGRATION_DIR}/openchami-resources-old2new.py"
+chmod 755 "${MIGRATION_DIR}/openchami-resources-old2new.py"
+python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" --help
+```
+
+JSON conversion uses only the Python standard library. Create a Python virtual
+environment and install PyYAML to read or write YAML:
+
+```bash
+python3 -m venv "${MIGRATION_DIR}/venv"
+source "${MIGRATION_DIR}/venv/bin/activate"
+pip install PyYAML
+```
+
+Convert the complete export bundle:
+
+```bash
+python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" \
+  --bundle "${MIGRATION_DIR}/export" \
+  --output-dir "${MIGRATION_DIR}/converted" \
+  --metadata-url \
+    "http://${PROVISIONING_IP}:8081/metadata-service" \
+  --out-format yaml
+```
+
+The converter recognizes these input files:
+
+- `bss-bootparameters.json`;
+- `cloud-init-defaults.json`;
+- `cloud-init-groups.json`; and
+- optional `cloud-init-instance-overrides.json`, assembled from the raw
+  overrides recovered in section 2.4.
+
+It writes:
+
+- `boot-configurations.yaml`;
+- `cluster-defaults.yaml`;
+- `groups.yaml`;
+- `instance-info.yaml` when raw overrides were supplied; and
+- `migration-report.json`.
+
+Review every generated resource and every warning in `migration-report.json`.
+The script reports dropped legacy fields, invalid NIDs and MACs, duplicate boot
+selectors, inferred URLs, unsupported overrides, and other conversions that
+need an administrator's decision. It does not validate templates against a
+running metadata-service.
+
+By default, non-string values in legacy group metadata stop conversion because
+modern `metaData` accepts strings. After reviewing those values, explicitly
+allow deterministic JSON stringification when appropriate:
+
+```bash
+python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" \
+  --bundle "${MIGRATION_DIR}/export" \
+  --output-dir "${MIGRATION_DIR}/converted" \
+  --metadata-url \
+    "http://${PROVISIONING_IP}:8081/metadata-service" \
+  --out-format yaml \
+  --stringify-metadata
+```
+
+Use `--strict` to reject all warnings and emit no converted files. In bundle
+mode, the absence of the optional raw instance-override file is itself a
+warning, because the administrator must confirm whether overrides existed.
+
+The converter can also process one resource type through standard input and
+output, matching the discovery converter's workflow:
+
+```bash
+python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" \
+  --resource boot \
+  --metadata-url \
+    "http://${PROVISIONING_IP}:8081/metadata-service" \
+  --report "${MIGRATION_DIR}/converted/boot-report.json" \
+  < "${MIGRATION_DIR}/export/bss-bootparameters.json" \
+  > "${MIGRATION_DIR}/converted/boot-configurations.json"
+```
+
+The following sections explain each transformation so that the generated files
+can be reviewed rather than trusted blindly.
+
+Don't forget to exit the Python virtual environment when finished running the
+script:
+
+```bash
+deactivate
+```
+
+### 4.2 Convert BSS Records to Boot Configurations
 
 Each BSS record becomes one named `BootConfiguration`. Map fields as follows:
 
@@ -378,10 +478,7 @@ For example, this legacy record:
 ```yaml
 kernel: http://172.16.0.254:7070/boot-images/vmlinuz
 initrd: http://172.16.0.254:7070/boot-images/initramfs.img
-params: >-
-  root=live:http://172.16.0.254:7070/boot-images/compute.squashfs
-  ip=dhcp cloud-init=enabled
-  ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
+params: root=live:http://172.16.0.254:7070/boot-images/compute.squashfs ip=dhcp cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/cloud-init
 macs:
   - 52:54:00:be:ef:01
 ```
@@ -393,14 +490,9 @@ becomes an import file like this:
 - name: compute-default
   kernel: http://172.16.0.254:7070/boot-images/vmlinuz
   initrd: http://172.16.0.254:7070/boot-images/initramfs.img
-  params: >-
-    root=live:http://172.16.0.254:7070/boot-images/compute.squashfs
-    ip=dhcp cloud-init=enabled
-    ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service
+  params: root=live:http://172.16.0.254:7070/boot-images/compute.squashfs ip=dhcp cloud-init=enabled ds=nocloud-net;s=http://172.16.0.254:8081/metadata-service
   macs:
     - 52:54:00:be:ef:01
-  profile: default
-  priority: 10
 ```
 
 Boot-service allows configurations without selectors as catch-all defaults.
@@ -410,7 +502,7 @@ overlaps so a migrated record does not unexpectedly supersede another record.
 Use separate import files for logically distinct profiles or node classes. Do
 not mechanically assign every legacy record the same name.
 
-### 4.2 Convert Cluster Defaults
+### 4.3 Convert Cluster Defaults
 
 Map the legacy keys to their underscore-separated modern names:
 
@@ -448,7 +540,7 @@ Create `${MIGRATION_DIR}/converted/cluster-defaults.yaml`:
 Only one intended cluster-default resource should normally be active. Importing
 multiple competing defaults makes later behavior difficult to reason about.
 
-### 4.3 Convert Groups and Templates
+### 4.4 Convert Groups and Templates
 
 Map each legacy group as follows:
 
@@ -500,7 +592,7 @@ YAML. Review legacy variables carefully. The modern context includes flat node
 fields as well as `ds.meta_data`, `ds.vendor_data`, and custom values from
 `metaData`, but not every legacy variable is necessarily available.
 
-### 4.4 Convert Instance Overrides
+### 4.5 Convert Instance Overrides
 
 Each known raw legacy override becomes an `InstanceInfo` resource:
 
@@ -559,7 +651,7 @@ only stale OpenCHAMI package files that remain after comparing them with the
 backup:
 
 ```bash
-sudo ls -la /etc/containers/systemd
+ls -la /etc/containers/systemd
 ```
 
 The v0.2.0 RPM checks for old OpenCHAMI `.container`, `.network`, and `.volume`
@@ -569,7 +661,7 @@ unrelated Quadlets may remain, provided they do not shadow an OpenCHAMI unit.
 Also inspect RPM preservation files before installation:
 
 ```bash
-sudo ls -la /etc/openchami/configs
+ls -la /etc/openchami/configs
 ```
 
 Keep `.rpmsave` files for comparison. Do not copy the complete old
@@ -602,8 +694,8 @@ Confirm the new package layout:
 
 ```bash
 rpm -ql openchami | less
-sudo ls -la /usr/share/containers/systemd
-sudo ls -la /usr/lib/systemd/system/openchami.target
+ls -la /usr/share/containers/systemd
+ls -la /usr/lib/systemd/system/openchami.target
 ```
 
 Expected new resources include:
@@ -614,6 +706,10 @@ Expected new resources include:
 - a new `openchami.target` without BSS, cloud-init, Hydra, or OPAAL.
 
 ## 7. Merge Site Configuration
+
+The following sections after 7.1 refer to configuration files in
+`/etc/openchami/configs`. Refer to the config files there (as well as any
+`.rpmsave` files if using DNF/RPM) when merging configs.
 
 ### 7.1 Restore the Cluster FQDN
 
@@ -628,13 +724,15 @@ Do not restore old modified `acme-*.container` files. Inspect the generated
 drop-in and then reload Systemd:
 
 ```bash
-sudo ls -la /etc/containers/systemd/acme-.container.d
+ls -la /etc/containers/systemd/acme-.container.d
 sudo systemctl daemon-reload
 ```
 
-### 7.2 Update CoreDHCP
+### 7.2 Update CoreSMD
 
-CoreDHCP must be v0.6.1 or newer. That release changed plugin parameters from
+#### CoreDHCP
+
+CoreSMD must be v0.6.1 or newer. That release changed plugin parameters from
 positional arguments to named multiline values. Preserve the site's interface,
 router, DNS, subnet, lease, and address-pool choices while using this form:
 
@@ -666,6 +764,20 @@ The important endpoint is
 `http://<provisioning-IP>:8081/boot-service/bootscript`. Do not retain the old
 base URL that made CoreSMD chainload `/boot/v1/bootscript`.
 
+Note that the order of the key-value pairs above (and in the `coredhcp.yaml`
+installed by the package) matches the order of the old, ordered values. This
+means that you only need prepend the keys to the values when changing to the
+new format for `coresmd` and `bootloop` (if applicable).
+
+If you need to assign hostnames or modify any host-specific DHCP options,
+you'll need to use CoreSMD [rich
+rules](https://github.com/OpenCHAMI/coresmd/blob/main/examples/coredhcp/rules.md).
+
+#### CoreDNS
+
+The CoreDNS Corefile format has not changed. It is save to copy the `.rpmsave`
+file back into the Corefile.
+
 ### 7.3 Review HAProxy and Environment Changes
 
 Merge local HAProxy changes into the v0.2.0 configuration. The new routes are:
@@ -673,6 +785,10 @@ Merge local HAProxy changes into the v0.2.0 configuration. The new routes are:
 - `/boot-service/` to `boot-service:8081`;
 - `/metadata-service/` to `metadata-service:8080`; and
 - `/tokensmith/` to `tokensmith:8080`.
+
+**If this file does not have an `.rpmsave` file (e.g. was not modified), no
+config merge is necessary.** The new package will have correct paths
+configured.
 
 Reapply site customizations with Quadlet drop-ins when possible. Do not restore
 the old BSS, cloud-init, Hydra, or OPAAL backends.
@@ -726,15 +842,28 @@ sudo podman secret inspect \
 
 ## 9. Update `ochami` and Authentication
 
-Use an `ochami` version that supports both `boot` and `metadata`. Configure the
-cluster and boot-service base URI:
+Use an `ochami` version that supports both `boot` and `metadata` (preferably
+v0.10.1+). Configure the cluster and boot-service base URI:
 
 ```bash
 sudo ochami config cluster set --system --default "${CLUSTER_NAME}" \
   cluster.uri "${CLUSTER_URL}"
 sudo ochami config --system cluster set "${CLUSTER_NAME}" \
-  boot-service.uri: /boot-service
+  cluster.boot-service.uri /boot-service
 ochami config show
+```
+
+The cluster config should have a `boot-service` block with the configured URI,
+e.g:
+
+```yaml
+clusters:
+    - cluster:
+        boot-service:
+            uri: /boot-service
+        enable-auth: true
+        uri: https://demo.openchami.cluster:8443
+      name: demo
 ```
 
 Old Hydra/OPAAL tokens cannot be reused. Mint a TokenSmith token:
@@ -763,8 +892,7 @@ Import one reviewed file or logical batch at a time:
 
 ```bash
 ochami boot config add -f yaml \
-  -d @"${MIGRATION_DIR}/converted/boot-configurations.yaml" \
-  -l migration
+  -d @"${MIGRATION_DIR}/converted/boot-configurations.yaml"
 ochami boot config list -F yaml \
   | sudo tee "${MIGRATION_DIR}/inventory/imported-boot-configurations.yaml" \
     >/dev/null
@@ -835,7 +963,8 @@ jq -r '.[] | .spec.kernel, .spec.initrd' \
     done
 ```
 
-Request a boot script for at least one node in every node class or profile:
+Request a boot script for at least one node in every node class or profile
+(replace MAC address with one from your inventory):
 
 ```bash
 curl --fail --silent --show-error \
