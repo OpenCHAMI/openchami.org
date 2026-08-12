@@ -337,7 +337,8 @@ the dump before continuing:
 
 ```bash
 test -s "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql"
-sha256sum "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql"
+sha256sum "${MIGRATION_DIR}/backup/postgres-pg_dumpall.sql" \
+  | tee "${MIGRATION_DIR}/inventory/postgres-pg_dumpall-export-sha256.txt"
 ```
 
 Also back up the stopped Podman volume. Determine its actual mount point rather
