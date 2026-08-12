@@ -195,7 +195,7 @@ to count the records with `jq`:
 
 ```bash
 ochami bss boot params get -F yaml \
-  | tee "${MIGRATION_DIR}/export/bss-bootparameters.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/bss-bootparameters.yaml"
 ochami bss boot params get -F json | jq 'length' \
   | tee "${MIGRATION_DIR}/inventory/bss-record-count.txt"
 ```
@@ -215,7 +215,7 @@ not be copied into a `BootConfiguration`.
 
 ```bash
 ochami cloud-init defaults get -F yaml \
-  | tee "${MIGRATION_DIR}/export/cloud-init-defaults.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/cloud-init-defaults.yaml"
 ```
 
 The defaults can contain SSH public keys and environment-specific URLs. Protect
@@ -230,7 +230,7 @@ only to count the groups:
 
 ```bash
 ochami cloud-init group get raw -F yaml \
-  | tee "${MIGRATION_DIR}/export/cloud-init-groups.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/cloud-init-groups.yaml"
 ochami cloud-init group get raw -F json | jq 'length' \
   | tee "${MIGRATION_DIR}/inventory/cloud-init-group-count.txt"
 ```
@@ -256,7 +256,7 @@ have overrides:
 ```bash
 NODE=x1000c0s0b0n0
 ochami cloud-init node get meta-data "${NODE}" -F yaml \
-  | tee "${MIGRATION_DIR}/export/rendered-${NODE}-metadata.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/rendered-${NODE}-metadata.yaml"
 ```
 
 Rendered metadata combines defaults, SMD data, group data, and instance
@@ -277,9 +277,9 @@ SMD remains PostgreSQL-backed in v0.2.0 and should continue using the existing
 
 ```bash
 ochami smd component get -F yaml \
-  | tee "${MIGRATION_DIR}/export/smd-components.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/smd-components.yaml"
 ochami smd group get -F yaml \
-  | tee "${MIGRATION_DIR}/export/smd-groups.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/export/smd-groups.yaml"
 ```
 
 If the installed `ochami` version does not accept those output flags, use the
@@ -346,7 +346,7 @@ than assuming a storage-driver path:
 ```bash
 POSTGRES_VOLUME=postgres-data
 sudo podman volume inspect "${POSTGRES_VOLUME}" \
-  | tee "${MIGRATION_DIR}/inventory/postgres-volume.json" >/dev/null
+  | tee "${MIGRATION_DIR}/inventory/postgres-volume.json"
 POSTGRES_MOUNT=$(sudo podman volume inspect "${POSTGRES_VOLUME}" \
   --format '{{ .Mountpoint }}')
 sudo tar --acls --xattrs --selinux -C "${POSTGRES_MOUNT}" -cpf \
@@ -593,7 +593,7 @@ one decoded legacy template manually, use the legacy client:
 
 ```bash
 ochami cloud-init group get config compute \
-  | tee "${MIGRATION_DIR}/converted/compute-cloud-config.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/converted/compute-cloud-config.yaml"
 ```
 
 This inspection command is not an additional conversion input. Use the
@@ -930,8 +930,7 @@ Import one reviewed file or logical batch at a time:
 ochami boot config add -f yaml \
   -d @"${MIGRATION_DIR}/converted/boot-configurations.yaml"
 ochami boot config list -F yaml \
-  | sudo tee "${MIGRATION_DIR}/inventory/imported-boot-configurations.yaml" \
-    >/dev/null
+  | tee "${MIGRATION_DIR}/inventory/imported-boot-configurations.yaml"
 ```
 
 `add` rejects an existing resource. For subsequent changes, get the resource's
@@ -958,7 +957,7 @@ name, hostname prefix, NID length, and SSH keys match the reviewed export.
 ochami metadata group add -f yaml \
   -d @"${MIGRATION_DIR}/converted/groups.yaml"
 ochami metadata group list -F yaml \
-  | sudo tee "${MIGRATION_DIR}/inventory/imported-groups.yaml" >/dev/null
+  | tee "${MIGRATION_DIR}/inventory/imported-groups.yaml"
 ```
 
 Treat a template-validation failure as a conversion problem. Do not weaken or
@@ -990,8 +989,7 @@ List the modern configurations and test every referenced artifact URL:
 
 ```bash
 ochami boot config list -F yaml \
-  | sudo tee "${MIGRATION_DIR}/inventory/final-boot-configurations.yaml" \
-    >/dev/null
+  | tee "${MIGRATION_DIR}/inventory/final-boot-configurations.yaml"
 ochami boot config list -F json \
   | jq -r '.[] | .spec.kernel, .spec.initrd' \
   | while read -r url; do
