@@ -880,7 +880,15 @@ sudo podman secret inspect \
 ## 9. Update `ochami` and Authentication
 
 Use an `ochami` version that supports both `boot` and `metadata` (preferably
-v0.10.1+). Configure the cluster and boot-service base URI:
+v0.10.1+). Install the latest version with:
+
+```bash
+latest_release_url=$(curl -s https://api.github.com/repos/openchami/ochami/releases/latest | jq -r '.assets[] | select(.name | endswith("amd64.rpm")) | .browser_download_url')
+curl -L "${latest_release_url}" -o ochami.rpm
+sudo dnf install -y ./ochami.rpm
+```
+
+Then, configure the cluster and boot-service base URI:
 
 ```bash
 sudo ochami config cluster set --system --default "${CLUSTER_NAME}" \
