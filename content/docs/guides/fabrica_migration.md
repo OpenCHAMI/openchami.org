@@ -116,18 +116,48 @@ ochami config show \
   | tee "${MIGRATION_DIR}/inventory/ochami-config.yaml"
 ```
 
-Identify files that can shadow the v0.2.0 package:
+Identify files that can shadow the v0.2.0 package.
+
+First, the quadlets:
 
 ```bash
-sudo ls -la /etc/containers/systemd \
+ls -la /etc/containers/systemd | grep -E '^/etc/containers/systemd/('"\
+'acme-(deploy|register)\.container|'\
+'boot-service\.container|'\
+'bss(-init)?\.container|'\
+'cloud-init-server\.container|'\
+'coresmd(-core(dhcp|dns))?\.container|'\
+'haproxy\.container|'\
+'metadata-service\.container|'\
+'hydra(-(gen-jwks|migrate))?\.container|'\
+'opaal(-idp)?\.container|'\
+'postgres\.container|'\
+'smd(-init)?\.container|'\
+'step-ca\.container|'\
+'tokensmith\.container|'\
+'openchami-(cert-internal|external|internal|jwt-internal)\.network|'\
+'acme-certs\.volume|'\
+'boot-service-data\.volume|'\
+'cloud-init-data\.volume|'\
+'haproxy-certs\.volume|'\
+'metadata-service-data\.volume|'\
+'postgres-data\.volume|'\
+'step-ca-(db|home)\.volume|'\
+'step-root-ca\.volume|'\
+'tokensmith\.volume'\
+')$'" \
   | tee "${MIGRATION_DIR}/inventory/etc-quadlets.txt"
-sudo ls -la /etc/systemd/system \
-  | tee "${MIGRATION_DIR}/inventory/etc-systemd-units.txt"
 ```
 
-Do not assume every file in these directories belongs to OpenCHAMI. Record any
-unrelated containers and local site modifications so that only the old
-package-owned OpenCHAMI files are removed later.
+Then, the systemd units:
+
+```bash
+ls -la /etc/systemd/system | grep -E '^/etc/systemd/system/openchami-cert-('"\
+'renewal\.(service|timer)|'\
+'trust\.service'\
+')$'" \
+  | tee "${MIGRATION_DIR}/inventory/etc-systemd-units.txt"
+```
 
 Check that the legacy services can still answer requests. Fix export-blocking
 problems before proceeding:
