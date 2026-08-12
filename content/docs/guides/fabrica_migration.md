@@ -165,7 +165,7 @@ problems before proceeding:
 ```bash
 ochami bss service status | jq
 ochami smd service status | jq
-ochami cloud-init defaults get -F json-pretty | jq
+ochami cloud-init defaults get -F yaml
 ```
 
 {{< callout context="note" title="Set token" icon="outline/info-circle" >}}
@@ -182,16 +182,21 @@ export DEMO_ACCESS_TOKEN=$(sudo bash -lc gen_access_token)
 Logical exports are the source of truth for the new services. Physical volume
 backups made later are primarily for rollback.
 
+Store resource data as YAML throughout this guide so that exports, converted
+resources, and imports remain consistent and readable in IaC. JSON is retained
+only for structured diagnostic reports, native inspection output, and transient
+pipelines that use `jq`; those JSON pipelines do not create additional resource
+files.
+
 ### 2.1 Export BSS Boot Parameters
 
-Export all BSS boot parameter records as JSON and YAML:
+Export all BSS boot parameter records as YAML. Use transient JSON output only
+to count the records with `jq`:
 
 ```bash
-ochami bss boot params get -F json-pretty \
-  | tee "${MIGRATION_DIR}/export/bss-bootparameters.json" >/dev/null
 ochami bss boot params get -F yaml \
   | tee "${MIGRATION_DIR}/export/bss-bootparameters.yaml" >/dev/null
-jq 'length' "${MIGRATION_DIR}/export/bss-bootparameters.json" \
+ochami bss boot params get -F json | jq 'length' \
   | tee "${MIGRATION_DIR}/inventory/bss-record-count.txt"
 ```
 
@@ -209,8 +214,6 @@ not be copied into a `BootConfiguration`.
 ### 2.2 Export Cloud-Init Cluster Defaults
 
 ```bash
-ochami cloud-init defaults get -F json-pretty \
-  | tee "${MIGRATION_DIR}/export/cloud-init-defaults.json" >/dev/null
 ochami cloud-init defaults get -F yaml \
   | tee "${MIGRATION_DIR}/export/cloud-init-defaults.yaml" >/dev/null
 ```
@@ -220,27 +223,21 @@ the export directory accordingly.
 
 ### 2.3 Export Every Cloud-Init Group
 
-The legacy service exposes all group definitions at its administrative groups
-endpoint. Using the externally routed URL preserves the same authentication and
-TLS behavior used by other administrative clients:
+Export every raw group definition as YAML. The legacy `ochami` client requests
+the administrative groups endpoint, converts its name-keyed response to a list,
+and preserves each group's data for the converter. Use transient JSON output
+only to count the groups:
 
 ```bash
-curl --fail --silent --show-error \
-  -H "Authorization: Bearer ${DEMO_ACCESS_TOKEN}" \
-  "${CLUSTER_URL}/cloud-init/admin/groups" \
-  | jq --sort-keys . \
-  | tee "${MIGRATION_DIR}/export/cloud-init-groups.json" >/dev/null
-jq 'length' "${MIGRATION_DIR}/export/cloud-init-groups.json" \
+ochami cloud-init group get raw -F yaml \
+  | tee "${MIGRATION_DIR}/export/cloud-init-groups.yaml" >/dev/null
+ochami cloud-init group get raw -F json | jq 'length' \
   | tee "${MIGRATION_DIR}/inventory/cloud-init-group-count.txt"
 ```
 
-This relies on `openchami-cert-trust.service` having installed the OpenCHAMI CA
-in the system trust store. If the cluster CA is not in the system trust store,
-add `--cacert <path-to-cluster-ca>` with the correct local path. Do not use
-`--insecure` for a production migration.
-
-The endpoint returns an object keyed by group name. Preserve both the key and
-each object's `name`, `description`, `meta-data`, `file`, and `versions` values.
+The exported list preserves each object's `name`, `description`, `meta-data`,
+`file`, and `versions` values. The converter accepts either this list or the
+name-keyed object returned directly by the legacy API.
 
 ### 2.4 Recover Node-Specific Overrides
 
@@ -279,10 +276,10 @@ SMD remains PostgreSQL-backed in v0.2.0 and should continue using the existing
 `/etc/openchami/data` and capture useful API output as an additional check:
 
 ```bash
-ochami smd component get -F json-pretty \
-  | tee "${MIGRATION_DIR}/export/smd-components.json" >/dev/null
-ochami smd group get -F json-pretty \
-  | tee "${MIGRATION_DIR}/export/smd-groups.json" >/dev/null
+ochami smd component get -F yaml \
+  | tee "${MIGRATION_DIR}/export/smd-components.yaml" >/dev/null
+ochami smd group get -F yaml \
+  | tee "${MIGRATION_DIR}/export/smd-groups.yaml" >/dev/null
 ```
 
 If the installed `ochami` version does not accept those output flags, use the
@@ -403,8 +400,10 @@ chmod 755 "${MIGRATION_DIR}/openchami-resources-old2new.py"
 python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" --help
 ```
 
-JSON conversion uses only the Python standard library. Create a Python virtual
-environment and install PyYAML to read or write YAML:
+The migration workflow uses YAML for stored resource data so it remains
+readable and suitable for IaC. Create a Python virtual environment and install
+PyYAML before running the converter. JSON input remains supported without
+PyYAML for exceptional cases:
 
 ```bash
 python3 -m venv "${MIGRATION_DIR}/venv"
@@ -425,10 +424,10 @@ python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" \
 
 The converter recognizes these input files:
 
-- `bss-bootparameters.json`;
-- `cloud-init-defaults.json`;
-- `cloud-init-groups.json`; and
-- optional `cloud-init-instance-overrides.json`, assembled from the raw
+- `bss-bootparameters.yaml`;
+- `cloud-init-defaults.yaml`;
+- `cloud-init-groups.yaml`; and
+- optional `cloud-init-instance-overrides.yaml`, assembled from the raw
   overrides recovered in section 2.4.
 
 It writes:
@@ -444,6 +443,10 @@ The script reports dropped legacy fields, invalid NIDs and MACs, duplicate boot
 selectors, inferred URLs, unsupported overrides, and other conversions that
 need an administrator's decision. It does not validate templates against a
 running metadata-service.
+
+The resource files use YAML consistently from export through import. The
+migration report remains JSON because it is structured diagnostic output meant
+for both administrators and automation.
 
 By default, non-string values in legacy group metadata stop conversion because
 modern `metaData` accepts strings. After reviewing those values, explicitly
@@ -469,11 +472,13 @@ output, matching the discovery converter's workflow:
 ```bash
 python3 "${MIGRATION_DIR}/openchami-resources-old2new.py" \
   --resource boot \
+  --in-format yaml \
+  --out-format yaml \
   --metadata-url \
     "http://${PROVISIONING_IP}:8081/metadata-service" \
   --report "${MIGRATION_DIR}/converted/boot-report.json" \
-  < "${MIGRATION_DIR}/export/bss-bootparameters.json" \
-  > "${MIGRATION_DIR}/converted/boot-configurations.json"
+  < "${MIGRATION_DIR}/export/bss-bootparameters.yaml" \
+  > "${MIGRATION_DIR}/converted/boot-configurations.yaml"
 ```
 
 The following sections explain each transformation so that the generated files
@@ -582,17 +587,18 @@ Map each legacy group as follows:
 | `meta-data` | `metaData` |
 | `versions` | no direct import; preserve in the migration archive |
 
-The modern template is always plain text. If `file.encoding` is `base64`,
-decode `file.content` before placing it in `template`:
+The modern template is always plain text. The converter decodes
+`file.encoding: base64` before placing `file.content` in `template`. To inspect
+one decoded legacy template manually, use the legacy client:
 
 ```bash
-jq -r '.compute.file.content' \
-  "${MIGRATION_DIR}/export/cloud-init-groups.json" \
-  | base64 --decode \
-  | sudo tee "${MIGRATION_DIR}/converted/compute-cloud-config.yaml" >/dev/null
+ochami cloud-init group get config compute \
+  | tee "${MIGRATION_DIR}/converted/compute-cloud-config.yaml" >/dev/null
 ```
 
-For `file.encoding: plain`, copy the content without base64 decoding.
+This inspection command is not an additional conversion input. Use the
+converter's `groups.yaml` output for import. For `file.encoding: plain`, the
+converter copies the content without base64 decoding.
 
 Modern `metaData` values are strings. Legacy `meta-data` can contain arbitrary
 JSON values. Flatten, stringify, or move nested objects and arrays into a
@@ -983,11 +989,11 @@ Complete all checks before allowing managed nodes to reboot.
 List the modern configurations and test every referenced artifact URL:
 
 ```bash
-ochami boot config list -F json-pretty \
-  | sudo tee "${MIGRATION_DIR}/inventory/final-boot-configurations.json" \
+ochami boot config list -F yaml \
+  | sudo tee "${MIGRATION_DIR}/inventory/final-boot-configurations.yaml" \
     >/dev/null
-jq -r '.[] | .spec.kernel, .spec.initrd' \
-  "${MIGRATION_DIR}/inventory/final-boot-configurations.json" \
+ochami boot config list -F json \
+  | jq -r '.[] | .spec.kernel, .spec.initrd' \
   | while read -r url; do
       [ -n "${url}" ] && curl --fail --head "${url}"
     done
