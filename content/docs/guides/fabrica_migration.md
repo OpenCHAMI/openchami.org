@@ -67,7 +67,7 @@ convert them, and import them through the new APIs.
 
 The migration has these phases:
 
-1. Inventory the running deployment.
+1. Inventory the current deployment.
 2. Export logical BSS and cloud-init data.
 3. Stop OpenCHAMI and make physical backups.
 4. Convert the exported resources.
