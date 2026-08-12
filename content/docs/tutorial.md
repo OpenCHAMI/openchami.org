@@ -22,7 +22,7 @@ services: [boot-service](https://github.com/openchami/boot-service) over
 [metadata-service](https://github.com/openchami/metadata-service) over
 [cloud-init](https://github.com/openchami/cloud-init).
 
-To use the legacy tutorial, see [here](/docs/archive/tutorial-legacy/).
+See [here](/docs/archive/tutorial-legacy/) for the legacy tutorial.
 
 See [here](/docs/guides/fabrica-migration/) for a guide on how to migrate an
 existing, legacy deployment to the new fabrica-based services.
