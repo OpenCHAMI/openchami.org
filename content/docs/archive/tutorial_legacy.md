@@ -778,26 +778,12 @@ systemctl status registry
 
 Now, the OpenCHAMI services need to be installed. Luckily, there is [a release
 RPM](https://github.com/openchami/release) for this that provides signed RPMs.
-The latest version ca be used.
+Install version 0.1.6.
 
 **Run the commands below in the `/opt/workdir` directory!**
 
 ```bash
-# Set repository details
-OWNER="openchami"
-REPO="release"
-
-# Identify the latest release RPM
-API_URL="https://api.github.com/repos/${OWNER}/${REPO}/releases/latest"
-release_json=$(curl -s "$API_URL")
-rpm_url=$(echo "$release_json" | jq -r '.assets[] | select(.name | endswith(".rpm")) | .browser_download_url' | head -n 1)
-rpm_name=$(echo "$release_json" | jq -r '.assets[] | select(.name | endswith(".rpm")) | .name' | head -n 1)
-
-# Download the RPM
-curl -L -o "$rpm_name" "$rpm_url"
-
-# Install the RPM
-sudo dnf install -y ./"$rpm_name"
+sudo dnf install -y https://github.com/OpenCHAMI/release/releases/download/v0.1.6/openchami-0.1.6.rpm
 ```
 
 #### 1.4.1 Update CoreDHCP Configuration
