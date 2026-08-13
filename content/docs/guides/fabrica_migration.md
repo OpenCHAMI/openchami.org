@@ -14,10 +14,10 @@ toc: true
 <!-- vi: set tw=80 sw=2 sts=2: -->
 
 This guide describes how to migrate an existing OpenCHAMI deployment made with
-a release before v0.2.0 to the services shipped in v0.2.0. The source
-deployment uses the legacy Boot Script Service (BSS), cloud-init server,
-Hydra, and OPAAL. The destination uses the Fabrica-generated `boot-service`
-and `metadata-service`, with TokenSmith providing tokens.
+release v0.1.6 to the services shipped in v0.2.0. The source deployment uses
+the legacy Boot Script Service (BSS), cloud-init server, Hydra, and OPAAL. The
+destination uses the Fabrica-generated `boot-service` and `metadata-service`,
+with TokenSmith providing tokens.
 
 The procedure deliberately migrates service data through the APIs instead of
 copying databases between unrelated implementations. It also preserves SMD and
