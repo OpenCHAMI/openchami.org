@@ -1,8 +1,8 @@
 ---
 title: "OpenCHAMI Tutorial (Legacy)"
-linktitle: "Old Tutorial"
+linktitle: "Legacy Tutorial"
 description: "Learn about OpenCHAMI by setting it up in a controlled environment. Uses legacy services (BSS, cloud-init, SMD)."
-slug: "tutorial"
+slug: "tutorial-legacy"
 summary: ""
 date: 2025-10-06T15:34:25-06:00
 lastmod: 2026-08-06T09:32:06-06:00
@@ -778,26 +778,12 @@ systemctl status registry
 
 Now, the OpenCHAMI services need to be installed. Luckily, there is [a release
 RPM](https://github.com/openchami/release) for this that provides signed RPMs.
-The latest version ca be used.
+Install version 0.1.6.
 
 **Run the commands below in the `/opt/workdir` directory!**
 
 ```bash
-# Set repository details
-OWNER="openchami"
-REPO="release"
-
-# Identify the latest release RPM
-API_URL="https://api.github.com/repos/${OWNER}/${REPO}/releases/latest"
-release_json=$(curl -s "$API_URL")
-rpm_url=$(echo "$release_json" | jq -r '.assets[] | select(.name | endswith(".rpm")) | .browser_download_url' | head -n 1)
-rpm_name=$(echo "$release_json" | jq -r '.assets[] | select(.name | endswith(".rpm")) | .name' | head -n 1)
-
-# Download the RPM
-curl -L -o "$rpm_name" "$rpm_url"
-
-# Install the RPM
-sudo dnf install -y ./"$rpm_name"
+sudo dnf install -y https://github.com/OpenCHAMI/release/releases/download/v0.1.6/openchami-0.1.6.rpm
 ```
 
 #### 1.4.1 Update CoreDHCP Configuration
@@ -1099,12 +1085,10 @@ interact with the OpenCHAMI services.
 
 #### 1.7.1 Installation
 
-The latest RPM can be installed with the following:
+The v0.8.1 RPM can be installed with the following:
 
 ```bash
-latest_release_url=$(curl -s https://api.github.com/repos/OpenCHAMI/ochami/releases/latest | jq -r '.assets[] | select(.name | endswith("amd64.rpm")) | .browser_download_url')
-curl -L "${latest_release_url}" -o ochami.rpm
-sudo dnf install -y ./ochami.rpm
+sudo dnf install -y https://github.com/OpenCHAMI/ochami/releases/download/v0.8.1/ochami_0.8.1_linux_amd64.rpm
 ```
 
 As a sanity check, check the version to make sure it is installed properly:
@@ -1116,15 +1100,15 @@ ochami version
 The output should look something like:
 
 ```
-Version:    0.7.1
-Tag:        v0.7.1
+Version:    0.8.1
+Tag:        v0.8.1
 Branch:     HEAD
-Commit:     08a11e6d18e6804270a0137618934810a10e470e
+Commit:     c4dcc9941a6ea52ad3c79f99fac3925d434ba24f
 Git State:  clean
-Date:       2026-03-25T18:25:04Z
-Go:         go1.26.1
+Date:       2026-06-17T10:32:08Z
+Go:         go1.26.4
 Compiler:   gc
-Build Host: runnervm46oaq
+Build Host: runnervm1li68
 Build User: runner
 ```
 
