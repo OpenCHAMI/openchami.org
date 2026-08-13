@@ -298,6 +298,13 @@ rpm -ql openchami \
     "${MIGRATION_DIR}/backup/etc-systemd-system.tar"
 ```
 
+{{< callout context="caution" title="Account for Systemd Drop-Ins" icon="outline/alert-triangle" >}}
+**Make sure any OpenCHAMI-specific Systemd overrides are backed up.** While
+`openchami-cert-update` modified the units directly in v0.1.6, it no longer
+does so in v0.2.0 and places Systemd overrides instead. To avoid clobbering
+existing drop-ins, ensure they are backed up.
+{{< /callout >}}
+
 ### 3.1 Back Up PostgreSQL
 
 Start only PostgreSQL, create a logical dump, then stop it again:
