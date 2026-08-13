@@ -121,41 +121,16 @@ Identify files that can shadow the v0.2.0 package.
 First, the quadlets:
 
 ```bash
-ls -la /etc/containers/systemd | grep -E '^/etc/containers/systemd/('"\
-'acme-(deploy|register)\.container|'\
-'boot-service\.container|'\
-'bss(-init)?\.container|'\
-'cloud-init-server\.container|'\
-'coresmd(-core(dhcp|dns))?\.container|'\
-'haproxy\.container|'\
-'metadata-service\.container|'\
-'hydra(-(gen-jwks|migrate))?\.container|'\
-'opaal(-idp)?\.container|'\
-'postgres\.container|'\
-'smd(-init)?\.container|'\
-'step-ca\.container|'\
-'tokensmith\.container|'\
-'openchami-(cert-internal|external|internal|jwt-internal)\.network|'\
-'acme-certs\.volume|'\
-'boot-service-data\.volume|'\
-'cloud-init-data\.volume|'\
-'haproxy-certs\.volume|'\
-'metadata-service-data\.volume|'\
-'postgres-data\.volume|'\
-'step-ca-(db|home)\.volume|'\
-'step-root-ca\.volume|'\
-'tokensmith\.volume'\
-')$'" \
+rpm -ql openchami \
+  | grep '^/etc/containers/systemd/' \
   | tee "${MIGRATION_DIR}/inventory/etc-quadlets.txt"
 ```
 
 Then, the systemd units:
 
 ```bash
-ls -la /etc/systemd/system | grep -E '^/etc/systemd/system/openchami-cert-('"\
-'renewal\.(service|timer)|'\
-'trust\.service'\
-')$'" \
+rpm -ql openchami \
+  | grep '^/etc/systemd/system/' \
   | tee "${MIGRATION_DIR}/inventory/etc-systemd-units.txt"
 ```
 
@@ -311,14 +286,16 @@ Back up configuration and unit files while preserving ownership, modes, ACLs,
 xattrs, and SELinux labels:
 
 ```bash
-sudo tar --acls --xattrs --selinux -C / -cpf \
-  "${MIGRATION_DIR}/backup/etc-openchami.tar" etc/openchami
-sudo tar --acls --xattrs --selinux -C / -cpf \
-  "${MIGRATION_DIR}/backup/etc-containers-systemd.tar" \
-  etc/containers/systemd
-sudo tar --acls --xattrs --selinux -C / -cpf \
-  "${MIGRATION_DIR}/backup/etc-systemd-system.tar" etc/systemd/system
-sudo chown "$(whoami):" "${MIGRATION_DIR}"/backup/etc-{openchami,containers-systemd,systemd-system}.tar
+tar --acls --xattrs --selinux -cpf \
+  "${MIGRATION_DIR}/backup/etc-openchami.tar" /etc/openchami
+rpm -ql openchami \
+  | grep '^/etc/containers/systemd' \
+  | xargs tar --acls --xattrs --selinux -cpf \
+    "${MIGRATION_DIR}/backup/etc-containers-systemd.tar"
+rpm -ql openchami \
+  | grep '^/etc/systemd/system' \
+  | xargs tar --acls --xattrs --selinux -cpf \
+    "${MIGRATION_DIR}/backup/etc-systemd-system.tar"
 ```
 
 ### 3.1 Back Up PostgreSQL
