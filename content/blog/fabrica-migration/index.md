@@ -21,7 +21,7 @@ OpenCHAMI has undergone a significant architectural evolution with the introduct
 In the [legacy tutorial](/docs/archive/tutorial-legacy), OpenCHAMI relied on two key services for node bootstrapping and configuration:
 
 1. **BSS (Boot Script Service)** - Responsible for serving iPXE boot scripts and kernel parameters to compute nodes
-2. **cloud-init** - Handled post-boot configuration of nodes once they were booted
+2. **cloud-init server** - Handled post-boot configuration of nodes once they were booted
 
 These services worked together but had accumulated technical debt over time. BSS, in particular, became challenging to modify due to its complex codebase and tight coupling with other components.
 
