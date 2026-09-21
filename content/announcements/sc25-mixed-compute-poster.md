@@ -26,4 +26,4 @@ To address this demand, we utilized OpenCHAMI, an open-source system management 
 - **Poster Summary**: [PDF](https://sc25.supercomputing.org/proceedings/posters/poster_files/post139s2-file3.pdf)
 - **SC25 Archive**: [Poster Page](https://sc25.supercomputing.org/proceedings/posters/poster_pages/post139.html)
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

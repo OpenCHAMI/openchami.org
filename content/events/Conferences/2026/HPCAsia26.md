@@ -18,4 +18,4 @@ contributors = []
 
 HPC Asia is a premier conference for high performance computing in the Asia-Pacific region. OpenCHAMI will deliver a **tutorial** at this event.
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

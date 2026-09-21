@@ -12,7 +12,7 @@ One of the key strengths of OpenCHAMI is its flexibility. The software is fully 
 
 ### Docker Compose Quickstart
 
-For those looking to get started quickly, we recommend using our [quickstart](https://openchami.org/guides/getting_started/) which leverages `docker-compose` to spin up the services and infrastructure needed for OpenCHAMI.  The
+For those looking to get started quickly, we recommend using our [quickstart](https://openchami.org/docs/tutorial/) which leverages `docker-compose` to spin up the services and infrastructure needed for OpenCHAMI.  The
 
 ### Podman Quadlets for Badger
 

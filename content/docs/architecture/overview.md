@@ -57,4 +57,4 @@ graph TD;
 
 - Learn more about **[Early Design Decisions](/architecture/design_decisions/)**.
 - Dive deeper into **[Security & Authentication](/architecture/security/)**.
-- Explore how to **[Deploy OpenCHAMI](/guides/getting_started/)**.
+- Explore how to **[Deploy OpenCHAMI](/docs/tutorial/)**.

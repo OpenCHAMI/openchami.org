@@ -28,4 +28,4 @@ We need your help to use OpenCHAMI as it exists today and offer suggestions on h
 
 **Read the full announcement**: [OpenCHAMI Joins HPSF on the HPSF blog](https://hpsf.io/blog/2025/openchami-joins-hpsf-composable-software-to-securely-and-quickly-provision-hpc-ai-clusters/)
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

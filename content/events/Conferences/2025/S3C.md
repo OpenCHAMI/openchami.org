@@ -21,4 +21,4 @@ Sustainable Scientific Software Conference S3C is hosted by Hosted by National L
 **Chris Harris** will present "OpenCHAMI: Bridging the worlds of cloud and HPC"
 
 Registration Details are [here](https://www.fbcinc.com/e/NLIT/attendeereg.aspx)
-Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it your self through the [install guide](/guides/getting_started/)
+Read more about OpenCHAMI, [here](/docs/tutorial/) and try it your self through the [install guide](/docs/tutorial/)

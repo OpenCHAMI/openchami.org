@@ -18,4 +18,4 @@ contributors = ["Alex Lovell-Troy"]
 
 Workshop on interoperability of supercomputing and cloud technologies, co-organized with OpenCHAMI. Includes presentations and panels on HPC-cloud convergence. **Alex** will co-organize on behalf of OpenCHAMI.
 
-Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI, [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

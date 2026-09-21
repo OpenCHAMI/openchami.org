@@ -18,4 +18,4 @@ contributors = []
 
 PEARC is the premier conference for research computing professionals, focused on practical experiences in advanced cyberinfrastructure. OpenCHAMI will likely deliver a **tutorial** at this event.
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

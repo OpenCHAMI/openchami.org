@@ -18,4 +18,4 @@ contributors = []
 
 HPSFCon brings together the high performance software community for collaboration and knowledge sharing. OpenCHAMI will participate in this **community meeting and workshop**.
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).
