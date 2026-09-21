@@ -18,4 +18,4 @@ contributors = ["David J. Allen (LANL)", "Devon Bautista"]
 
 David and Devon will deliver an OpenCHAMI tutorial on HPC system deployment.
 
-Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI, [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

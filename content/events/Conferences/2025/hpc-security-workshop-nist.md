@@ -18,4 +18,4 @@ contributors = ["Alex Lovell-Troy"]
 
 Workshop hosted by NIST focused on HPC security best practices. **Alex** will participate as an invited speaker representing OpenCHAMI.
 
-Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI, [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

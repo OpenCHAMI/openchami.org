@@ -18,4 +18,4 @@ contributors = []
 
 ISC High Performance is one of the premier international conferences for HPC, AI, and data analytics. OpenCHAMI will propose a **Birds of a Feather (BoF) session** with the SYSPROS community.
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

@@ -18,4 +18,4 @@ contributors = ["Travis Cotton"]
 
 Annual Cray User Group (CUG) Conference focusing on high-performance computing solutions. OpenCHAMI will be represented by **Travis Cotton**.
 
-Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI, [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

@@ -20,7 +20,7 @@ contributors = ["Alex Lovell-Troy", "David J. Allen (LANL)", "Devon Bautista"]
 
 One of the premier HPC conferences. **Alex, David, and Devon** will present [tutorials](https://isc.app.swapcard.com/widget/event/isc-high-performance-2025/planning/UGxhbm5pbmdfMjU4MTgxMA==), a workshop, and represent OpenCHAMI at the DOE booth.
 
-Read more about OpenCHAMI, [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI, [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).
 
 # ISC Updates (Gist)
 

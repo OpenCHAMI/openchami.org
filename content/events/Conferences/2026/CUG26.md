@@ -18,4 +18,4 @@ contributors = []
 
 The annual Cray User Group conference brings together HPC professionals to share knowledge and best practices. OpenCHAMI will be represented at this event.
 
-Read more about OpenCHAMI [here](/docs/introduction-to-openchami/) and try it yourself through the [install guide](/guides/getting_started/).
+Read more about OpenCHAMI [here](/docs/tutorial/) and try it yourself through the [install guide](/docs/tutorial/).

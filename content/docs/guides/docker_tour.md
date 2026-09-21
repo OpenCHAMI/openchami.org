@@ -13,7 +13,7 @@ seo:
   noindex: false # false (default) or true
 ---
 
-The [quickstart](/guides/getting_started/) is designed to launch quickly so developers and sysadmins can get familiar with the system.  It makes many assumptions about a small system that may not be valid for your site.  The `docker compose` environment and all the concepts may not be familiar to you.  This tour is meant to provide devlopers with a starting point when trying to make changes.
+The [quickstart](/docs/tutorial/) is designed to launch quickly so developers and sysadmins can get familiar with the system.  It makes many assumptions about a small system that may not be valid for your site.  The `docker compose` environment and all the concepts may not be familiar to you.  This tour is meant to provide devlopers with a starting point when trying to make changes.
 
 ## What is Docker Compose?
 
