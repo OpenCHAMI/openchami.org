@@ -21,11 +21,14 @@ dependencies:
     specifier: ^2.4.3
     version: 2.4.3
   hugo-extended:
-    specifier: 0.152.2
-    version: 0.152.2
+    specifier: 0.158.0
+    version: 0.158.0
   thulite:
     specifier: ^2.6.5
     version: 2.6.5
+  yaml:
+    specifier: ^2.8.3
+    version: 2.8.3
 
 devDependencies:
   shx:
@@ -2014,18 +2017,6 @@ packages:
       resolve-alpn: 1.2.1
     dev: false
 
-  /hugo-extended@0.152.2:
-    resolution: {integrity: sha512-v/nInBhzlpkV7A8gvLTzay3MwB8qHOfv3TajCjrbaUlNPuPvC+JRNYpmxTJGK9vgAlqNb5IupveSYRaCuJsi7g==}
-    engines: {node: '>=18.12'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      careful-downloader: 3.0.0
-      log-symbols: 5.1.0
-      read-pkg-up: 9.1.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
 
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -3097,4 +3088,75 @@ packages:
   /yocto-queue@1.2.2:
     resolution: {integrity: sha512-4LCcse/U2MHZ63HAJVE+v71o7yOdIe4cZ70Wpf8D/IyjDKYQLV5GD46B+hSTjJsvV5PztjvHoU580EftxjDZFQ==}
     engines: {node: '>=12.20'}
+    dev: false
+
+  /hugo-extended@0.158.0:
+    resolution:
+      integrity: sha512-cFl07JY5juYoik9wVZSZxBKVgSWQtmddTB1AhpOFetCZFR9PgN0cl/MQSX+cYho2kl8mquDdQ+4jzfP1KP0hmA==
+    engines:
+      node: '>=18.17'
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      adm-zip: 0.5.17
+      tar: 7.5.13
+    dev: false
+
+  /adm-zip@0.5.17:
+    resolution:
+      integrity: sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==
+    engines:
+      node: '>=12.0'
+    dev: false
+
+  /tar@7.5.13:
+    resolution:
+      integrity: sha512-tOG/7GyXpFevhXVh8jOPJrmtRpOTsYqUIkVdVooZYJS/z8WhfQUX8RJILmeuJNinGAMSu1veBr4asSHFt5/hng==
+    engines:
+      node: '>=18'
+    dependencies:
+      '@isaacs/fs-minipass': 4.0.1
+      chownr: 3.0.0
+      minipass: 7.1.3
+      minizlib: 3.1.0
+      yallist: 5.0.0
+    dev: false
+
+  /@isaacs/fs-minipass@4.0.1:
+    resolution:
+      integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==
+    engines:
+      node: '>=18.0.0'
+    dependencies:
+      minipass: 7.1.3
+    dev: false
+
+  /minipass@7.1.3:
+    resolution:
+      integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==
+    engines:
+      node: '>=16 || 14 >=14.17'
+    dev: false
+
+  /chownr@3.0.0:
+    resolution:
+      integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==
+    engines:
+      node: '>=18'
+    dev: false
+
+  /minizlib@3.1.0:
+    resolution:
+      integrity: sha512-KZxYo1BUkWD2TVFLr0MQoM8vUUigWD3LlD83a/75BqC+4qE0Hb1Vo5v1FgcfaNXvfXzr+5EhQ6ing/CaBijTlw==
+    engines:
+      node: '>= 18'
+    dependencies:
+      minipass: 7.1.3
+    dev: false
+
+  /yallist@5.0.0:
+    resolution:
+      integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==
+    engines:
+      node: '>=18'
     dev: false

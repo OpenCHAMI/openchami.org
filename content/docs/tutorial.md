@@ -10,6 +10,8 @@ contributors: ["Devon Bautista", "David Allen"]
 draft: false
 weight: 100
 toc: true
+edition_family: tutorial
+edition_id: latest
 ---
 <!-- vi: set tw=80 sw=2 sts=2: -->
 
@@ -25,7 +27,7 @@ services: [boot-service](https://github.com/openchami/boot-service) over
 See [here](/docs/guides/fabrica-migration/) for a guide on how to migrate an
 existing, legacy deployment to the new fabrica-based services.
 
-See [here](/docs/archive/tutorial-legacy/) for the legacy tutorial.
+Use the **Version** menu above to select an earlier tutorial edition.
 {{< /callout >}}
 
 ## Part 0. Prerequisites
@@ -1130,9 +1132,8 @@ sudo systemctl restart acme-deploy
 
 The OpenCHAMI release RPM is created with sensible default configurations for
 this tutorial and all configuration files are included in the `/etc/openchami`
-directory. To understand each one in detail, review the [**Service
-Configuration**](service_configuration.md) instructions
-<!-- TODO: Point link of above to Handbook -->
+directory. Review the included configuration files for the settings used by each
+service.
 
 ### 1.7 Install and Configure OpenCHAMI Client
 
@@ -3137,5 +3138,5 @@ This can be done in at least two ways here:
 
 Follow the guide for [Slurm Installation](https://openchami.org/docs/guides/install-slurm/)
 to setup and configure the Slurm Workload Manager on the OpenCHAMI cluster
-created during this tutorial. Complete up to [Section 2.6](https://openchami.org/docs/tutorial/#26-boot-the-compute-node-with-the-debug-image)
+created during this tutorial. Complete up to [Section 2.6](#26-boot-the-compute-node-with-the-debug-image)
 of this tutorial, then begin the "Install Slurm" guide.

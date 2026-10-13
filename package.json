@@ -5,24 +5,27 @@
   "author": "Thulite",
   "license": "MIT",
   "scripts": {
-    "dev": "hugo server --bind=0.0.0.0 --disableFastRender --baseURL=http://localhost --noHTTPCache",
-    "dev:drafts": "hugo server --bind=0.0.0.0 --disableFastRender --baseURL=http://localhost --noHTTPCache --buildDrafts",
+    "dev": "node scripts/build-doc-editions.cjs && hugo server --bind=0.0.0.0 --disableFastRender --baseURL=http://localhost --noHTTPCache",
+    "dev:drafts": "node scripts/build-doc-editions.cjs && hugo server --bind=0.0.0.0 --disableFastRender --baseURL=http://localhost --noHTTPCache --buildDrafts",
     "create": "hugo new",
     "lint": "npm run lint:scripts && npm run lint:styles && npm run lint:markdown",
     "lint:scripts": "eslint --cache assets/js",
     "lint:styles": "stylelint --cache \"assets/scss/**/*.{css,sass,scss}\"",
     "lint:markdown": "markdownlint-cli2 \"*.md\" \"content/**/*.md\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "hugo --minify",
+    "build": "node scripts/build-doc-editions.cjs && hugo --minify",
     "preview": "http-server --gzip --brotli --ext=html --cors",
     "clean": "npm run clean:build && npm run clean:lint && npm run clean:install",
-    "clean:build": "shx rm -rf public resources .hugo_build.lock",
+    "clean:build": "shx rm -rf public resources .hugo_build.lock .generated",
     "clean:install": "shx rm -rf node_modules package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:lint": "shx rm -rf .eslintcache .stylelintcache",
     "preinfo": "npm version",
     "info": "npm list",
     "postinfo": "hugo version",
-    "deploy": "npm run build && hugo deploy --maxDeletes -1"
+    "deploy": "npm run build && hugo deploy --maxDeletes -1",
+    "docs:prepare": "node scripts/build-doc-editions.cjs",
+    "test:editions": "node --test tests/doc_editions.test.cjs",
+    "docs:fetch-tags": "node scripts/fetch-doc-tags.cjs"
   },
   "dependencies": {
     "@thulite/doks-core": "^1.9.3",
@@ -31,7 +34,8 @@
     "@thulite/seo": "^2.4.3",
     "@tabler/icons": "^3.31.0",
     "hugo-extended": "0.158.0",
-    "thulite": "^2.6.5"
+    "thulite": "^2.6.5",
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
     "shx": "^0.4.0"

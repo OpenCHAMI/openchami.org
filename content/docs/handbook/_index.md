@@ -10,4 +10,9 @@ toc: true
 pinned: false
 homepage: false
 layout: cards
+edition_family: handbook
+edition_id: latest
+cascade:
+  edition_family: handbook
+  edition_id: latest
 ---

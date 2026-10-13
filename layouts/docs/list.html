@@ -1,7 +1,10 @@
 {{ define "main" }}
 
 <div style="max-width: 800px; margin: auto; text-align: center;">
+  {{ if .Params.edition_family }}{{ partial "docs/page-toolbar.html" . }}{{ end }}
   <h1>{{ .Title }}</h1>
+  {{ partial "docs/edition-notice.html" . }}
+      {{ partial "docs/edition-source.html" . }}
   <div style="max-width: 800px; margin: auto; text-align: left;">
     {{ $docs := site.GetPage .Path }}
     <ul style="padding: 0;">

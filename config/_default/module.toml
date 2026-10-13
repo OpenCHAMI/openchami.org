@@ -91,3 +91,12 @@
 [[mounts]]
   source = "static"
   target = "static"
+
+# Documentation editions generated from Git tags before Hugo starts.
+[[mounts]]
+  source = ".generated/doc-editions/content"
+  target = "content"
+
+[[mounts]]
+  source = ".generated/doc-editions/data"
+  target = "data"

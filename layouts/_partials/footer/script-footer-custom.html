@@ -28,3 +28,7 @@
   ml('account', '933245');
 </script>
 <!-- End MailerLite Universal -->
+
+{{ if .Params.edition_family }}
+  {{ partial "footer/esbuild" (dict "src" "js/doc-editions.js" "load" "defer" "transpile" false) }}
+{{ end }}

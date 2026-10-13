@@ -1,0 +1,17 @@
+{{ if or site.Params.doks.breadcrumbTrail .Params.edition_family }}
+<div class="document-toolbar d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3" data-document-toolbar>
+  {{ if site.Params.doks.breadcrumbTrail }}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      {{ if .Params.edition_family }}
+        <li class="breadcrumb-item"><a href="{{ "docs/" | relURL }}">Docs</a></li>
+      {{ else }}
+        {{ partial "main/breadcrumb" . }}
+      {{ end }}
+      <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
+    </ol>
+  </nav>
+  {{ end }}
+  {{ partial "docs/edition-selector.html" . }}
+</div>
+{{ end }}

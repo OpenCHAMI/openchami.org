@@ -1,0 +1,15 @@
+{{ $current := . }}
+{{ with partial "docs/edition-context.html" . }}
+  {{ $current = .latest }}
+  {{ with .key }}
+    {{ with site.GetPage (printf "%s/%s" $current.Path .) }}{{ $current = . }}{{ end }}
+  {{ end }}
+{{ end }}
+{{ $sidebar := printf "sidebar_%s" .Section }}
+{{ with index site.Menus $sidebar }}
+  {{ partial "sidebar/render-section-menu.html" (dict "currentPage" $current "nodes" .) }}
+{{ else }}
+  {{ with (.Site.GetPage "section" .Section).Pages }}
+    {{ partial "sidebar/render-section-menu.html" (dict "currentPage" $current "nodes" .) }}
+  {{ end }}
+{{ end }}

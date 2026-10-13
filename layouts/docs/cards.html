@@ -2,8 +2,11 @@
 <section class="section section-tiles py-5">
   <div class="container">
     <header class="mb-4">
+      {{ if .Params.edition_family }}{{ partial "docs/page-toolbar.html" . }}{{ end }}
       <h1 class="h2 mb-1">{{ .LinkTitle }}</h1>
       {{ with .Params.lead }}<p class="lead text-muted mb-0">{{ . }}</p>{{ end }}
+      {{ partial "docs/edition-notice.html" . }}
+      {{ partial "docs/edition-source.html" . }}
     </header>
 
     {{/* Collect pages in this section (direct children). 
