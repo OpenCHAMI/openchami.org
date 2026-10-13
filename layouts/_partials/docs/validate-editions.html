@@ -1,0 +1,26 @@
+{{/* Validate even when no registered document is visited. */}}
+{{ if not site.Data.doc_editions }}{{ errorf "Documentation edition registry missing; run npm run docs:prepare before Hugo" }}{{ end }}
+{{ range $familyID, $family := site.Data.doc_editions }}
+  {{ $ids := slice }}
+  {{ $refs := slice }}
+  {{ $latest := false }}
+  {{ range $edition := $family.editions }}
+    {{ if or (not .id) (not .label) (not .pageRef) }}
+      {{ errorf "Edition in %s requires id, label and pageRef" $familyID }}
+    {{ end }}
+    {{ if or (in $ids .id) (in $refs .pageRef) }}
+      {{ errorf "Duplicate edition ID or pageRef in %s: %s" $familyID .id }}
+    {{ end }}
+    {{ $ids = $ids | append .id }}
+    {{ $refs = $refs | append .pageRef }}
+    {{ if eq .id "latest" }}{{ $latest = true }}{{ end }}
+    {{ with site.GetPage .pageRef }}
+      {{ if or (ne .Params.edition_family $familyID) (ne .Params.edition_id $edition.id) }}
+        {{ errorf "Edition metadata does not match registry: %s" .Path }}
+      {{ end }}
+    {{ else }}
+      {{ errorf "Edition page missing: %s" .pageRef }}
+    {{ end }}
+  {{ end }}
+  {{ if not $latest }}{{ errorf "Document family %s requires a latest edition" $familyID }}{{ end }}
+{{ end }}

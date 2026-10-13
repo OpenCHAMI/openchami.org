@@ -1,0 +1,5 @@
+{{ with .Params.edition_commit }}
+<div class="edit-page">
+  <a href="{{ printf "%s/blob/%s/%s" (strings.TrimSuffix "/" site.Params.doks.docsRepo) . $.Params.edition_source }}">View edition source on GitHub</a>
+</div>
+{{ end }}

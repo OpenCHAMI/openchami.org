@@ -1,0 +1,25 @@
+{{ $current := . }}
+{{ $editionSection := false }}
+{{ with partial "docs/edition-context.html" . }}
+  {{ $landing := site.GetPage .edition.pageRef }}
+  {{ if and (ne .edition.id "latest") $landing.IsSection }}
+    {{ $editionSection = $landing }}
+  {{ else }}
+    {{ $current = .latest }}
+    {{ with .key }}
+      {{ with site.GetPage (printf "%s/%s" $current.Path .) }}{{ $current = . }}{{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $sidebar := printf "sidebar_%s" .Section }}
+{{ if $editionSection }}
+  {{ partial "sidebar/render-section-menu.html" (dict "currentPage" . "nodes" (slice $editionSection)) }}
+{{ else }}
+  {{ with index site.Menus $sidebar }}
+    {{ partial "sidebar/render-section-menu.html" (dict "currentPage" $current "nodes" .) }}
+  {{ else }}
+    {{ with (.Site.GetPage "section" .Section).Pages }}
+      {{ partial "sidebar/render-section-menu.html" (dict "currentPage" $current "nodes" .) }}
+    {{ end }}
+  {{ end }}
+{{ end }}

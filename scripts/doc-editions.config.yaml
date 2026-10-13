@@ -1,0 +1,31 @@
+# Tag prefixes select independent histories. Labels may later use release names.
+families:
+  tutorial:
+    title: Tutorial
+    source: content/docs/tutorial.md
+    url: /docs/tutorial/
+    tagPrefix: tutorial-
+    # Migration entries keep existing URLs without inventing historical tags.
+    # A matching tag supersedes the pinned source; aliases and labels are retained.
+    bootstrap:
+      - id: "2026-08-06"
+        ref: dbf8f8794a1e3d37ca3e3337cd498d80fdfc12ce
+      - id: "2025-10-06"
+        label: "2025-10-06 (legacy services)"
+        ref: dbf8f8794a1e3d37ca3e3337cd498d80fdfc12ce
+        source: content/docs/archive/tutorial_legacy.md
+        metadata:
+          title: OpenCHAMI Tutorial
+          linktitle: Tutorial
+        aliases: ["/docs/archive/tutorial-legacy/"]
+    # Preserve link corrections made while migrating the two existing editions.
+    bootstrapReplacements:
+      - from: "See [here](/docs/archive/tutorial-legacy/) for the legacy tutorial."
+        to: "Use the **Version** menu above to select an earlier tutorial edition."
+      - from: "To understand each one in detail, review the [**Service\nConfiguration**](service_configuration.md) instructions\n<!-- TODO: Point link of above to Handbook -->"
+        to: "Review the included configuration files for the settings used by each\nservice."
+  handbook:
+    title: Handbook
+    source: content/docs/handbook
+    url: /docs/handbook/
+    tagPrefix: handbook-

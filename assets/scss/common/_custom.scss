@@ -50,3 +50,19 @@
     height: auto !important;
     max-width: 100%;
 }
+
+// Keep breadcrumbs and edition controls on the same vertical center.
+.document-toolbar {
+  margin-top: 2.25rem;
+
+  .breadcrumb {
+    margin: 0;
+  }
+
+  // The theme adds a bottom margin to inline SVGs in content.
+  .document-edition-ref .svg-inline {
+    display: block;
+    flex-shrink: 0;
+    margin: 0;
+  }
+}

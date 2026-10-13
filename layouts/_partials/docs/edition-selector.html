@@ -1,0 +1,37 @@
+{{ with partial "docs/edition-context.html" . }}
+<div class="document-editions ms-auto">
+  <div class="d-flex flex-wrap align-items-center justify-content-end gap-2">
+    <label for="document-edition-menu" class="small text-nowrap">Version:</label>
+    <select class="form-select form-select-sm w-auto" id="document-edition-menu" data-document-edition aria-label="{{ .family.title }} version">
+      {{ $context := . }}
+      {{ range .family.editions }}
+        {{ $target := site.GetPage .pageRef }}
+        {{ with $context.key }}
+          {{ with site.GetPage (printf "%s/%s" $target.Path .) }}{{ $target = . }}{{ end }}
+        {{ end }}
+        <option value="{{ $target.RelPermalink }}"{{ if eq .id $context.edition.id }} selected{{ end }}>{{ .label }}</option>
+      {{ end }}
+    </select>
+    {{ $ref := site.Params.doks.docsRepoBranch }}
+    {{ $refLabel := $ref }}
+    {{ if ne .edition.id "latest" }}
+      {{ $ref = .edition.tag | default .edition.commit }}
+      {{ $refLabel = .edition.tag | default (substr .edition.commit 0 7) }}
+    {{ end }}
+    <a class="document-edition-ref d-inline-flex align-items-center p-1" data-edition-github-ref href="{{ printf "%s/tree/%s" (strings.TrimSuffix "/" site.Params.doks.docsRepo) $ref }}" aria-label="View {{ .family.title }} at GitHub ref {{ $ref }}" title="GitHub: {{ $refLabel }}">
+      {{ partial "inline-svg" (dict "src" "outline/brand-github" "class" "icon" "width" "24" "height" "24" "aria-hidden" "true" "focusable" "false") }}
+    </a>
+  </div>
+  <noscript>
+    <ul class="list-unstyled mb-0">
+      {{ range .family.editions }}
+        {{ $target := site.GetPage .pageRef }}
+        {{ with $context.key }}
+          {{ with site.GetPage (printf "%s/%s" $target.Path .) }}{{ $target = . }}{{ end }}
+        {{ end }}
+        <li><a href="{{ $target.RelPermalink }}"{{ if eq .id $context.edition.id }} aria-current="page"{{ end }}>{{ .label }}</a></li>
+      {{ end }}
+    </ul>
+  </noscript>
+</div>
+{{ end }}
