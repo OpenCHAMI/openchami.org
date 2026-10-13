@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v6.3.0
@@ -33,8 +35,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Test documentation tag generation
+        run: npm run test:editions
+
       - name: Build site
         run: npm run build
+
+      - name: Verify documentation editions
+        run: python3 scripts/check_doc_editions.py
 
       - name: Verify build output
         run: |
