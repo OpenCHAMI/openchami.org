@@ -3,13 +3,22 @@ name: Hugo Deploy To S3
 on:
   push:
     branches: [ main ]
+    tags: ["tutorial-*", "handbook-*"]
+
+concurrency:
+  group: documentation-site-deploy
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Build all tagged content with the current site code and theme.
       - name: Check out main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
@@ -28,8 +37,20 @@ jobs:
         run: |
           hugo version
           hugo help deploy
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Test documentation tag generation
+        run: npm run test:editions
       - name: Build Hugo
-        run: hugo --minify
+        run: |
+          node scripts/build-doc-editions.cjs
+          hugo --minify
+      - name: Verify documentation editions
+        run: |
+          python3 -m pip install 'PyYAML>=6,<7'
+          python3 scripts/check_doc_editions.py
       - name: Deploy to S3 (no CDN invalidation)
         run: hugo deploy --target aws-deployment --invalidateCDN=true --maxDeletes -1
         env:
