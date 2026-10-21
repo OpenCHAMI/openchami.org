@@ -1,0 +1,56 @@
+# coredhcp.yaml — OpenCHAMI's DHCP server configuration (§7.7).
+#
+# Install to /etc/openchami/configs/coredhcp.yaml on the head node, replacing the
+# file the release RPM shipped, then restart:
+#   head$ sudo systemctl restart coresmd-coredhcp
+#
+# This file is the heart of the provisioning wire.
+#
+# Substitute:
+#   <PROV_IF>       the head's provisioning interface name, e.g. eth1
+#                   ⚠ DISCOVER THIS — do not assume. §6.6:
+#                     head$ ip -brief addr | grep 172.16.0.254
+#                   The name depends on the image. On the reference cloud it
+#                   is eth1, but a different image may name it differently.
+#   <HEAD_PROV_IP>  172.16.0.254
+#   <CLUSTER_FQDN>  demo.openchami.cluster
+
+server4:
+  listen:
+    # Bind to the provisioning NIC ONLY. Never let a provisioning DHCP server
+    # face a network you don't own. The "%" prefix means "this interface".
+    - "%<PROV_IF>"
+
+  plugins:
+    # On this wire the head node is everything: DHCP server, DNS server, and
+    # default gateway. The `router` line is what makes §7.12's NAT reachable —
+    # nodes send off-subnet traffic to the head because this told them to.
+    - server_id: <HEAD_PROV_IP>
+    - dns: <HEAD_PROV_IP>
+    - router: <HEAD_PROV_IP>
+    - netmask: 255.255.255.0
+
+    # The OpenCHAMI plugin, and the reason SMD is the single source of truth.
+    # Arguments, in order:
+    #   1. SMD URL             — where to read the inventory from
+    #   2. bootscript URL      — where to point a node's firmware (BSS)
+    #   3. CA cert path        — INSIDE the container, for verifying SMD's TLS
+    #   4. cache refresh (30s) — how often to re-read SMD
+    #   5. lease duration (1h) — for MACs it recognises
+    #   6. false               — do not serve unknown MACs from SMD
+    #
+    # ⚠ This container reads the root CA ONCE at startup. After any certificate
+    #   change, restart it or it fails TLS to SMD for ever after — symptom:
+    #   nodes get bootloop leases and the log says "x509: certificate signed by
+    #   unknown authority". See §7.10.
+    - coresmd: https://<CLUSTER_FQDN>:8443 http://<HEAD_PROV_IP>:8081 /root_ca/root_ca.crt 30s 1h false
+
+    # Fallback for UNKNOWN MACs: a short 5-minute lease from a reserved range,
+    # keeping them cycling until someone registers them in SMD. A brand-new rack
+    # can be powered on and simply wait here.
+    #
+    # ⚠ These addresses must be OUTSIDE the Neutron subnet's allocation pools
+    #   (§5.2), or Neutron may hand the same address to a port.
+    # ⚠ A node with an address in this range means CoreDHCP answered but did NOT
+    #   recognise the MAC — so the wire is fine and the problem is SMD (§8).
+    - bootloop: /tmp/coredhcp.db default 5m 172.16.0.200 172.16.0.250

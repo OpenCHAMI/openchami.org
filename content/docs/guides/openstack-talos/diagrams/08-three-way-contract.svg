@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 716" width="1320" height="716" role="img"
+     aria-labelledby="t06 d06"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t06">The three-way contract: one MAC address copied into three files</title>
+  <desc id="d06">The node map in och-vars-env.sh decides each node's name, xname, NID, MAC address, IP address and
+    role once. Those values are then copied by hand into three places. The Neutron port created in section
+    5.4 pins the MAC and is owned by OpenStack. The SMD inventory loaded in section 8.1 maps that same MAC
+    to an IP address and an xname, and CoreDHCP and CoreDNS read it. The BSS payload written in section 11.1
+    maps the same MAC to a kernel, an initrd and a command line, and iPXE reads it. The MAC address is the
+    join key because it is the only thing a node knows about itself at power-on — and the Neutron port
+    names do not match the node names, being offset by one, so the MAC is the only value that reliably
+    connects the three. Neutron cannot see OpenCHAMI's copies and OpenCHAMI cannot see Neutron's, so a
+    disagreement is never detected automatically: a MAC missing from SMD produces a silent bootloop, and a
+    MAC in the wrong BSS payload boots the node successfully as the wrong role.</desc>
+
+  <defs>
+    <marker id="a6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="716" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§8 — the three-way contract: one MAC, three files, two authorities</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">The MACs and IPs below are this tutorial's. The shape — one source, three hand-made copies, nothing that checks them — is the part that transfers.</text>
+
+  <!-- ======================= THE SOURCE: the node map ======================= -->
+  <rect x="16" y="64" width="1288" height="188" rx="10" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#6b7280">THE NODE MAP — YOUR SOURCE OF TRUTH · templates/och-vars-env.sh</text>
+  <text x="32" y="107" font-size="10.5" fill="#6b7280">Decided once, in §3. Everything below is a copy, and the tutorial has no mechanism for keeping the copies honest.</text>
+
+  <text x="32"  y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#6b7280">NAME</text>
+  <text x="120" y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#6b7280">XNAME</text>
+  <text x="250" y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#6b7280">NID</text>
+  <text x="300" y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#6b7280">MAC</text>
+  <text x="450" y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#6b7280">IP</text>
+  <text x="580" y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#6b7280">ROLE</text>
+  <text x="716" y="134" font-size="10" font-weight="600" letter-spacing="0.06em" fill="#a16207">PORT (§5.4)</text>
+  <line x1="32" y1="141" x2="802" y2="141" stroke="#d5dae0"/>
+
+  <g font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">
+    <text x="32"  y="158">och-cp1</text>
+    <text x="120" y="158">x1000c0s0b0n0</text>
+    <text x="250" y="158">1</text>
+    <text x="300" y="158">52:54:00:be:ef:01</text>
+    <text x="450" y="158">172.16.0.1</text>
+    <text x="580" y="158" fill="#4a6d96">talos-controlplane</text>
+    <text x="716" y="158" fill="#a16207">och-node1-prov</text>
+
+    <text x="32"  y="175">och-w1</text>
+    <text x="120" y="175">x1000c0s0b1n0</text>
+    <text x="250" y="175">2</text>
+    <text x="300" y="175">52:54:00:be:ef:02</text>
+    <text x="450" y="175">172.16.0.2</text>
+    <text x="580" y="175" fill="#6b7280">talos-worker</text>
+    <text x="716" y="175" fill="#a16207">och-node2-prov</text>
+
+    <text x="32"  y="192">och-w2</text>
+    <text x="120" y="192">x1000c0s0b2n0</text>
+    <text x="250" y="192">3</text>
+    <text x="300" y="192">52:54:00:be:ef:03</text>
+    <text x="450" y="192">172.16.0.3</text>
+    <text x="580" y="192" fill="#6b7280">talos-worker</text>
+    <text x="716" y="192" fill="#a16207">och-node3-prov</text>
+
+    <text x="32"  y="209">och-w3</text>
+    <text x="120" y="209">x1000c0s0b3n0</text>
+    <text x="250" y="209">4</text>
+    <text x="300" y="209">52:54:00:be:ef:04</text>
+    <text x="450" y="209">172.16.0.4</text>
+    <text x="580" y="209" fill="#6b7280">talos-worker</text>
+    <text x="716" y="209" fill="#a16207">och-node4-prov</text>
+
+    <text x="32"  y="226">och-w4</text>
+    <text x="120" y="226">x1000c0s0b4n0</text>
+    <text x="250" y="226">5</text>
+    <text x="300" y="226">52:54:00:be:ef:05</text>
+    <text x="450" y="226">172.16.0.5</text>
+    <text x="580" y="226" fill="#6b7280">talos-worker</text>
+    <text x="716" y="226" fill="#a16207">och-node5-prov</text>
+  </g>
+
+  <text x="32" y="244" font-size="10.5" fill="#4a5568"><tspan font-weight="600" fill="#b45309">⚠ The port names are offset by one from the node names — </tspan><tspan font-family="ui-monospace, Menlo, monospace">node1</tspan> is <tspan font-family="ui-monospace, Menlo, monospace">och-cp1</tspan>, so <tspan font-family="ui-monospace, Menlo, monospace">node2</tspan> is <tspan font-family="ui-monospace, Menlo, monospace">och-w1</tspan> and <tspan font-family="ui-monospace, Menlo, monospace">node5</tspan> is <tspan font-family="ui-monospace, Menlo, monospace">och-w4</tspan>. §5.4 numbers slots; §8 assigns roles.</text>
+
+  <rect x="820" y="122" width="468" height="102" rx="8" fill="#ffffff" stroke="#d5dae0"/>
+  <text x="836" y="144" font-size="11" font-weight="600" fill="#1b1f24">Why the MAC is the join key, and not the xname or the name</text>
+  <text x="836" y="165" font-size="10.5" fill="#4a5568">The xname is OpenCHAMI's primary key and the IP is CoreDHCP's answer,</text>
+  <text x="836" y="180" font-size="10.5" fill="#4a5568">but the only thing a node knows about itself at power-on is its own MAC.</text>
+  <text x="836" y="195" font-size="10.5" fill="#4a5568">Every lookup below starts there — so a wrong MAC is not a wrong field,</text>
+  <text x="836" y="210" font-size="10.5" font-weight="600" fill="#b45309">it is a node that, as far as the cluster is concerned, does not exist.</text>
+
+  <!-- ======================= the fan-out bus ======================= -->
+  <line x1="660" y1="252" x2="660" y2="278" stroke="#7b8794" stroke-width="1.4"/>
+  <line x1="214" y1="278" x2="1106" y2="278" stroke="#7b8794" stroke-width="1.4"/>
+  <line x1="214"  y1="278" x2="214"  y2="310" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a6)"/>
+  <line x1="660"  y1="278" x2="660"  y2="310" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a6)"/>
+  <line x1="1106" y1="278" x2="1106" y2="310" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a6)"/>
+  <text x="672" y="272" font-size="10" fill="#6b7280">copied by hand, three times</text>
+
+  <!-- ======================= COLUMN 1 — Neutron ======================= -->
+  <rect x="16" y="316" width="396" height="256" rx="10" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="32" y="342" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">AUTHORITY — NEUTRON, IN OPENSTACK</text>
+  <text x="32" y="366" font-size="13" font-weight="600" fill="#1b1f24">§5.4 — the Neutron port</text>
+  <text x="32" y="386" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">openstack port create --mac-address …</text>
+
+  <rect x="32" y="400" width="364" height="34" rx="6" fill="#ffffff" stroke="#e0b96a"/>
+  <text x="44" y="422" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:01</text>
+  <text x="170" y="422" font-size="10" fill="#a16207">pinned here — where it originates</text>
+
+  <text x="32" y="456" font-size="10.5" fill="#4a5568">Read by nothing in OpenCHAMI. It is simply the</text>
+  <text x="32" y="471" font-size="10.5" fill="#4a5568">hardware address the instance's NIC will have.</text>
+
+  <text x="32" y="498" font-size="10.5" font-weight="600" fill="#b45309">If Neutron refused --mac-address</text>
+  <text x="32" y="515" font-size="10" fill="#4a5568">it assigned its own. Then this column is the</text>
+  <text x="32" y="530" font-size="10" fill="#4a5568">authority, and the other two must be rewritten</text>
+  <text x="32" y="545" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">from openstack port list.</text>
+
+  <!-- ======================= COLUMN 2 — SMD ======================= -->
+  <rect x="462" y="316" width="396" height="256" rx="10" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="478" y="342" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">AUTHORITY — OPENCHAMI SMD</text>
+  <text x="478" y="366" font-size="13" font-weight="600" fill="#1b1f24">§8.1 — the SMD inventory</text>
+  <text x="478" y="386" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">ochami discover static -f yaml -d @nodes.yaml</text>
+
+  <rect x="478" y="400" width="364" height="34" rx="6" fill="#ffffff" stroke="#b7cde4"/>
+  <text x="490" y="422" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:01</text>
+  <text x="616" y="422" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#4a6d96">→ 172.16.0.1 · x1000c0s0b0n0</text>
+
+  <text x="478" y="456" font-size="10.5" fill="#4a5568">Read by CoreDHCP for the lease and CoreDNS for</text>
+  <text x="478" y="471" font-size="10.5" fill="#4a5568">the name, one cache refresh (~30 s) later.</text>
+
+  <text x="478" y="498" font-size="10.5" font-weight="600" fill="#b45309">If the MAC is missing or mistyped here</text>
+  <text x="478" y="515" font-size="10" fill="#4a5568">CoreDHCP has no answer for the node. No lease,</text>
+  <text x="478" y="530" font-size="10" fill="#4a5568">so iPXE never reaches BSS, so the console shows</text>
+  <text x="478" y="545" font-size="10" fill="#4a5568">a bootloop and no error message anywhere.</text>
+
+  <!-- ======================= COLUMN 3 — BSS ======================= -->
+  <rect x="908" y="316" width="396" height="256" rx="10" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="924" y="342" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">AUTHORITY — OPENCHAMI BSS</text>
+  <text x="924" y="366" font-size="13" font-weight="600" fill="#1b1f24">§11.1 — the BSS payload</text>
+  <text x="924" y="386" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">ochami bss boot params set -f yaml -d @…yaml</text>
+
+  <rect x="924" y="400" width="364" height="34" rx="6" fill="#ffffff" stroke="#b7cde4"/>
+  <text x="936" y="422" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:01</text>
+  <text x="1062" y="422" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#4a6d96">→ talos-controlplane.yaml</text>
+
+  <text x="924" y="456" font-size="10.5" fill="#4a5568">Read by iPXE, after the node already has its</text>
+  <text x="924" y="471" font-size="10.5" fill="#4a5568">lease: kernel, initrd, and the command line.</text>
+
+  <text x="924" y="498" font-size="10.5" font-weight="600" fill="#b45309">If the MAC sits in the wrong payload</text>
+  <text x="924" y="515" font-size="10" fill="#4a5568">the node boots perfectly — as the wrong role.</text>
+  <text x="924" y="530" font-size="10" fill="#4a5568">Two control planes, or none at all. This is the</text>
+  <text x="924" y="545" font-size="10" fill="#4a5568">one that costs you an afternoon.</text>
+
+  <!-- ======================= the join spine ======================= -->
+  <line x1="412" y1="417" x2="462" y2="417" stroke="#b45309" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <rect x="427" y="408" width="20" height="18" fill="#ffffff"/>
+  <text x="437" y="423" font-size="14" font-weight="700" text-anchor="middle" fill="#b45309">=</text>
+  <line x1="858" y1="417" x2="908" y2="417" stroke="#b45309" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <rect x="873" y="408" width="20" height="18" fill="#ffffff"/>
+  <text x="883" y="423" font-size="14" font-weight="700" text-anchor="middle" fill="#b45309">=</text>
+
+  <!-- ======================= the point ======================= -->
+  <rect x="16" y="588" width="1288" height="112" rx="8" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="612" font-size="11.5" font-weight="600" fill="#1b1f24">Two authorities, three copies, nothing in between</text>
+  <text x="32" y="634" font-size="10.5" fill="#4a5568">Neutron owns the port; OpenCHAMI owns SMD and BSS. Neither system can see the other's copy, so a disagreement is never reported — it is only ever</text>
+  <text x="32" y="650" font-size="10.5" fill="#4a5568">observed, later, as a node behaving oddly. The only check that exists is the one you do by eye: §8's checkpoint, and again in §11.</text>
+  <text x="32" y="678" font-size="10.5" fill="#4a5568"><tspan font-weight="600" fill="#b45309">This is the strongest argument for automating the build — </tspan>generating all three from a single <tspan font-family="ui-monospace, Menlo, monospace">nodes.yaml</tspan> makes disagreement impossible rather than merely unlikely.</text>
+</svg>
