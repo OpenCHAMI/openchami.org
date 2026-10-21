@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 1050" width="1320" height="1050" role="img"
+     aria-labelledby="t07n d07n"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t07n">How a node network-boots on OpenStack: iPXE is the node's root disk, and everything after it is unmodified OpenCHAMI</title>
+  <desc id="d07n">Nova only ever assigns a boot index to storage devices, so there is no way to put a NIC in a
+    guest's boot order and no equivalent of libvirt's boot order of disk then network; the limitation is in
+    how Nova generates the guest's XML, below the API, so no microversion, image property or policy change
+    reaches it. The way round it is to make iPXE itself the storage device. Three commands do the whole of
+    section 9: download ipxe.usb, an eight megabyte hybrid disk image carrying an MBR bootloader for BIOS
+    and EFI slash BOOT slash BOOTX64.EFI for UEFI; upload it to Glance as a raw private image called
+    och-ipxe-disk; and create each node instance from that image on its MAC-pinned port. The firmware then
+    boots what looks to it like an ordinary disk, and from that point the chain is identical to real
+    hardware and entirely unmodified OpenCHAMI. iPXE starts. CoreDHCP answers with the address SMD holds
+    for that MAC and the lease carries the BSS URL. iPXE fetches the boot script BSS holds for that MAC.
+    The Talos kernel and initramfs come from the head node's S3 store and boot into RAM. Talos enters
+    maintenance mode and fetches its machine config from the talos.config URL on the kernel command line.
+    Finally Talos selects its install disk by size rather than by device name and writes itself to the
+    root disk, overwriting the iPXE bootloader — which is what stops the node network-booting again, with
+    no state held anywhere. There is therefore no way-back command: the next boot is Talos from disk,
+    re-provisioning is an openstack server rebuild, and the one capability given up is network-booting a
+    node without destroying its disk. On real hardware all of this is one Redfish call setting the boot
+    source override target to PXE, followed by a reset.</desc>
+
+  <defs>
+    <marker id="a7n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="1050" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§9 — a cloud has no “PXE” button, so we make iPXE the node's root disk</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Amber is the part that exists only because this is a cloud — three commands, all of §9. Blue is ordinary, unmodified OpenCHAMI: identical on real hardware.</text>
+
+  <!-- ======================= THE CONSTRAINT ======================= -->
+  <rect x="16" y="64" width="800" height="92" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="32" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">THE CONSTRAINT — WHY THIS SECTION EXISTS AT ALL</text>
+  <text x="32" y="110" font-size="10.5" fill="#4a5568">Nova only ever assigns a <tspan font-family="ui-monospace, Menlo, monospace">boot_index</tspan> to <tspan font-style="italic">storage</tspan>. It cannot put a NIC in a guest's boot order, and the</text>
+  <text x="32" y="126" font-size="10.5" fill="#4a5568">limitation is in XML generation, <tspan font-style="italic">below the API</tspan> — no microversion or image property reaches it.</text>
+  <text x="32" y="142" font-size="10.5" font-weight="600" fill="#b45309">So we give it something other than the NIC to boot: a disk with iPXE on it.</text>
+
+  <rect x="836" y="64" width="468" height="92" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="852" y="88" font-size="11" font-weight="600" fill="#1b1f24">On real hardware this is one call, not a section</text>
+  <text x="852" y="110" font-size="10.5" fill="#4a5568"><tspan font-family="ui-monospace, Menlo, monospace">BootSourceOverrideTarget=Pxe</tspan>, then <tspan font-family="ui-monospace, Menlo, monospace">Reset</tspan>. Everything</text>
+  <text x="852" y="126" font-size="10.5" fill="#4a5568">in amber is the hand-cranked equivalent of those two</text>
+  <text x="852" y="142" font-size="10.5" fill="#4a5568">Redfish fields.</text>
+
+  <!-- ======================= THREE COMMANDS ======================= -->
+  <text x="16" y="180" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">THE OPENSTACK-SPECIFIC PART — ONE MECHANISM, THREE COMMANDS</text>
+  <text x="1304" y="180" font-size="10" text-anchor="end" fill="#6b7280">No Cinder volume · no boot order · no rescue policy · no microversion · BIOS or UEFI from one file</text>
+
+  <!-- ==== 7.1 ==== -->
+  <rect x="16" y="192" width="396" height="160" rx="10" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="32" y="216" font-size="11" font-weight="700" letter-spacing="0.06em" fill="#a16207">§9.1 · GET THE ARTIFACT</text>
+  <text x="32" y="240" font-size="13" font-weight="600" fill="#1b1f24">A bootable disk image, 8 MB</text>
+  <text x="32" y="260" font-size="10.5" fill="#4a5568">MBR + SYSLINUX for BIOS, and a FAT partition</text>
+  <text x="32" y="275" font-size="10.5" fill="#4a5568">holding <tspan font-family="ui-monospace, Menlo, monospace">EFI/BOOT/BOOTX64.EFI</tspan> for UEFI.</text>
+
+  <rect x="32" y="288" width="364" height="32" rx="6" fill="#ffffff" stroke="#e0b96a"/>
+  <text x="44" y="308" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">curl -fLO https://boot.ipxe.org/ipxe.usb</text>
+
+  <text x="32" y="340" font-size="10" fill="#4a5568">Not <tspan font-family="ui-monospace, Menlo, monospace">ipxe.iso</tspan> — that is a CD, and we have no CD.</text>
+
+  <!-- ==== 7.2 ==== -->
+  <rect x="462" y="192" width="396" height="160" rx="10" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="478" y="216" font-size="11" font-weight="700" letter-spacing="0.06em" fill="#a16207">§9.2 · UPLOAD IT</text>
+  <text x="478" y="240" font-size="13" font-weight="600" fill="#1b1f24">A private raw image in Glance</text>
+  <text x="478" y="260" font-size="10.5" fill="#4a5568">Byte for byte, so Nova hands the guest exactly</text>
+  <text x="478" y="275" font-size="10.5" fill="#4a5568">the partition table the firmware needs to see.</text>
+
+  <rect x="478" y="288" width="364" height="32" rx="6" fill="#ffffff" stroke="#e0b96a"/>
+  <text x="490" y="308" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">image create --disk-format raw --private</text>
+
+  <text x="478" y="340" font-size="10" fill="#4a5568"><tspan font-family="ui-monospace, Menlo, monospace">hw_firmware_type</tspan> must match §11's <tspan font-family="ui-monospace, Menlo, monospace">console=</tspan>.</text>
+
+  <!-- ==== 7.3 ==== -->
+  <rect x="908" y="192" width="396" height="160" rx="10" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="924" y="216" font-size="11" font-weight="700" letter-spacing="0.06em" fill="#a16207">§9.3 · CREATE THE NODES</text>
+  <text x="924" y="240" font-size="13" font-weight="600" fill="#1b1f24">Root disk = iPXE</text>
+  <text x="924" y="260" font-size="10.5" fill="#4a5568">One instance per node, each on its MAC-pinned</text>
+  <text x="924" y="275" font-size="10.5" fill="#4a5568">port from §5.4. Nothing else is unusual.</text>
+
+  <rect x="924" y="288" width="364" height="32" rx="6" fill="#ffffff" stroke="#e0b96a"/>
+  <text x="936" y="308" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">server create --image och-ipxe-disk</text>
+
+  <text x="924" y="340" font-size="10" font-weight="600" fill="#a16207">This <tspan font-style="italic">is</tspan> the PXE button. There is no second step.</text>
+
+  <!-- ======================= convergence ======================= -->
+  <line x1="214"  y1="352" x2="214"  y2="372" stroke="#7b8794" stroke-width="1.4"/>
+  <line x1="660"  y1="352" x2="660"  y2="372" stroke="#7b8794" stroke-width="1.4"/>
+  <line x1="1106" y1="352" x2="1106" y2="372" stroke="#7b8794" stroke-width="1.4"/>
+  <line x1="214"  y1="372" x2="1106" y2="372" stroke="#7b8794" stroke-width="1.4"/>
+  <line x1="660"  y1="372" x2="660"  y2="400" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a7n)"/>
+  <text x="676" y="366" font-size="10" fill="#6b7280">the firmware boots a plain disk — and from here nothing knows this is a cloud</text>
+
+  <text x="16" y="394" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">UNMODIFIED OPENCHAMI — NOTHING BELOW HERE IS CLOUD-SPECIFIC</text>
+
+  <!-- ======================= 1 ======================= -->
+  <rect x="16" y="406" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="24" y="421" width="18" height="18" rx="4" fill="#dce7f3"/>
+  <text x="33" y="434" font-size="10.5" font-weight="600" text-anchor="middle" fill="#4a6d96">1</text>
+  <text x="52" y="426" font-size="12" font-weight="600" fill="#1b1f24">iPXE is running — from the node's own root disk</text>
+  <text x="52" y="444" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">iPXE 2.0.0+ (ga1992) -- Open Source Network Boot Firmware</text>
+  <text x="706" y="426" font-size="10.5" fill="#4a5568">Only the 8 MB above this line is local. Everything below arrives over the wire,</text>
+  <text x="706" y="444" font-size="10.5" fill="#4a5568">which is why the boot chain proves something about OpenCHAMI at all.</text>
+
+  <line x1="660" y1="454" x2="660" y2="472" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a7n)"/>
+
+  <!-- ======================= 2 ======================= -->
+  <rect x="16" y="472" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="24" y="487" width="18" height="18" rx="4" fill="#dce7f3"/>
+  <text x="33" y="500" font-size="10.5" font-weight="600" text-anchor="middle" fill="#4a6d96">2</text>
+  <text x="52" y="492" font-size="12" font-weight="600" fill="#1b1f24">CoreDHCP answers — §7.7, from SMD's record — §8</text>
+  <text x="52" y="510" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">net0: 172.16.0.1/255.255.255.0 gw 172.16.0.254</text>
+  <text x="706" y="492" font-size="10.5" fill="#4a5568">The address SMD holds for <tspan font-family="ui-monospace, Menlo, monospace">52:54:00:be:ef:01</tspan>, and the lease also carries the</text>
+  <text x="706" y="510" font-size="10.5" font-weight="600" fill="#b45309">BSS URL. A <tspan font-family="ui-monospace, Menlo, monospace">172.16.0.2xx</tspan> address is a bootloop lease — the MAC is unknown.</text>
+
+  <line x1="660" y1="520" x2="660" y2="538" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a7n)"/>
+
+  <!-- ======================= 3 ======================= -->
+  <rect x="16" y="538" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="24" y="553" width="18" height="18" rx="4" fill="#dce7f3"/>
+  <text x="33" y="566" font-size="10.5" font-weight="600" text-anchor="middle" fill="#4a6d96">3</text>
+  <text x="52" y="558" font-size="12" font-weight="600" fill="#1b1f24">iPXE fetches its boot script from BSS — §11</text>
+  <text x="52" y="576" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">http://172.16.0.254:8081/boot/v1/bootscript?mac=52:54:00:be:ef:01 … ok</text>
+  <text x="706" y="558" font-size="10.5" fill="#4a5568">Keyed on the MAC, so a node's <tspan font-style="italic">role</tspan> comes from its NIC — never from the Nova</text>
+  <text x="706" y="576" font-size="10.5" fill="#4a5568">instance name you typed. §8's offset-by-one port table matters here.</text>
+
+  <line x1="660" y1="586" x2="660" y2="604" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a7n)"/>
+
+  <!-- ======================= 4 ======================= -->
+  <rect x="16" y="604" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="24" y="619" width="18" height="18" rx="4" fill="#dce7f3"/>
+  <text x="33" y="632" font-size="10.5" font-weight="600" text-anchor="middle" fill="#4a6d96">4</text>
+  <text x="52" y="624" font-size="12" font-weight="600" fill="#1b1f24">Talos kernel and initramfs, from the head's S3 — §10</text>
+  <text x="52" y="642" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">:7070/boot-images/talos/vmlinuz-amd64 · initramfs-amd64.xz … ok</text>
+  <text x="706" y="624" font-size="10.5" fill="#4a5568">Booted <tspan font-style="italic">into RAM</tspan>. The root disk is untouched at this point and still holds iPXE —</text>
+  <text x="706" y="642" font-size="10.5" fill="#4a5568">that only changes at step 6, and that change is the whole design.</text>
+
+  <line x1="660" y1="652" x2="660" y2="670" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a7n)"/>
+
+  <!-- ======================= 5 ======================= -->
+  <rect x="16" y="670" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="24" y="685" width="18" height="18" rx="4" fill="#dce7f3"/>
+  <text x="33" y="698" font-size="10.5" font-weight="600" text-anchor="middle" fill="#4a6d96">5</text>
+  <text x="52" y="690" font-size="12" font-weight="600" fill="#1b1f24">Maintenance mode, then the machine config</text>
+  <text x="52" y="708" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">talos.config=http://172.16.0.254:7070/…/controlplane.yaml</text>
+  <text x="706" y="690" font-size="10.5" fill="#4a5568">No cloud-init, no SSH key, no user-data. The config arrives on the kernel</text>
+  <text x="706" y="708" font-size="10.5" fill="#4a5568">command line, which is what keeps OpenCHAMI the source of truth, not Nova.</text>
+
+  <line x1="660" y1="718" x2="660" y2="736" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a7n)"/>
+
+  <!-- ======================= 6 ======================= -->
+  <rect x="16" y="736" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="24" y="751" width="18" height="18" rx="4" fill="#dce7f3"/>
+  <text x="33" y="764" font-size="10.5" font-weight="600" text-anchor="middle" fill="#4a6d96">6</text>
+  <text x="52" y="756" font-size="12" font-weight="600" fill="#1b1f24">Talos writes itself to the root disk — over iPXE — §10.6</text>
+  <text x="52" y="774" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">diskSelector: { size: '&gt;= 10GB' }<tspan font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">  — by description, never </tspan>/dev/vda</text>
+  <text x="706" y="756" font-size="10.5" fill="#4a5568">This is the step that ends the network booting, by destroying the bootloader.</text>
+  <text x="706" y="774" font-size="10.5" font-weight="600" fill="#b45309">Install to any other disk and iPXE survives — and the node reinstalls for ever.</text>
+
+  <!-- ======================= THE WAY BACK ======================= -->
+  <text x="16" y="816" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">AND THE WAY BACK TO DISK BOOT — THERE ISN'T ONE, WHICH IS THE POINT</text>
+  <text x="1304" y="816" font-size="10" text-anchor="end" fill="#6b7280">Nothing anywhere records “is this node provisioned?” — the disk answers it</text>
+
+  <rect x="16" y="826" width="396" height="84" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="848" font-size="11" font-weight="600" fill="#1b1f24">Next boot — Talos, from its own disk</text>
+  <text x="32" y="867" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">(nothing)</text>
+  <text x="32" y="887" font-size="9.5" fill="#4a5568">The bootloader iPXE lived in no longer exists, so</text>
+  <text x="32" y="900" font-size="9.5" fill="#4a5568">there is no command and no state to keep. §12.</text>
+
+  <rect x="462" y="826" width="396" height="84" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="478" y="848" font-size="11" font-weight="600" fill="#1b1f24">Re-provision — start the node again</text>
+  <text x="478" y="867" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">server rebuild --image och-ipxe-disk</text>
+  <text x="478" y="887" font-size="9.5" font-weight="600" fill="#b45309">Restores iPXE by wiping the disk — destructive,</text>
+  <text x="478" y="900" font-size="9.5" fill="#4a5568">deliberately. OVB uses the same mechanism.</text>
+
+  <rect x="908" y="826" width="396" height="84" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="924" y="848" font-size="11" font-weight="600" fill="#1b1f24">What we gave up — and it is one thing</text>
+  <text x="924" y="867" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">server rescue --image och-ipxe</text>
+  <text x="924" y="887" font-size="9.5" fill="#4a5568">Network-booting a node <tspan font-style="italic">without</tspan> wiping it. Matters</text>
+  <text x="924" y="900" font-size="9.5" fill="#4a5568">on metal, not at all here.</text>
+
+  <!-- ======================= the point ======================= -->
+  <rect x="16" y="926" width="1288" height="104" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="950" font-size="11.5" font-weight="600" fill="#1b1f24">What is actually faked, and how little of it there is</text>
+  <text x="32" y="972" font-size="10.5" fill="#4a5568">Eight megabytes. iPXE is the only thing that comes off local storage. The node's identity comes from CoreDHCP reading SMD, its instructions from BSS, its operating</text>
+  <text x="32" y="988" font-size="10.5" fill="#4a5568">system from the head's S3 store and its configuration from a kernel argument — every one of them over the network, keyed on a MAC, exactly as on real hardware.</text>
+  <text x="32" y="1014" font-size="10.5" fill="#4a5568"><tspan font-weight="600" fill="#b45309">Both amber bands collapse to one Redfish call on real hardware — </tspan>and the blue chain does not change at all. That is the whole claim this tutorial exists to test.</text>
+</svg>

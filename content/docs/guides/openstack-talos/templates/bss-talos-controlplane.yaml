@@ -1,0 +1,36 @@
+---
+# bss-talos-controlplane.yaml — BSS boot payload for the Kubernetes
+# control-plane node (§11.1).
+#
+# Load with:
+#   head$ export DEMO_ACCESS_TOKEN=$(sudo bash -lc 'gen_access_token')
+#   head$ ochami bss boot params set -f yaml -d @bss-talos-controlplane.yaml
+#
+# `bss boot params set` REPLACES idempotently — re-run it freely while tweaking
+# the kernel command line. (Unlike `ochami discover static`, which is an add and
+# fails with 409 on a second run.)
+#
+# Substitute for your cluster, or generate this file with the heredoc in §11.1
+# which expands the variables for you:
+#   <OBJ>     172.16.0.254:7070    the Versity S3 gateway as booting nodes see it
+#   <ARCH>    amd64                x86_64 in Talos/Go naming
+#   <CONSOLE> ttyS0,115200         serial console for x86_64 (ttyAMA0 on aarch64)
+#
+# Kernel command line, token by token:
+#   talos.platform=metal   Talos is on bare metal (PXE), not a cloud. REQUIRED.
+#                          Talos DOES have an `openstack` platform that reads its
+#                          config from the Nova metadata service — we deliberately
+#                          do not use it, because then OpenCHAMI would not be the
+#                          source of truth and the exercise would prove nothing.
+#   slab_nomerge pti=on    kernel hardening Talos requires on metal. REQUIRED.
+#   console=…              so `openstack console log show` shows the dashboard
+#   talos.config=…         where Talos fetches its machine config. This is what
+#                          replaces cloud-init entirely.
+
+kernel: 'http://<OBJ>/boot-images/talos/vmlinuz-<ARCH>'
+initrd: 'http://<OBJ>/boot-images/talos/initramfs-<ARCH>.xz'
+params: 'talos.platform=metal slab_nomerge pti=on console=tty0 console=<CONSOLE> talos.config=http://<OBJ>/boot-images/talos/controlplane.yaml'
+macs:
+  # Must match the Neutron port (§5.4) and the SMD inventory (§8.1) — the
+  # three-way contract. Exactly ONE control-plane node in this POC.
+  - 52:54:00:be:ef:01

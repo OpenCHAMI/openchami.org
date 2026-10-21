@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 380" width="1320" height="380" role="img"
+     aria-labelledby="t18 d18"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t18">The four mechanisms that stack before an accelerator is usable</title>
+  <desc id="d18">Four layers, each resting on the one below. Layer 1, at the bottom, is the image: a Talos Image
+    Factory schematic becomes the kernel and initramfs that BSS serves, so this layer loops back to the Talos
+    assets of section 10 and is the only one OpenCHAMI serves. Layer 2 is drivers: Talos system extensions, baked
+    into that boot image. Layer 3 is advertisement: a device plugin tells Kubernetes, for example, that a node has
+    four nvidia.com/gpu. Layer 4, at the top, is scheduling: Ray resources, node selectors, and taints and
+    tolerations decide which workload lands where. This proof of concept has no accelerators; what it establishes
+    is the mechanisms, so that adding hardware is a configuration change rather than a research project.</desc>
+
+  <defs>
+    <marker id="a18" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="380" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§18 — four mechanisms, and they stack</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Read bottom to top: each layer needs the one below it. Blue is the one layer OpenCHAMI serves; grey is everything Kubernetes does on top.</text>
+
+  <!-- rests-on arrow, left margin -->
+  <path d="M40,336 V88" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a18)"/>
+
+  <!-- 4 -->
+  <rect x="64" y="72" width="1240" height="56" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="84" y="106" font-size="15" font-weight="600" fill="#1b1f24">4. Scheduling</text>
+  <text x="706" y="106" font-size="12" fill="#4a5568">Ray resources, node selectors, taints/tolerations</text>
+
+  <!-- 3 -->
+  <rect x="64" y="140" width="1240" height="56" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="84" y="174" font-size="15" font-weight="600" fill="#1b1f24">3. Advertisement</text>
+  <text x="706" y="174" font-size="12" fill="#4a5568">device plugin: "this node has 4 × <tspan font-family="ui-monospace, Menlo, monospace">nvidia.com/gpu</tspan>"</text>
+
+  <!-- 2 -->
+  <rect x="64" y="208" width="1240" height="56" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="84" y="242" font-size="15" font-weight="600" fill="#1b1f24">2. Drivers</text>
+  <text x="706" y="242" font-size="12" fill="#4a5568">Talos system extensions, baked into the boot image</text>
+
+  <!-- 1 -->
+  <rect x="64" y="276" width="1240" height="56" rx="8" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="84" y="310" font-size="15" font-weight="600" fill="#1b1f24">1. The image</text>
+  <text x="706" y="310" font-size="12" fill="#4a5568">Talos Image Factory schematic → the assets BSS serves</text>
+
+  <text x="16" y="364" font-size="10.5" fill="#6b7280">This proof of concept has no accelerators. It establishes the mechanisms, so adding hardware is a configuration change. Layer 1 loops back to §10.</text>
+</svg>
