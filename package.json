@@ -25,22 +25,30 @@
     "deploy": "npm run build && hugo deploy --maxDeletes -1"
   },
   "dependencies": {
-    "@thulite/doks-core": "^1.9.3",
+    "@thulite/doks-core": "^1.9.4",
     "@thulite/images": "^3.3.4",
     "@thulite/inline-svg": "^1.2.2",
-    "@thulite/seo": "^2.4.3",
-    "@tabler/icons": "^3.31.0",
-    "hugo-extended": "0.158.0",
+    "@thulite/seo": "^2.4.4",
+    "@tabler/icons": "^3.50.0",
+    "hugo-extended": "0.168.0",
     "thulite": "^2.6.5"
   },
   "devDependencies": {
     "shx": "^0.4.0"
   },
   "overrides": {
-    "semver": "^7.5.4"
+    "adm-zip": "0.6.1",
+    "semver": "^7.5.4",
+    "tar": "7.5.22"
+  },
+  "pnpm": {
+    "overrides": {
+      "adm-zip": "0.6.1",
+      "tar": "7.5.22"
+    }
   },
   "engines": {
-    "node": ">=18.14.1",
+    "node": ">=22.15.0",
     "pnpm": ">=8.10.0"
   },
   "packageManager": "pnpm@8.12.0"

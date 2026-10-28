@@ -63,7 +63,7 @@
   target = "layouts"
 
 [[mounts]]
-  excludeFiles = ['home.html']
+  files = ['! home.html']
   source = "node_modules/@thulite/doks-core/layouts"
   target = "layouts"
 

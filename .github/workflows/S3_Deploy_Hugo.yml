@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.20.0'
       - name: NPM Install
         run: npm ci
       - name: Install Hugo withdeploy
@@ -35,4 +35,3 @@ jobs:
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
