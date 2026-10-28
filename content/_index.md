@@ -36,8 +36,8 @@ HPC system management has traditionally relied on **monolithic, complex, and rig
 ### **Watch OpenCHAMI in Action** 🎥
 Learn how OpenCHAMI simplifies HPC system management with **security-first architecture, composability, and microservices-based deployment.**
 
-{{< callout context="note" title="Join us at SC26!" icon="outline/calendar" >}}
-OpenCHAMI will be participating in the Birds of a Feather (BoF) sessions at **SC26** (Nov 15-20, 2026). [Learn more about our participation](/events/2026/sc26/).
+{{< callout context="note" title="OpenCHAMI at SC26" icon="outline/calendar" >}}
+Join us at **SC26**, Nov 15-20, 2026, for OpenCHAMI workshops, talks, a poster, and community BoFs. [View the full schedule](/events/2026/sc26/).
 {{< /callout >}}
 
 {{< youtube UbBdbhzXjbA >}}
