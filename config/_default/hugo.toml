@@ -7,7 +7,7 @@ disableHugoGeneratorInject = true
 enableEmoji = true
 enableGitInfo = true
 enableRobotsTXT = true
-languageCode = "en-US"
+locale = "en-US"
 [pagination]
   pagerSize = 10
 rssLimit = 10
@@ -82,9 +82,16 @@ copyRight = "Copyright (c) 2023-2026 OpenCHAMI"
 [imaging]
   anchor = "Center"
   bgColor = "#ffffff"
-  hint = "photo"
-  quality = 85
   resampleFilter = "Lanczos"
+
+  [imaging.jpeg]
+    quality = 85
+  [imaging.webp]
+    hint = "photo"
+    quality = 85
+  [imaging.avif]
+    hint = "photo"
+    quality = 85
 
 [deployment]
 
