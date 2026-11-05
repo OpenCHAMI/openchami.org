@@ -1,0 +1,5 @@
+{{ with partial "docs/edition-context.html" . }}
+  {{ if ne .edition.id "latest" }}
+  <p class="document-editions small text-body-secondary mt-2 mb-3" data-edition-notice>You are reading the {{ .edition.label }} edition of the {{ .family.title }}. <a href="{{ .latestPage.RelPermalink }}">Read Latest</a>.</p>
+  {{ end }}
+{{ end }}
