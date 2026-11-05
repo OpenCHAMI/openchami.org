@@ -120,11 +120,12 @@ The Python output checker requires PyYAML (`python3 -m pip install 'PyYAML>=6,<7
 
 `scripts/doc-editions.config.yaml` defines independent document families, their
 source paths, public URLs, and tag prefixes. Both files (Tutorial) and complete
-sections (Handbook) are supported. Tag suffixes become stable URL IDs, ordered
-newest-first for dates. Safe release names such as `tutorial-v0.2.0` also work;
-optional `labels` keyed by edition ID customize display names without changing
-URLs. Unrelated repository tags are ignored. In a section, an ID cannot match a
-live chapter URL or `page`, which is reserved for pagination.
+sections (Handbook) are supported. Tag suffixes become stable URL IDs. Use dated
+IDs, which sort newest-first, and set optional `labels` keyed by edition ID to show
+a release name without changing URLs. Safe release names such as `tutorial-v0.2.0`
+also work as IDs, but they sort above every date, and prereleases sort above their
+final release. Unrelated repository tags are ignored. In a section, an ID cannot
+match a live chapter URL or `page`, which is reserved for pagination.
 
 The live landing page must declare its `edition_family` and `edition_id: latest`.
 For a section, cascade these fields to its chapters, as the Handbook does, and
