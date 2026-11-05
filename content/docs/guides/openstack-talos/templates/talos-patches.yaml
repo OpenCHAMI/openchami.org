@@ -1,0 +1,84 @@
+# talos-patches.yaml — the three strategic-merge patches from §10.6, in one file
+# for reference. Apply them as SEPARATE files (they are shown split below), or
+# concatenate the `machine:`/`cluster:` keys into one patch of your own.
+#
+# Apply with (--patch can be repeated, so it is one command per role file):
+#   head$ talosctl machineconfig patch controlplane.yaml \
+#           --patch @install-patch.yaml --patch @dns-patch.yaml --patch @extra-patch.yaml \
+#           -o controlplane.yaml.tmp && mv controlplane.yaml.tmp controlplane.yaml
+#
+# ⚠ Use strategic-merge (YAML) patches, NOT JSON6902 (`[{"op":…}]`). Talos v1.13
+#   generates a multi-document machine config, and JSON6902 patches are rejected
+#   for multi-doc configs.
+# ⚠ Write to a temp file and mv. Redirecting into the file being read truncates it.
+
+# ─── install-patch.yaml ──────────────────────────────────────────────────────
+# WHY: the node has exactly one disk, and it is the disk currently running iPXE
+# (§9 makes ipxe.usb the root disk). Two consequences:
+#
+#   1. Match by SIZE, not by device name. `talosctl gen config` writes a default
+#      `disk: /dev/sda` and our disk is virtio at /dev/vda — harmless, because
+#      the installer takes diskSelector when one is present and never reads
+#      `disk` (v1alpha1_sequencer_tasks.go). Selecting by size states the intent.
+#
+#   2. wipe MUST be true. ipxe.usb is a hybrid image: an MBR for BIOS plus a
+#      FAT16 partition holding /EFI/BOOT/BOOTX64.EFI for UEFI. Without a wipe
+#      that partition can survive next to Talos's own ESP, the firmware's
+#      removable-media fallback finds the OLD bootloader, and the node
+#      network-boots and reinstalls for ever. Talos defaults wipe to true; it is
+#      set explicitly here because the whole design of §9 depends on it.
+#
+# DO NOT add extraKernelArgs here to recover the serial console. UEFI installs
+# systemd-boot, which ignores that field entirely (the cmdline lives in the
+# UKI), and Talos rejects it outright alongside gen config's default
+# grubUseUKICmdline: true. An installed node simply has no console; see the
+# note after §10.7. Confirmed on och-cp1, 7 Aug 2026.
+#
+# These patches also apply ONCE, to a freshly generated config. Re-running the
+# install patch fails on diskSelector.size ("merge not possible, left >= 10GB
+# is not settable"). To change something later, write a patch containing only
+# the changed field.
+#
+# NOTE `type:` takes a single value (ssd | hdd | nvme | sd), not an expression.
+#      Omitted deliberately — size alone is unambiguous with one disk.
+machine:
+  install:
+    diskSelector:
+      size: '>= 10GB'
+    wipe: true
+
+---
+# ─── dns-patch.yaml ─────────────────────────────────────────────────────────
+# WHY: CoreDHCP tells nodes their DNS server is 172.16.0.254 — OpenCHAMI's
+# CoreDNS — which answers ONLY cluster names (§7.8, no `forward` clause). Talos
+# must resolve ghcr.io and registry.k8s.io to pull its installer and the
+# Kubernetes images. These public resolvers are reachable through §7.12's NAT.
+#
+# Do NOT "fix" this by adding a forward clause to the Corefile instead: §10.4
+# explains why giving the boot-time iPXE resolver internet access does not help
+# (its TLS stack cannot talk to modern servers anyway).
+machine:
+  network:
+    nameservers:
+      - 1.1.1.1
+      - 8.8.8.8
+
+---
+# ─── extra-patch.yaml ───────────────────────────────────────────────────────
+# WHY: talosctl and kubectl run on the HEAD node and address the cluster by raw
+# IP (there is no external DNS for the provisioning wire). Without these SANs,
+# every connection fails with
+#   x509: certificate is valid for …, not 172.16.0.1
+#
+# Substitute your own values:
+#   <CP_IP>        172.16.0.1     the control-plane node's SMD-mapped address
+#   <HEAD_PROV_IP> 172.16.0.254   the head node on the provisioning wire
+machine:
+  certSANs:
+    - <CP_IP>
+    - <HEAD_PROV_IP>
+cluster:
+  apiServer:
+    certSANs:
+      - <CP_IP>
+      - <HEAD_PROV_IP>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 330" width="1320" height="330" role="img"
+     aria-labelledby="t05 d05"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t05">How the provisioning subnet 172.16.0.0/24 is divided between Neutron and CoreDHCP</title>
+  <desc id="d05">The address plan for och-prov's subnet, in four ranges. 172.16.0.1 to .199 is a Neutron
+    allocation pool for the node ports, where every IP is named by us when the port is created.
+    172.16.0.200 to .250 is CoreDHCP's bootloop range, leased to MAC addresses CoreDHCP does not recognise
+    (section 7.7). 172.16.0.251 to .253 is unused. 172.16.0.254 is a second, single-address Neutron pool,
+    reserved for the head node (section 6). Because Neutron may only allocate inside its two pools, it can never
+    hand out an address in the range CoreDHCP leases. A to-scale strip underneath shows how small the last
+    three ranges are.</desc>
+
+  <rect width="1320" height="330" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§5 — who may hand out which address on <tspan font-family="ui-monospace, Menlo, monospace">172.16.0.0/24</tspan></text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Amber is a Neutron allocation pool. Blue is CoreDHCP's. Grey is nobody's. Neutron allocates only inside its pools, so the two never collide.</text>
+
+  <!-- the four ranges, not to scale -->
+  <rect x="16" y="72" width="520" height="112" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="32" y="98" font-size="13" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">172.16.0.1 – .199</text>
+  <text x="32" y="120" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">NEUTRON POOL</text>
+  <text x="32" y="144" font-size="11" fill="#4a5568">Node ports, assigned by us: every port we create names</text>
+  <text x="32" y="162" font-size="11" fill="#4a5568">its IP explicitly (§5.4)</text>
+
+  <rect x="548" y="72" width="380" height="112" rx="8" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="564" y="98" font-size="13" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">172.16.0.200 – .250</text>
+  <text x="564" y="120" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">COREDHCP "BOOTLOOP"</text>
+  <text x="564" y="144" font-size="11" fill="#4a5568">Leased to MACs CoreDHCP does not recognise (§7.7)</text>
+
+  <rect x="940" y="72" width="180" height="112" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="956" y="98" font-size="12" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">.251 – .253</text>
+  <text x="956" y="120" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a5568">UNUSED</text>
+  <text x="956" y="144" font-size="11" fill="#4a5568">Outside every range</text>
+
+  <rect x="1132" y="72" width="172" height="112" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="1148" y="98" font-size="13" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">172.16.0.254</text>
+  <text x="1148" y="120" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">NEUTRON POOL</text>
+  <text x="1148" y="144" font-size="11" fill="#4a5568">The head node (§6)</text>
+
+  <!-- the same, to scale: 254 addresses across 1288 units, 5.07 per address -->
+  <text x="16" y="222" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a5568">THE SAME, TO SCALE</text>
+  <rect x="16" y="234" width="1009" height="24" fill="#fdf3e3" stroke="#e0b96a"/>
+  <rect x="1025" y="234" width="259" height="24" fill="#eef4fb" stroke="#b7cde4"/>
+  <rect x="1284" y="234" width="15" height="24" fill="#f7f8fa" stroke="#d5dae0"/>
+  <rect x="1299" y="234" width="5" height="24" fill="#fdf3e3" stroke="#e0b96a"/>
+
+  <text x="16" y="276" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">.1</text>
+  <text x="1025" y="276" font-size="10.5" font-family="ui-monospace, Menlo, monospace" text-anchor="middle" fill="#4a5568">.200</text>
+  <text x="1304" y="276" font-size="10.5" font-family="ui-monospace, Menlo, monospace" text-anchor="end" fill="#4a5568">.254</text>
+
+  <text x="16" y="310" font-size="10.5" fill="#6b7280">Neutron still assigns fixed IPs on a <tspan font-family="ui-monospace, Menlo, monospace">--no-dhcp</tspan> subnet, for anti-spoofing and IPAM; it just does not serve them. The two pools keep those records out of CoreDHCP's range.</text>
+</svg>

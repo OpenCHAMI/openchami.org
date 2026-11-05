@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 720" width="1320" height="720" role="img"
+     aria-labelledby="t00b d00b"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t00b">How a node boots: the eight-step chain this tutorial builds, and which section builds each step</title>
+  <desc id="d00b">A node's boot, from power-on to a Kubernetes cluster, in eight steps. Step one, power on and
+    network-boot, is the only step that has to be faked on a cloud: OpenStack has no boot-from-network option,
+    so section 9 makes iPXE the node's root disk. Steps two to six are identical to what happens on a real HPC
+    cluster and are unmodified OpenCHAMI: CoreDHCP looks the node's MAC up in SMD and leases it the IP SMD
+    holds (sections 7 and 8); the firmware or iPXE asks BSS for this node's boot script (section 11); it
+    downloads the Talos kernel and initramfs from the head node's S3 store (section 10); Talos boots into RAM
+    and enters maintenance mode (section 12); and it fetches its machine config from the talos.config URL on
+    its kernel command line (sections 10 and 11). Steps seven and eight are Talos's own, after OpenCHAMI has
+    handed over: Talos pulls its installer, writes itself to disk and reboots, then joins or forms a
+    Kubernetes cluster (section 12).</desc>
+
+  <defs>
+    <marker id="a00b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="720" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">How a node boots — the chain this tutorial builds</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Amber exists only because this is a cloud. Blue is unmodified OpenCHAMI, identical on real hardware. Grey is Talos's own, after OpenCHAMI hands over.</text>
+
+  <!-- ======================= CLOUD-ONLY ======================= -->
+  <text x="16" y="84" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">THE ONLY STEP FAKED ON A CLOUD — DECISION 2</text>
+
+  <rect x="16" y="96" width="1288" height="48" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="32" y="116" font-size="13" font-weight="600" fill="#1b1f24">1 · Power on → firmware network-boots</text>
+  <text x="32" y="134" font-size="10.5" fill="#4a5568">On OpenStack there is no network-boot option, so the firmware boots <tspan font-family="ui-monospace, Menlo, monospace">ipxe.usb</tspan> from the node's root disk</text>
+  <text x="722" y="116" font-size="11" font-weight="600" fill="#a16207">§9</text>
+  <text x="722" y="134" font-size="10.5" fill="#4a5568">On real hardware: a BMC's “boot from PXE, then reset”</text>
+
+  <line x1="660" y1="144" x2="660" y2="180" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <!-- ======================= OPENCHAMI ======================= -->
+  <text x="16" y="172" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">UNMODIFIED OPENCHAMI — IDENTICAL ON A REAL HPC CLUSTER</text>
+
+  <rect x="16" y="184" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="204" font-size="13" font-weight="600" fill="#1b1f24">2 · DHCP: CoreDHCP looks the MAC up in SMD, leases its IP</text>
+  <text x="32" y="222" font-size="10.5" fill="#4a5568">SMD is the single source of truth; the lease is derived from it on demand</text>
+  <text x="722" y="204" font-size="11" font-weight="600" fill="#4a6d96">§7, §8</text>
+  <text x="722" y="222" font-size="10.5" fill="#4a5568">CoreSMD — CoreDHCP with an SMD plugin</text>
+
+  <line x1="660" y1="232" x2="660" y2="248" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <rect x="16" y="250" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="270" font-size="13" font-weight="600" fill="#1b1f24">3 · The firmware / iPXE asks BSS for this node's boot script</text>
+  <text x="32" y="288" font-size="10.5" fill="#4a5568">Kernel, initramfs and kernel command line, keyed by MAC</text>
+  <text x="722" y="270" font-size="11" font-weight="600" fill="#4a6d96">§11</text>
+  <text x="722" y="288" font-size="10.5" fill="#4a5568">BSS — one payload per node role</text>
+
+  <line x1="660" y1="298" x2="660" y2="314" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <rect x="16" y="316" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="336" font-size="13" font-weight="600" fill="#1b1f24">4 · Downloads the Talos kernel + initramfs from the S3 store</text>
+  <text x="32" y="354" font-size="10.5" fill="#4a5568">Prebuilt <tspan font-family="ui-monospace, Menlo, monospace">vmlinuz</tspan> and <tspan font-family="ui-monospace, Menlo, monospace">initramfs.xz</tspan> — no image build at all</text>
+  <text x="722" y="336" font-size="11" font-weight="600" fill="#4a6d96">§10</text>
+  <text x="722" y="354" font-size="10.5" fill="#4a5568">Versity S3 gateway on the head node</text>
+
+  <line x1="660" y1="364" x2="660" y2="380" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <rect x="16" y="382" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="402" font-size="13" font-weight="600" fill="#1b1f24">5 · Talos boots into RAM, enters maintenance mode</text>
+  <text x="32" y="420" font-size="10.5" fill="#4a5568">No shell and no SSH — from here on, <tspan font-family="ui-monospace, Menlo, monospace">talosctl</tspan> is the only way in</text>
+  <text x="722" y="402" font-size="11" font-weight="600" fill="#4a6d96">§12</text>
+  <text x="722" y="420" font-size="10.5" fill="#4a5568">Waiting for a machine config</text>
+
+  <line x1="660" y1="430" x2="660" y2="446" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <rect x="16" y="448" width="1288" height="48" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="468" font-size="13" font-weight="600" fill="#1b1f24">6 · Fetches its machine config from the <tspan font-family="ui-monospace, Menlo, monospace">talos.config</tspan> URL</text>
+  <text x="32" y="486" font-size="10.5" fill="#4a5568">The URL arrives as a kernel argument, which is BSS's job — Talos ignores cloud-init</text>
+  <text x="722" y="468" font-size="11" font-weight="600" fill="#4a6d96">§10, §11</text>
+  <text x="722" y="486" font-size="10.5" fill="#4a5568">A declarative config, one per role</text>
+
+  <line x1="660" y1="496" x2="660" y2="532" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <!-- ======================= TALOS ======================= -->
+  <text x="16" y="524" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a5568">TALOS'S OWN — OPENCHAMI HAS HANDED OVER</text>
+
+  <rect x="16" y="536" width="1288" height="48" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="556" font-size="13" font-weight="600" fill="#1b1f24">7 · Pulls its installer, writes itself to disk, reboots</text>
+  <text x="32" y="574" font-size="10.5" fill="#4a5568">Overwrites the iPXE bootloader, so the next boot is Talos from disk — nothing remembers which nodes are done</text>
+  <text x="722" y="556" font-size="11" font-weight="600" fill="#4a5568">§12</text>
+  <text x="722" y="574" font-size="10.5" fill="#4a5568">Needs the internet, through the head's NAT (§7.12)</text>
+
+  <line x1="660" y1="584" x2="660" y2="600" stroke="#7b8794" stroke-width="1.5" marker-end="url(#a00b)"/>
+
+  <rect x="16" y="602" width="1288" height="48" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="622" font-size="13" font-weight="600" fill="#1b1f24">8 · Joins / forms a Kubernetes cluster</text>
+  <text x="32" y="640" font-size="10.5" fill="#4a5568">The control-plane node bootstraps etcd; the workers join it</text>
+  <text x="722" y="622" font-size="11" font-weight="600" fill="#4a5568">§12</text>
+  <text x="722" y="640" font-size="10.5" fill="#4a5568">Then §§13–18 build the inference stack on top</text>
+
+  <text x="16" y="690" font-size="11" fill="#6b7280">Steps 2 to 6 are the same on real metal. Only step 1 changes, and on real hardware it is one Redfish call.</text>
+</svg>

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 500" width="1320" height="500" role="img"
+     aria-labelledby="t00n d00n"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t00n">Decision 1: the nested way needs nested virtualisation; the flat way, which this tutorial uses, needs nothing special</title>
+  <desc id="d00n">Two ways to model a cluster inside an OpenStack project, side by side. On the left, the nested way,
+    which is what HPE's vTDS does: one large OpenStack instance runs Ubuntu with libvirt and KVM, and the
+    management node and compute nodes are VMs inside it. That gives full control of the virtual hardware,
+    so PXE and Redfish emulation are easy, but it needs /dev/kvm inside the guest — nested virtualisation —
+    which many production clouds switch off. On the right, the flat way, which this tutorial uses: every node
+    is its own Nova instance — och-head, och-cp1, och-w1 and och-w2 — all siblings on one Neutron network,
+    och-prov. There is no libvirt anywhere and nothing needs /dev/kvm inside a guest. It is also closer to
+    real hardware, where each node is a separate machine on a shared provisioning network; what it gives up
+    is control of the virtual firmware, which is decision 2.</desc>
+
+  <rect width="1320" height="500" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">Decision 1 — one instance per node, no nesting</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Blue is the OpenStack project. White with a dark border is a thing Nova booted. Amber is the silent provisioning wire.</text>
+
+  <!-- ======================= NESTED ======================= -->
+  <text x="16" y="84" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a5568">THE NESTED WAY (vTDS)</text>
+  <text x="644" y="84" font-size="11" font-weight="600" text-anchor="end" fill="#b45309">needs nested virtualisation</text>
+
+  <rect x="16" y="96" width="628" height="300" rx="10" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="120" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">OPENSTACK PROJECT</text>
+
+  <rect x="40" y="136" width="580" height="236" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="60" y="162" font-size="15" font-weight="600" fill="#1b1f24">One large OpenStack instance</text>
+  <text x="60" y="182" font-size="11" fill="#4a5568">Ubuntu + libvirt/KVM — needs <tspan font-family="ui-monospace, Menlo, monospace">/dev/kvm</tspan> inside the guest</text>
+
+  <rect x="60" y="202" width="164" height="96" rx="10" fill="#ffffff" stroke="#4a5568" stroke-dasharray="4 3"/>
+  <text x="76" y="228" font-size="13" font-weight="600" fill="#1b1f24">mgmt</text>
+  <text x="76" y="246" font-size="10.5" fill="#4a5568">a VM, inside</text>
+  <text x="76" y="262" font-size="10.5" fill="#4a5568">the instance</text>
+
+  <rect x="240" y="202" width="164" height="96" rx="10" fill="#ffffff" stroke="#4a5568" stroke-dasharray="4 3"/>
+  <text x="256" y="228" font-size="13" font-weight="600" fill="#1b1f24">compute-1</text>
+  <text x="256" y="246" font-size="10.5" fill="#4a5568">a VM, inside</text>
+  <text x="256" y="262" font-size="10.5" fill="#4a5568">the instance</text>
+
+  <rect x="420" y="202" width="180" height="96" rx="10" fill="#ffffff" stroke="#4a5568" stroke-dasharray="4 3"/>
+  <text x="436" y="228" font-size="13" font-weight="600" fill="#1b1f24">compute-N …</text>
+  <text x="436" y="246" font-size="10.5" fill="#4a5568">as many as the one</text>
+  <text x="436" y="262" font-size="10.5" fill="#4a5568">instance can hold</text>
+
+  <text x="60" y="326" font-size="10.5" fill="#4a5568">+ full control of the virtual hardware: PXE and Redfish emulation are easy</text>
+  <text x="60" y="346" font-size="10.5" font-weight="600" fill="#b45309">− switched off on many production clouds, and not a tenant's to switch on</text>
+
+  <!-- ======================= FLAT ======================= -->
+  <text x="676" y="84" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a5568">THE FLAT WAY — THIS TUTORIAL</text>
+  <text x="1304" y="84" font-size="11" font-weight="600" text-anchor="end" fill="#3f6b52">needs nothing special</text>
+
+  <rect x="676" y="96" width="628" height="300" rx="10" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="692" y="120" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">OPENSTACK PROJECT</text>
+
+  <rect x="700" y="136" width="132" height="84" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="716" y="162" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-head</text>
+  <text x="716" y="182" font-size="10.5" fill="#4a5568">Nova instance</text>
+  <text x="716" y="198" font-size="10.5" fill="#4a5568">OpenCHAMI</text>
+
+  <rect x="846" y="136" width="132" height="84" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="862" y="162" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-cp1</text>
+  <text x="862" y="182" font-size="10.5" fill="#4a5568">Nova instance</text>
+  <text x="862" y="198" font-size="10.5" fill="#4a5568">Talos, k8s CP</text>
+
+  <rect x="992" y="136" width="132" height="84" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="1008" y="162" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-w1</text>
+  <text x="1008" y="182" font-size="10.5" fill="#4a5568">Nova instance</text>
+  <text x="1008" y="198" font-size="10.5" fill="#4a5568">Talos, worker</text>
+
+  <rect x="1138" y="136" width="142" height="84" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="1154" y="162" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-w2 …</text>
+  <text x="1154" y="182" font-size="10.5" fill="#4a5568">Nova instance</text>
+  <text x="1154" y="198" font-size="10.5" fill="#4a5568">Talos, worker</text>
+
+  <!-- port elbows take the network's colour -->
+  <path d="M766,220 V256" stroke="#e0b96a" stroke-width="2" fill="none"/>
+  <path d="M912,220 V256" stroke="#e0b96a" stroke-width="2" fill="none"/>
+  <path d="M1058,220 V256" stroke="#e0b96a" stroke-width="2" fill="none"/>
+  <path d="M1209,220 V256" stroke="#e0b96a" stroke-width="2" fill="none"/>
+
+  <rect x="700" y="256" width="580" height="40" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="716" y="281" font-size="13" font-weight="600" fill="#a16207"><tspan font-family="ui-monospace, Menlo, monospace">och-prov</tspan><tspan font-size="11" font-weight="400" fill="#4a5568">  — one Neutron network, all nodes siblings on it</tspan></text>
+
+  <text x="700" y="326" font-size="10.5" fill="#4a5568">+ no libvirt anywhere; nothing needs <tspan font-family="ui-monospace, Menlo, monospace">/dev/kvm</tspan> inside a guest</text>
+  <text x="700" y="346" font-size="10.5" fill="#4a5568">+ closer to real hardware: separate machines on a shared provisioning network</text>
+  <text x="700" y="366" font-size="10.5" font-weight="600" fill="#b45309">− no control of the virtual firmware — which is decision 2</text>
+
+  <text x="16" y="436" font-size="11" fill="#6b7280">Check nesting before you plan around it: <tspan font-family="ui-monospace, Menlo, monospace">openstack flavor show</tspan> will not tell you. Boot one instance and look for <tspan font-family="ui-monospace, Menlo, monospace">/dev/kvm</tspan> and a</text>
+  <text x="16" y="454" font-size="11" fill="#6b7280">non-empty <tspan font-family="ui-monospace, Menlo, monospace">kvm_intel</tspan>/<tspan font-family="ui-monospace, Menlo, monospace">kvm_amd</tspan> module inside it — or ask whoever runs your cloud.</text>
+</svg>
