@@ -1,6 +1,6 @@
 {{/* Validate even when no registered document is visited. */}}
-{{ if not site.Data.doc_editions }}{{ errorf "Documentation edition registry missing; run npm run docs:prepare before Hugo" }}{{ end }}
-{{ range $familyID, $family := site.Data.doc_editions }}
+{{ if not hugo.Data.doc_editions }}{{ errorf "Documentation edition registry missing; run npm run docs:prepare before Hugo" }}{{ end }}
+{{ range $familyID, $family := hugo.Data.doc_editions }}
   {{ $ids := slice }}
   {{ $refs := slice }}
   {{ $latest := false }}

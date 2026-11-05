@@ -1,0 +1,10 @@
+{{/* Editions live under hidden content paths, so skip those and link within the edition. */}}
+{{ $family := .Params.edition_family }}
+{{ $edition := .Params.edition_id }}
+<li class="breadcrumb-item"><a href="{{ site.Home.RelPermalink }}">{{ i18n "home" }}</a></li>
+<li class="breadcrumb-item"><a href="{{ "docs/" | relURL }}">Docs</a></li>
+{{ range .Ancestors.Reverse }}
+  {{ if and (eq .Params.edition_family $family) (eq .Params.edition_id $edition) }}
+    <li class="breadcrumb-item"><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+  {{ end }}
+{{ end }}

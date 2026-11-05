@@ -2,7 +2,7 @@
 <div class="document-editions ms-auto">
   <div class="d-flex flex-wrap align-items-center justify-content-end gap-2">
     <label for="document-edition-menu" class="small text-nowrap">Version:</label>
-    <select class="form-select form-select-sm w-auto" id="document-edition-menu" data-document-edition aria-label="{{ .family.title }} version">
+    <select class="form-select form-select-sm w-auto" id="document-edition-menu" data-document-edition autocomplete="off" aria-label="{{ .family.title }} version">
       {{ $context := . }}
       {{ range .family.editions }}
         {{ $target := site.GetPage .pageRef }}

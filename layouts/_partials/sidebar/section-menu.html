@@ -5,10 +5,7 @@
   {{ if and (ne .edition.id "latest") $landing.IsSection }}
     {{ $editionSection = $landing }}
   {{ else }}
-    {{ $current = .latest }}
-    {{ with .key }}
-      {{ with site.GetPage (printf "%s/%s" $current.Path .) }}{{ $current = . }}{{ end }}
-    {{ end }}
+    {{ $current = .latestPage }}
   {{ end }}
 {{ end }}
 {{ $sidebar := printf "sidebar_%s" .Section }}

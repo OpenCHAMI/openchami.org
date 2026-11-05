@@ -3,8 +3,8 @@
   {{ if site.Params.doks.breadcrumbTrail }}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-0">
-      {{ if .Params.edition_family }}
-        <li class="breadcrumb-item"><a href="{{ "docs/" | relURL }}">Docs</a></li>
+      {{ if and .Params.edition_family (ne .Params.edition_id "latest") }}
+        {{ partial "docs/edition-breadcrumb.html" . }}
       {{ else }}
         {{ partial "main/breadcrumb" . }}
       {{ end }}

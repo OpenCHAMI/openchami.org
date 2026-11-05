@@ -1,6 +1,6 @@
 {{ $context := dict }}
 {{ with .Params.edition_family }}
-  {{ $family := index site.Data.doc_editions . }}
+  {{ $family := index hugo.Data.doc_editions . }}
   {{ if not $family }}{{ errorf "Unknown document edition family: %s" . }}{{ end }}
   {{ $edition := dict }}
   {{ $latest := dict }}
@@ -14,6 +14,10 @@
   {{ if and (eq $.Params.edition_id "latest") (ne $.Path $landing.Path) (not $key) }}
     {{ $key = strings.TrimPrefix (printf "%s/" $landing.Path) $.Path }}
   {{ end }}
-  {{ $context = dict "family" $family "edition" $edition "latest" $landing "key" $key }}
+  {{ $latestPage := $landing }}
+  {{ with $key }}
+    {{ with site.GetPage (printf "%s/%s" $landing.Path .) }}{{ $latestPage = . }}{{ end }}
+  {{ end }}
+  {{ $context = dict "family" $family "edition" $edition "latest" $landing "latestPage" $latestPage "key" $key }}
 {{ end }}
 {{ return $context }}
