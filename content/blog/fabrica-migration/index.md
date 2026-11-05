@@ -18,7 +18,7 @@ OpenCHAMI has undergone a significant architectural evolution with the introduct
 
 ### The Legacy Approach (BSS and cloud-init)
 
-In the [legacy tutorial](/docs/archive/tutorial-legacy), OpenCHAMI relied on two key services for node bootstrapping and configuration:
+In the [legacy tutorial](/docs/tutorial/2025-10-06/), OpenCHAMI relied on two key services for node bootstrapping and configuration:
 
 1. **BSS (Boot Script Service)** - Responsible for serving iPXE boot scripts and kernel parameters to compute nodes
 2. **cloud-init server** - Handled post-boot configuration of nodes once they were booted
@@ -65,7 +65,7 @@ The migration is now reflected in the documentation:
 
 ### Tutorial Changes
 - The main tutorial now uses boot-service and metadata-service by default, introduced in [OpenCHAMI v0.2.0](https://github.com/openchami/release/releases/tag/v0.2.0)
-- Legacy tutorial is [preserved](/docs/archive/tutorial-legacy) for reference
+- Legacy tutorial is [preserved](/docs/tutorial/2025-10-06/) for reference
 - Migration guide now [available](/docs/guides/fabrica-migration)
 
 ### Configuration Differences
@@ -115,6 +115,6 @@ As OpenCHAMI continues to evolve, the fabrica-based approach will enable develop
 
 - [Fabrica GitHub Repository](https://github.com/openchami/fabrica)
 - [OpenCHAMI Tutorial](/docs/tutorial)
-- [Legacy OpenCHAMI Tutorial](/docs/archive/tutorial-legacy)
+- [Legacy OpenCHAMI Tutorial](/docs/tutorial/2025-10-06/)
 - [Fabrica Migration Guide](/docs/guides/fabrica-migration)
 - [OpenCHAMI v0.2.0 Release Notes](https://github.com/openchami/release/releases/tag/v0.2.0)

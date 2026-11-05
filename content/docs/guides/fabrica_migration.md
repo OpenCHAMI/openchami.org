@@ -1187,5 +1187,5 @@ created. Old Hydra/OPAAL credentials and tokens are not valid substitutes.
 - [boot-service v0.3.1 configuration documentation](https://github.com/OpenCHAMI/boot-service/blob/v0.3.1/docs/CONFIGURATION.md)
 - [metadata-service v0.2.1 legacy compatibility](https://github.com/OpenCHAMI/metadata-service/blob/v0.2.1/LEGACY_COMPATIBILITY.md)
 - [metadata-service v0.2.1 client guide](https://github.com/OpenCHAMI/metadata-service/blob/v0.2.1/docs/CLIENT_USAGE.md)
-- [Legacy OpenCHAMI tutorial](/docs/archive/tutorial-legacy/)
+- [Legacy OpenCHAMI tutorial](/docs/tutorial/2025-10-06/)
 - [Current OpenCHAMI tutorial](/docs/tutorial/)

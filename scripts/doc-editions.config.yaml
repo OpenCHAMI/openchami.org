@@ -6,7 +6,7 @@ families:
     url: /docs/tutorial/
     tagPrefix: tutorial-
     # Migration entries keep existing URLs without inventing historical tags.
-    # A matching tag supersedes the pinned source; aliases and labels are retained.
+    # A matching tag on main replaces the pinned commit; everything else is retained.
     bootstrap:
       - id: "2026-08-06"
         ref: dbf8f8794a1e3d37ca3e3337cd498d80fdfc12ce
@@ -17,7 +17,7 @@ families:
         metadata:
           title: OpenCHAMI Tutorial
           linktitle: Tutorial
-        aliases: ["/docs/archive/tutorial-legacy/"]
+        aliases: ["/docs/archive/tutorial-legacy/", "/docs/archive/"]
     # Preserve link corrections made while migrating the two existing editions.
     bootstrapReplacements:
       - from: "See [here](/docs/archive/tutorial-legacy/) for the legacy tutorial."

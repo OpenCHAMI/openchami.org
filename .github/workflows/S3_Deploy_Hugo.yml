@@ -19,6 +19,15 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+      - name: Require documentation tag on main
+        if: github.ref_type == 'tag'
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if ! git merge-base --is-ancestor "refs/tags/$TAG^{commit}" origin/main; then
+            echo "::error::$TAG is not on main, so it will not be published. Merge the commit, then tag it on main."
+            exit 1
+          fi
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:

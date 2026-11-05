@@ -24,6 +24,7 @@ class Page(HTMLParser):
         self.scripts = []
         self.order = []
         self.metas = []
+        self.breadcrumbs = []
         self.feed(path.read_text())
 
     def handle_starttag(self, tag, attrs):
@@ -32,6 +33,8 @@ class Page(HTMLParser):
             self.ids.add(attrs["id"])
         ancestors = [item[1] for item in self.stack]
         if tag == "a":
+            if any("breadcrumb" in parent.get("class", "").split() for parent in ancestors):
+                self.breadcrumbs.append(attrs.get("href", ""))
             self.links.append((attrs, ancestors))
         if tag == "meta":
             self.metas.append(attrs)
@@ -72,6 +75,10 @@ def url_path(url):
     return urlsplit(url).path.rstrip("/") + "/"
 
 
+def robots(page):
+    return next((meta.get("content", "") for meta in page.metas if meta.get("name") == "robots"), "")
+
+
 def verify(destination, root=ROOT):
     registry = json.loads((root / ".generated/doc-editions/data/doc_editions.json").read_text())
     search = json.loads((destination / "search-index.json").read_text())
@@ -87,7 +94,7 @@ def verify(destination, root=ROOT):
             assert [url_path(option["value"]) for option in menu] == list(urls.values()), f"Incorrect edition menu: {url}"
             active = [option for option in menu if "selected" in option]
             assert len(active) == 1 and url_path(active[0]["value"]) == url, f"Incorrect current edition: {url}"
-            assert any(select.get("id") == "document-edition-menu" and "data-document-edition" in select and select.get("aria-label") for select in page.selects), f"Missing accessible selector: {url}"
+            assert any(select.get("id") == "document-edition-menu" and "data-document-edition" in select and select.get("aria-label") and select.get("autocomplete") == "off" for select in page.selects), f"Missing accessible selector: {url}"
             assert page.order.index("toolbar") < page.order.index("title"), f"Selector must appear above title: {url}"
             assert any("doc-editions." in script.get("src", "") and "defer" in script for script in page.scripts), f"Missing edition navigation script: {url}"
             ref_links = [link for link, _ in page.links if "data-edition-github-ref" in link]
@@ -101,11 +108,15 @@ def verify(destination, root=ROOT):
                 source_suffix = f'/blob/{entry["commit"]}/{source_metadata["edition_source"]}'
                 assert any(source_suffix in link.get("href", "") for link, _ in page.links), f"Missing immutable Git source link: {url}"
                 assert url not in indexed, f"Historical edition in search: {url}"
+                assert "noindex" in robots(page), f"Historical edition open to search engines: {url}"
+                for feed in ("index.xml", "sitemap.xml"):
+                    assert not (destination / url.lstrip("/") / feed).exists(), f"Historical edition publishes {feed}: {url}"
                 assert not any("page-nav" in parent.get("class", "").split() for _, ancestors in page.links for parent in ancestors), f"Historical edition has global previous/next: {url}"
                 assert any(url_path(link.get("href", "")) == urls["latest"] for link, ancestors in page.links if any("document-editions" in parent.get("class", "").split() for parent in ancestors)), f"Missing Latest link: {url}"
             else:
                 assert "/tree/" in ref_links[0]["href"], f"Missing Latest branch ref: {url}"
                 assert url in indexed, f"Latest missing from search: {url}"
+                assert "noindex" not in robots(page), f"Latest hidden from search engines: {url}"
             for alias in metadata(entry["pageRef"], root).get("aliases", []):
                 redirect = Page(destination / alias.strip("/") / "index.html")
                 assert any(meta.get("http-equiv") == "refresh" and url in meta.get("content", "") for meta in redirect.metas), f"Missing alias: {alias}"
@@ -114,15 +125,27 @@ def verify(destination, root=ROOT):
                 assert "26-boot-the-compute-node-with-the-debug-image" in page.ids, f"Tutorial anchor lost: {url}"
                 assert any(link.get("href") == "#26-boot-the-compute-node-with-the-debug-image" for link, _ in page.links), f"Tutorial self-link lost: {url}"
             count += 1
+    landings = {entry["url"].rstrip("/") + "/": entry for family in registry.values() for entry in family["editions"]}
     for path in (destination / "docs").rglob("index.html"):
         page = Page(path)
+        # Chapters must lead back to their own edition, in the trail and in the Latest notice.
+        chapter_url = "/" + path.parent.relative_to(destination).as_posix() + "/"
+        owner = max((url for url in landings if chapter_url.startswith(url)), key=len, default=None)
+        if owner and owner != chapter_url and "toolbar" in page.order:
+            assert owner in map(url_path, page.breadcrumbs), f"Breadcrumb misses its edition: {chapter_url}"
+            if landings[owner]["id"] != "latest":
+                latest_chapter = url_path(page.options[0]["value"])
+                assert any(url_path(link.get("href", "")) == latest_chapter for link, ancestors in page.links if any("data-edition-notice" in parent for parent in ancestors)), f"Latest notice misses matching chapter: {chapter_url}"
         for link, ancestors in page.links:
             inside_menu = any("document-editions" in parent.get("class", "").split() for parent in ancestors)
             current_url = "/" + path.parent.relative_to(destination).as_posix() + "/"
             target_url = url_path(link.get("href", ""))
             self_link = target_url == current_url
             within_edition = any(current_url.startswith(edition) and target_url.startswith(edition) for edition in historical)
-            assert inside_menu or self_link or within_edition or target_url not in historical, f"Snapshot leaked into ordinary navigation/listing: {path}"
+            # Authors may cite an edition in prose; navigation and listings must not reach one.
+            classes = [name for parent in ancestors for name in parent.get("class", "").split()]
+            authored = "docs-content" in classes and "page-nav" not in classes
+            assert inside_menu or self_link or within_edition or authored or target_url not in historical, f"Snapshot leaked into ordinary navigation/listing: {path}"
     print(f"Verified {count} documentation editions, aliases, anchors, search, and navigation exclusions.")
 
 
