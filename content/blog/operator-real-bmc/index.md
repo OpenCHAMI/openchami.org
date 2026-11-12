@@ -227,9 +227,7 @@ curl -sS -i -X POST "$SMD_URL/hsm/v2/Inventory/RedfishEndpoints" \
   --data-binary "@$DEMO_DIR/smd-endpoint.json"
 ```
 
-There was one important version-specific wrinkle in this run. SMD `v2.20.3` returned HTTP `400` with repeated `Invalid CompEthInterface IP Address` errors for system NICs that had no reported IP address, but it still stored the component endpoint. The standalone Ethernet interface inventory contained the BMC interfaces, not those MAC-only system NICs. This was a partial write, not a fully successful import. The guided demo displays the response and continues to BSS registration using Magellan's data directly.
-
-We can still inspect the stored endpoint rather than just display a local file:
+We can now inspect the stored endpoint rather than just display a local file:
 
 ```bash
 curl -fsS "$SMD_URL/hsm/v2/Inventory/ComponentEndpoints" \
