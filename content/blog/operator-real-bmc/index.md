@@ -227,7 +227,9 @@ curl -sS -i -X POST "$SMD_URL/hsm/v2/Inventory/RedfishEndpoints" \
   --data-binary "@$DEMO_DIR/smd-endpoint.json"
 ```
 
-We can now inspect the stored endpoint rather than just display a local file:
+There was one important version-specific wrinkle in this run. SMD `v2.20.3` returned HTTP `400` with repeated `Invalid CompEthInterface IP Address` errors for system NICs that had no reported IP address, but it still stored the component endpoint. The standalone Ethernet interface inventory contained the BMC interfaces, not those MAC-only system NICs. This was a partial write, not a fully successful import. The guided demo displays the response and continues to BSS registration using Magellan's data directly.
+
+We can still inspect the stored endpoint rather than just display a local file:
 
 ```bash
 curl -fsS "$SMD_URL/hsm/v2/Inventory/ComponentEndpoints" \
@@ -262,7 +264,7 @@ An excerpt of the real SMD response contained:
 }
 ```
 
-The unchanged UUID and MAC tie this API response back to the physical server. That is the useful demonstration: another service can return information about the hardware Magellan found. It does not require us to pretend every inventory representation was populated successfully.
+The unchanged UUID and MAC tie this API response back to the physical server. SMD stored the node's component endpoint and its embedded NIC information, but did not create the separate `EthernetInterfaces` records for the five system NICs without reported IP addresses. The query demonstrates stored hardware identity, not a complete inventory import.
 
 ## 5. Tell Boot Service About the Discovered Node
 
@@ -382,7 +384,7 @@ The generated script has no assigned role and shows NID `0` because the minimal 
 We have connected a physical server to several independently inspectable results:
 
 1. Magellan reads its actual identity and network interfaces through Redfish.
-2. SMD returns a component endpoint matching that discovered UUID and MAC, with the partial-write limitation noted above.
+2. SMD returns a component endpoint matching that discovered UUID and MAC, although separate Ethernet interface records for the MAC-only system NICs were not created.
 3. Boot Service recognizes the registered node by name and MAC and generates its boot instructions.
 
 The operator handles deploying the control plane. The API calls show how discovery data and administrator-chosen configuration come together. That is more useful than simply seeing pods run: we can trace one real machine from its BMC to the script it would receive during provisioning.
