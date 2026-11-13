@@ -1,0 +1,65 @@
+# clouds.yaml.example — copy to ~/.config/openstack/clouds.yaml on the devbox
+# and chmod 600 it. See §2.6.
+#
+# Deliberately contains no username, no password and no project name: the
+# application credential (§2.5) carries its own scope, so this file cannot be
+# accidentally pointed at a project that isn't ours.
+#
+# NEVER COMMIT THE FILLED-IN VERSION. The tutorial's .gitignore excludes
+# clouds.yaml, but the habit matters more than the file.
+#
+# ⚠ THE KEY BELOW ("ochami-lab") IS A LOCAL NICKNAME, NOT A CLOUD-SIDE OBJECT.
+#   It is not your project name and not your username. It exists only in this
+#   file, and `OS_CLOUD` selects it. If they disagree you get:
+#
+#       Cloud ochami-lab was not found.
+#
+#   ...which is raised locally, before any request is sent — see §2's Common failures.
+#
+# ⚠ If you let Horizon generate this file for you (Identity → Application
+#   Credentials → Create, then "Download clouds.yaml"), THE ENTRY IT WRITES IS
+#   CALLED `openstack`, not `ochami-lab`. Either rename it here or set
+#   OS_CLOUD=openstack. Horizon's version also omits `interface` and, on some
+#   deployments, `region_name` — both are fine to add by hand.
+
+clouds:
+  ochami-lab:
+    # Fixed by the authentication method — copy verbatim, nothing to look up.
+    auth_type: v3applicationcredential
+
+    auth:
+      # Horizon → Project → API Access → the "Identity" row, plus /v3.
+      # Or OS_AUTH_URL in the downloaded RC file.
+      # On the reference cloud: https://keystone.cloud.example.org:5000/v3
+      auth_url: <AUTH_URL>
+
+      # Both of these come from creating the application credential:
+      # Horizon → Identity → Application Credentials → Create,
+      # or the CLI command in §2.5.
+      #
+      # The ID can be looked up again later:
+      #   openstack application credential list
+      # THE SECRET CANNOT. It is displayed exactly once, at creation. If you
+      # lose it, delete the credential and create a new one — which is cheap,
+      # and safer than any workaround.
+      application_credential_id: <APP_CRED_ID>
+      application_credential_secret: <APP_CRED_SECRET>
+
+    # OS_REGION_NAME in the RC file, or `openstack region list` once you can
+    # authenticate. On the reference cloud: RegionOne
+    #
+    # ⚠ If you don't know it yet, DELETE THIS LINE — on a single-region cloud the
+    #   SDK picks the only region there is. NEVER leave the placeholder in: the
+    #   SDK reads "<REGION>" as the name of your cloud's one region and then
+    #   rejects the real one with
+    #     Region RegionOne is not a valid region name for cloud ochami-lab.
+    #     Valid choices are <REGION>.
+    region_name: <REGION>
+
+    # Fixed — copy verbatim.
+    interface: public
+    identity_api_version: 3
+
+    # Uncomment if the cloud presents a private CA. Prefer this over
+    # `verify: false`, which disables certificate checking entirely.
+    # cacert: /etc/ssl/certs/ca-bundle.crt

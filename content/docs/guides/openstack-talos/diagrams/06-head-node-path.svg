@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 660" width="1320" height="660" role="img"
+     aria-labelledby="t04 d04"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t04">The path from your laptop to the OpenCHAMI head node</title>
+  <desc id="d04">Traffic leaves the Lima devbox VM, is NAT-ed by macOS onto the VPN tunnel utun10
+    (198.51.100.49), crosses to the shared OpenStack external network 192.0.2.0/24, is DNAT-ed by och-router
+    from floating IP 192.0.2.185 onto the och-ext network 192.168.200.0/24, and arrives at the och-head
+    instance's first Neutron port. The head's second port sits on the silent och-prov network
+    172.16.0.0/24 at 172.16.0.254.</desc>
+
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+    <marker id="av" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c08a2e"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="660" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§6 — the path from your laptop to the head node</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Every value below was measured on the reference cloud, 2 Aug 2026. Yours will differ; the shape will not.</text>
+
+  <!-- ============================ LEFT: the laptop ============================ -->
+  <rect x="16" y="64" width="280" height="576" rx="10" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#6b7280">YOUR LAPTOP — macOS</text>
+
+  <rect x="32" y="100" width="248" height="132" rx="8" fill="#ffffff" stroke="#b9c2cc"/>
+  <text x="48" y="124" font-size="13" font-weight="600" fill="#1b1f24">openstack-devbox</text>
+  <text x="48" y="142" font-size="11" fill="#6b7280">Lima VM · Linux · Appendix A</text>
+  <text x="48" y="167" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">eth0  192.168.5.15/24</text>
+  <text x="48" y="183" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">gw    192.168.5.2</text>
+  <text x="48" y="208" font-size="11" fill="#6b7280">runs the openstack CLI + ssh</text>
+  <text x="48" y="224" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">prompt: devbox$</text>
+
+  <line x1="156" y1="232" x2="156" y2="264" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a)"/>
+  <text x="166" y="253" font-size="10" fill="#6b7280">macOS routes + NATs</text>
+
+  <rect x="32" y="268" width="248" height="112" rx="8" fill="#fff8ec" stroke="#e0b96a"/>
+  <text x="48" y="292" font-size="13" font-weight="600" fill="#1b1f24">utun10 — VPN</text>
+  <text x="48" y="310" font-size="11" fill="#6b7280">split tunnel</text>
+  <text x="48" y="335" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">inet 198.51.100.49</text>
+  <text x="48" y="351" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">mtu  1411</text>
+  <text x="48" y="369" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#a16207">192.0.2.0/24 goes this way</text>
+
+  <rect x="32" y="398" width="248" height="152" rx="8" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="48" y="421" font-size="11.5" font-weight="600" fill="#1b1f24">The head sees 198.51.100.49</text>
+  <text x="48" y="442" font-size="10.5" fill="#4a5568">192.168.5.15 is private to the</text>
+  <text x="48" y="457" font-size="10.5" fill="#4a5568">VM and never leaves it.</text>
+  <text x="48" y="478" font-size="10.5" fill="#4a5568">86.x.y.z (ifconfig.me) is</text>
+  <text x="48" y="493" font-size="10.5" fill="#4a5568">the ISP line, which carries no</text>
+  <text x="48" y="508" font-size="10.5" fill="#4a5568">10.3.x.y traffic at all.</text>
+  <text x="48" y="530" font-size="10.5" font-weight="600" fill="#b45309">och-sg-head must allow</text>
+  <text x="48" y="544" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#b45309">198.51.100.49/32</text>
+
+  <!-- ============================ the tunnel ============================ -->
+  <line x1="298" y1="324" x2="356" y2="324" stroke="#c08a2e" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#av)"/>
+  <text x="327" y="312" font-size="10" font-weight="600" text-anchor="middle" fill="#a16207">VPN</text>
+
+  <!-- ============================ RIGHT: OpenStack ============================ -->
+  <rect x="360" y="64" width="944" height="576" rx="10" fill="#f5f8fc" stroke="#c3d3e5"/>
+  <text x="376" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">OPENSTACK — PROJECT ochami-lab</text>
+
+  <!-- external network -->
+  <rect x="376" y="100" width="912" height="58" rx="8" fill="#eaf1f8" stroke="#9fbdda"/>
+  <text x="392" y="124" font-size="13" font-weight="600" fill="#1b1f24">external</text>
+  <text x="392" y="143" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">192.0.2.0/24 · RFC1918 — only via the VPN · shared: attach, never modify</text>
+  <rect x="1046" y="112" width="226" height="34" rx="6" fill="#ffffff" stroke="#9fbdda"/>
+  <text x="1058" y="134" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">floating IP 192.0.2.185</text>
+
+  <line x1="560" y1="158" x2="560" y2="184" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- router -->
+  <rect x="376" y="186" width="912" height="50" rx="8" fill="#ffffff" stroke="#b9c2cc"/>
+  <text x="392" y="208" font-size="12.5" font-weight="600" fill="#1b1f24">och-router</text>
+  <text x="480" y="208" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">DNAT 192.0.2.185 ⇄ 192.168.200.x     ·     SNAT 192.168.200.0/24 → internet</text>
+  <text x="392" y="226" font-size="10" fill="#6b7280">gateway on external; one interface on och-ext-subnet. och-prov is deliberately not attached.</text>
+
+  <line x1="560" y1="236" x2="560" y2="260" stroke="#7b8794" stroke-width="1.4" marker-end="url(#a)"/>
+
+  <!-- och-ext -->
+  <rect x="376" y="262" width="912" height="54" rx="8" fill="#e9f6ee" stroke="#8ec6a4"/>
+  <text x="392" y="286" font-size="13" font-weight="600" fill="#1b1f24">och-ext</text>
+  <text x="392" y="305" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#3f6b52">192.168.200.0/24 · DHCP ON · gateway .1 · DNS 1.1.1.1, 8.8.8.8 · routed — SSH in, downloads out</text>
+
+  <!-- feed lines into / out of the instance -->
+  <path d="M430,316 V450 H466" fill="none" stroke="#8ec6a4" stroke-width="1.8" marker-end="url(#a)"/>
+  <path d="M466,504 H430 V562" fill="none" stroke="#c08a2e" stroke-width="1.8" marker-end="url(#a)"/>
+
+  <!-- the instance -->
+  <rect x="470" y="350" width="560" height="192" rx="10" fill="#ffffff" stroke="#4a5568" stroke-width="1.6"/>
+  <text x="486" y="377" font-size="15" font-weight="600" fill="#1b1f24">och-head</text>
+  <text x="566" y="377" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">Rocky 9 · ACTIVE</text>
+  <text x="486" y="397" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">flavor ochami-lab-head — 4 vCPU · 16 GB RAM · 60 GB root</text>
+  <text x="486" y="413" font-size="10.5" fill="#6b7280">placed by Nova · cloud-init via config drive (§6.3)</text>
+
+  <rect x="486" y="424" width="528" height="50" rx="6" fill="#e9f6ee" stroke="#8ec6a4"/>
+  <text x="498" y="444" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-head-ext</text>
+  <text x="596" y="444" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:c0:fe:01 · 192.168.200.x (DHCP) · NIC 1</text>
+  <text x="498" y="463" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#3f6b52">port security ON · security group och-sg-head → tcp/22 + icmp from 198.51.100.49/32</text>
+
+  <rect x="486" y="480" width="528" height="50" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="498" y="500" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-head-prov</text>
+  <text x="604" y="500" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:ff · 172.16.0.254 static · NIC 2</text>
+  <text x="498" y="519" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#a16207">port security DISABLED · no security group — required for DHCP + NAT (§5.3)</text>
+
+  <!-- side note -->
+  <rect x="1046" y="350" width="242" height="192" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="1058" y="372" font-size="11" font-weight="600" fill="#1b1f24">The SSH path, in full</text>
+  <text x="1058" y="393" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">devbox → 192.0.2.185:22</text>
+  <text x="1058" y="408" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ Lima NAT → macOS</text>
+  <text x="1058" y="423" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ utun10  198.51.100.49</text>
+  <text x="1058" y="438" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ och-router DNAT</text>
+  <text x="1058" y="453" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ och-head-ext</text>
+  <text x="1058" y="476" font-size="10" fill="#4a5568">The head's own sshd log is</text>
+  <text x="1058" y="491" font-size="10" fill="#4a5568">the only authority on the</text>
+  <text x="1058" y="506" font-size="10" fill="#4a5568">source address:</text>
+  <text x="1058" y="527" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#b45309">Accepted … from 198.51.100.49</text>
+
+  <!-- och-prov -->
+  <rect x="376" y="562" width="912" height="58" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="392" y="586" font-size="13" font-weight="600" fill="#1b1f24">och-prov</text>
+  <text x="392" y="605" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#a16207">172.16.0.0/24 · NO DHCP · NO router · gateway none — the silent wire (§5.2)</text>
+  <rect x="1046" y="574" width="226" height="34" rx="6" fill="#ffffff" stroke="#e0b96a"/>
+  <text x="1058" y="596" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#a16207">nodes join here in §9</text>
+</svg>

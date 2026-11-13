@@ -1,0 +1,25 @@
+---
+# bss-talos-worker.yaml — BSS boot payload for the Talos worker nodes (§11.1).
+#
+# Load with:
+#   head$ ochami bss boot params set -f yaml -d @bss-talos-worker.yaml
+#
+# Identical to the control-plane payload except for the last path component of
+# talos.config (worker.yaml instead of controlplane.yaml) and the MAC list. That
+# one difference is the entire role split: workers read a config whose endpoint
+# points at the control-plane node, and they join it unattended — no bootstrap.
+#
+# Repointing a node between roles later = move its MAC between these two files
+# and re-run `set` on both.
+#
+# See bss-talos-controlplane.yaml for the placeholder values and a token-by-token
+# explanation of the kernel command line.
+
+kernel: 'http://<OBJ>/boot-images/talos/vmlinuz-<ARCH>'
+initrd: 'http://<OBJ>/boot-images/talos/initramfs-<ARCH>.xz'
+params: 'talos.platform=metal slab_nomerge pti=on console=tty0 console=<CONSOLE> talos.config=http://<OBJ>/boot-images/talos/worker.yaml'
+macs:
+  - 52:54:00:be:ef:02
+  - 52:54:00:be:ef:03
+  - 52:54:00:be:ef:04
+  - 52:54:00:be:ef:05

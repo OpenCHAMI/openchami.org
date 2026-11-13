@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 290" width="1320" height="290" role="img"
+     aria-labelledby="t20 d20"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t20">The order teardown must follow, because Neutron refuses to delete anything still in use</title>
+  <desc id="d20">Teardown in eight steps, in order. First the instances, then the floating IP, then the ports,
+    then the router interfaces, then the router. Then the subnets, then the networks, and last the security groups,
+    the keypair, the images and the volumes. Each step removes something the next one would otherwise be refused
+    for, because Neutron will not delete a resource that is still in use. Only resources carrying the och- prefix
+    are deleted, and the external network is never touched: we attached to it, we do not own it.</desc>
+
+  <defs>
+    <marker id="a20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="290" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§20 — teardown order: Neutron refuses to delete what is still in use</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Every box is an OpenStack resource you created. Left to right, then the second row.</text>
+
+  <!-- row 1: five chips, 224 wide, 42 gaps -->
+  <rect x="16" y="76" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="100" font-size="11" font-weight="700" fill="#4a6d96">1</text>
+  <text x="32" y="120" font-size="13" font-weight="600" fill="#1b1f24">instances</text>
+  <path d="M242,104 H280" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <rect x="282" y="76" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="298" y="100" font-size="11" font-weight="700" fill="#4a6d96">2</text>
+  <text x="298" y="120" font-size="13" font-weight="600" fill="#1b1f24">floating IP</text>
+  <path d="M508,104 H546" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <rect x="548" y="76" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="564" y="100" font-size="11" font-weight="700" fill="#4a6d96">3</text>
+  <text x="564" y="120" font-size="13" font-weight="600" fill="#1b1f24">ports</text>
+  <path d="M774,104 H812" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <rect x="814" y="76" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="830" y="100" font-size="11" font-weight="700" fill="#4a6d96">4</text>
+  <text x="830" y="120" font-size="13" font-weight="600" fill="#1b1f24">router interfaces</text>
+  <path d="M1040,104 H1078" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <rect x="1080" y="76" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="1096" y="100" font-size="11" font-weight="700" fill="#4a6d96">5</text>
+  <text x="1096" y="120" font-size="13" font-weight="600" fill="#1b1f24">router</text>
+
+  <!-- wrap from router down to the start of row 2 -->
+  <path d="M1192,132 V152 H128 V170" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <!-- row 2 -->
+  <rect x="16" y="172" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="196" font-size="11" font-weight="700" fill="#4a6d96">6</text>
+  <text x="32" y="216" font-size="13" font-weight="600" fill="#1b1f24">subnets</text>
+  <path d="M242,200 H280" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <rect x="282" y="172" width="224" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="298" y="196" font-size="11" font-weight="700" fill="#4a6d96">7</text>
+  <text x="298" y="216" font-size="13" font-weight="600" fill="#1b1f24">networks</text>
+  <path d="M508,200 H546" stroke="#7b8794" stroke-width="1.5" fill="none" marker-end="url(#a20)"/>
+
+  <rect x="548" y="172" width="756" height="56" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="564" y="196" font-size="11" font-weight="700" fill="#4a6d96">8</text>
+  <text x="564" y="216" font-size="13" font-weight="600" fill="#1b1f24">security groups, keypair, images, volumes</text>
+
+  <text x="16" y="264" font-size="10.5" fill="#b45309" font-weight="600">Delete only what carries the <tspan font-family="ui-monospace, Menlo, monospace">och-</tspan> prefix, and never <tspan font-family="ui-monospace, Menlo, monospace">${OCH_EXT_NET}</tspan>: we attached to it, we do not own it.</text>
+</svg>
