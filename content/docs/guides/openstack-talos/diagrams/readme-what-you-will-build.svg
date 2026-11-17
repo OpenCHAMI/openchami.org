@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 610" width="1320" height="610" role="img"
+     aria-labelledby="trw drw"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="trw">What you will build: two Neutron networks, an OpenCHAMI head node, network-booted Talos nodes, and the inference stack on top</title>
+  <desc id="drw">Everything lives in one OpenStack project, called ochami-lab throughout. There are two Neutron networks,
+    both created in section 5. och-ext has DHCP on and is routed; it carries SSH and downloads. och-prov has no
+    DHCP and no router; it is the provisioning wire. The head node, och-head, is a Rocky 9 instance with two ports,
+    one on each network, created in section 6. Section 7 installs on it the OpenCHAMI control plane (SMD, BSS,
+    CoreSMD and the rest), a Versity S3 store on port 7070 and an OCI registry on port 5000, and turns it into a
+    NAT router from och-prov to och-ext. The Talos nodes — och-cp1, which becomes the Kubernetes control plane,
+    and the workers och-w1 to och-wN — have one port each, on och-prov only, and network-boot Talos in sections 9
+    to 12. On top of them the inference stack is built in order: Kubernetes foundations in section 13, FluxCD in
+    section 14, KServe in section 15, vLLM in section 16 and KubeRay in section 17.</desc>
+
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="610" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">What you will build</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Green is routed and filtered. Amber is the silent provisioning wire. White with a dark border is a thing Nova booted. Blue is OpenCHAMI. Grey runs on the Talos nodes.</text>
+
+  <!-- ======================= PROJECT ======================= -->
+  <rect x="16" y="64" width="1288" height="412" rx="10" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="32" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">OPENSTACK PROJECT — <tspan font-family="ui-monospace, Menlo, monospace" letter-spacing="0">ochami-lab</tspan></text>
+
+  <!-- och-ext -->
+  <rect x="40" y="104" width="1240" height="36" rx="8" fill="#e9f6ee" stroke="#8ec6a4"/>
+  <text x="56" y="127" font-size="13" font-weight="600" fill="#3f6b52"><tspan font-family="ui-monospace, Menlo, monospace">och-ext</tspan><tspan font-size="11" font-weight="400" fill="#4a5568">  — Neutron network, DHCP on, routed · SSH and downloads</tspan></text>
+  <text x="1264" y="127" font-size="11" font-weight="600" text-anchor="end" fill="#3f6b52">§5</text>
+
+  <!-- och-head -->
+  <path d="M330,176 V140" stroke="#8ec6a4" stroke-width="2" fill="none"/>
+  <rect x="40" y="176" width="580" height="208" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="60" y="202" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-head</text>
+  <text x="600" y="202" font-size="11" font-weight="600" text-anchor="end" fill="#4a5568">§6</text>
+  <text x="60" y="220" font-size="11" fill="#4a5568">Rocky 9 instance, two ports — one on each network</text>
+
+  <rect x="60" y="232" width="540" height="40" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="74" y="257" font-size="11.5" font-weight="600" fill="#1b1f24">OpenCHAMI control plane <tspan font-weight="400" fill="#4a5568">— SMD, BSS, CoreSMD, …</tspan></text>
+  <text x="588" y="257" font-size="11" font-weight="600" text-anchor="end" fill="#4a6d96">§7</text>
+
+  <rect x="60" y="280" width="540" height="40" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="74" y="305" font-size="11.5" font-weight="600" fill="#1b1f24">Versity S3 <tspan font-family="ui-monospace, Menlo, monospace" font-weight="400">:7070</tspan> + OCI registry <tspan font-family="ui-monospace, Menlo, monospace" font-weight="400">:5000</tspan></text>
+  <text x="588" y="305" font-size="11" font-weight="600" text-anchor="end" fill="#4a6d96">§7</text>
+
+  <rect x="60" y="328" width="540" height="40" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="74" y="353" font-size="11.5" font-weight="600" fill="#1b1f24">NAT router <tspan font-family="ui-monospace, Menlo, monospace" font-weight="400">och-prov → och-ext</tspan></text>
+  <text x="588" y="353" font-size="11" font-weight="600" text-anchor="end" fill="#4a6d96">§7</text>
+
+  <path d="M330,384 V420" stroke="#e0b96a" stroke-width="2" fill="none"/>
+
+  <!-- Talos nodes -->
+  <rect x="680" y="176" width="280" height="124" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="700" y="202" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-cp1</text>
+  <text x="940" y="202" font-size="11" font-weight="600" text-anchor="end" fill="#4a5568">§§9–12</text>
+  <text x="700" y="224" font-size="11" fill="#4a5568">network-boots Talos</text>
+  <text x="700" y="242" font-size="11" fill="#4a5568">→ Kubernetes control plane</text>
+  <text x="700" y="276" font-size="10.5" fill="#6b7280">one port, on <tspan font-family="ui-monospace, Menlo, monospace">och-prov</tspan> only</text>
+
+  <rect x="1000" y="176" width="280" height="124" rx="10" fill="#ffffff" stroke="#4a5568"/>
+  <text x="1020" y="202" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-w1 … och-wN</text>
+  <text x="1260" y="202" font-size="11" font-weight="600" text-anchor="end" fill="#4a5568">§§9–12</text>
+  <text x="1020" y="224" font-size="11" fill="#4a5568">network-boot Talos</text>
+  <text x="1020" y="242" font-size="11" fill="#4a5568">→ Kubernetes workers</text>
+  <text x="1020" y="276" font-size="10.5" fill="#6b7280">one port each, on <tspan font-family="ui-monospace, Menlo, monospace">och-prov</tspan> only</text>
+
+  <path d="M820,300 V420" stroke="#e0b96a" stroke-width="2" fill="none"/>
+  <path d="M1140,300 V420" stroke="#e0b96a" stroke-width="2" fill="none"/>
+
+  <!-- och-prov -->
+  <rect x="40" y="420" width="1240" height="36" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="56" y="443" font-size="13" font-weight="600" fill="#a16207"><tspan font-family="ui-monospace, Menlo, monospace">och-prov</tspan><tspan font-size="11" font-weight="400" fill="#4a5568">  — Neutron network, NO DHCP, NO router · the provisioning wire</tspan></text>
+  <text x="1264" y="443" font-size="11" font-weight="600" text-anchor="end" fill="#a16207">§5</text>
+
+  <!-- ======================= STACK ======================= -->
+  <text x="16" y="508" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a5568">ON THE TALOS NODES — THE INFERENCE STACK, IN ORDER</text>
+
+  <rect x="16" y="520" width="240" height="56" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="544" font-size="13" font-weight="600" fill="#1b1f24">Kubernetes</text>
+  <text x="32" y="562" font-size="10.5" fill="#4a5568">§13 · storage, metrics, Gateway API</text>
+
+  <rect x="278" y="520" width="240" height="56" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="294" y="544" font-size="13" font-weight="600" fill="#1b1f24">FluxCD</text>
+  <text x="294" y="562" font-size="10.5" fill="#4a5568">§14 · GitOps</text>
+
+  <rect x="540" y="520" width="240" height="56" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="556" y="544" font-size="13" font-weight="600" fill="#1b1f24">KServe</text>
+  <text x="556" y="562" font-size="10.5" fill="#4a5568">§15 · model serving control plane</text>
+
+  <rect x="802" y="520" width="240" height="56" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="818" y="544" font-size="13" font-weight="600" fill="#1b1f24">vLLM</text>
+  <text x="818" y="562" font-size="10.5" fill="#4a5568">§16 · an LLM over an OpenAI-style API</text>
+
+  <rect x="1064" y="520" width="240" height="56" rx="6" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="1080" y="544" font-size="13" font-weight="600" fill="#1b1f24">KubeRay</text>
+  <text x="1080" y="562" font-size="10.5" fill="#4a5568">§17 · distributed scheduling</text>
+
+  <line x1="256" y1="548" x2="276" y2="548" stroke="#7b8794" stroke-width="1.5" marker-end="url(#arw)"/>
+  <line x1="518" y1="548" x2="538" y2="548" stroke="#7b8794" stroke-width="1.5" marker-end="url(#arw)"/>
+  <line x1="780" y1="548" x2="800" y2="548" stroke="#7b8794" stroke-width="1.5" marker-end="url(#arw)"/>
+  <line x1="1042" y1="548" x2="1062" y2="548" stroke="#7b8794" stroke-width="1.5" marker-end="url(#arw)"/>
+</svg>

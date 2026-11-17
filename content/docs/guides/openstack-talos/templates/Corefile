@@ -1,0 +1,50 @@
+# Corefile — OpenCHAMI's CoreDNS configuration (§7.8).
+#
+# Install to /etc/openchami/configs/Corefile on the head node, then:
+#   head$ sudo systemctl restart coresmd-coredns
+#
+# Same idea as coredhcp.yaml, for names: DNS records are GENERATED FROM SMD.
+# Add a node to SMD and it becomes resolvable within one cache interval.
+#
+# Substitute:
+#   <HEAD_PROV_IP>  172.16.0.254
+#   <CLUSTER_FQDN>  demo.openchami.cluster
+
+.:53 {
+    ready
+    prometheus 0.0.0.0:9153
+
+    # Bind to the provisioning wire only — same reasoning as CoreDHCP's listen.
+    bind <HEAD_PROV_IP>
+
+    coresmd {
+        smd_url https://<CLUSTER_FQDN>:8443
+        ca_cert /root_ca/root_ca.crt
+        cache_duration 30s
+
+        zone openchami.cluster {
+            # Renders node 1 as de01.openchami.cluster, node 2 as de02, …
+            nodes de{02d}
+        }
+    }
+}
+
+# ⚠ NOTE THE ABSENCE OF A `forward` CLAUSE, AND DO NOT ADD ONE.
+#
+# This CoreDNS answers cluster names only. It cannot resolve ghcr.io or
+# registry.k8s.io — which Talos needs. The temptation is to add:
+#
+#     forward . 1.1.1.1 8.8.8.8
+#
+# Don't. Two reasons:
+#
+#   1. It is not where the problem should be fixed. Talos gets public resolvers
+#      from its machine config instead (§10.6's dns-patch.yaml), which keeps the
+#      cluster's DNS server answering only for the cluster.
+#
+#   2. It would give the boot-time iPXE resolver internet access, which sounds
+#      useful and isn't. We tried pointing BSS straight at factory.talos.dev:
+#      with a forward clause, DNS then resolves — and the fetch
+#      dies anyway because iPXE's minimal TLS stack cannot negotiate a cipher
+#      with a modern HTTPS server (iPXE error 0x410de18f). The head fetches from
+#      Factory and serves to nodes over plain HTTP by raw IP instead (§10.4).

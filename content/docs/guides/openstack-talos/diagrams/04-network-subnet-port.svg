@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 470" width="1320" height="470" role="img"
+     aria-labelledby="t04 d04"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="t04">Neutron's three nouns: a network, the subnet on it, and the ports plugged into it</title>
+  <desc id="d04">The provisioning network och-prov, broken into the three things Neutron makes you name. The
+    network itself is layer 2 only: a wire, with no addresses. The subnet 172.16.0.0/24 attaches layer 3 to it:
+    a CIDR, created with --no-dhcp and no gateway. Three ports hang off the same network, each a virtual NIC
+    with its MAC address fixed in advance: the one ending be:ef:ff holds 172.16.0.254 and is the head node's
+    second NIC; the one ending be:ef:01 has no IP and is och-cp1's NIC, which CoreDHCP
+    will address; the one ending be:ef:02 is och-w1's NIC. A port can exist before any instance uses it, which
+    is how the MAC addresses are pinned.</desc>
+
+  <rect width="1320" height="470" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">§4 — Neutron's three nouns: network, subnet, port</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Everything here is on och-prov, so everything is amber: the silent provisioning wire. A port can exist before any instance uses it.</text>
+
+  <!-- the tree spine -->
+  <path d="M56,136 V416" stroke="#7b8794" stroke-width="1.5" fill="none"/>
+  <path d="M56,196 H96" stroke="#7b8794" stroke-width="1.5" fill="none"/>
+  <path d="M56,290 H96" stroke="#7b8794" stroke-width="1.5" fill="none"/>
+  <path d="M56,352 H96" stroke="#7b8794" stroke-width="1.5" fill="none"/>
+  <path d="M56,414 H96" stroke="#7b8794" stroke-width="1.5" fill="none"/>
+
+  <!-- network -->
+  <rect x="16" y="76" width="1288" height="60" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="32" y="100" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">NETWORK</text>
+  <text x="132" y="101" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-prov</text>
+  <text x="32" y="122" font-size="11" fill="#4a5568">A layer-2 broadcast domain — a virtual switch. It has no addresses.</text>
+  <text x="1288" y="112" font-size="12" font-weight="600" text-anchor="end" fill="#a16207">layer 2: a wire, no addresses</text>
+
+  <!-- subnet -->
+  <rect x="96" y="166" width="1208" height="60" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="112" y="190" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">SUBNET</text>
+  <text x="200" y="191" font-size="15" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">172.16.0.0/24</text>
+  <text x="112" y="212" font-size="11" fill="#4a5568">Attaches layer 3 to the network. <tspan font-family="ui-monospace, Menlo, monospace">--no-dhcp</tspan> lives here, and it is the most important flag in the tutorial.</text>
+  <text x="1288" y="202" font-size="12" font-weight="600" text-anchor="end" fill="#a16207">layer 3: CIDR, --no-dhcp, no gateway</text>
+
+  <text x="96" y="258" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#a16207">PORTS — a virtual NIC each, MAC fixed before any instance exists</text>
+
+  <!-- ports -->
+  <rect x="96" y="268" width="1208" height="44" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="112" y="295" font-size="12" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">port  mac=…:be:ef:ff  ip=.254</text>
+  <text x="706" y="295" font-size="12" fill="#4a5568">the head's second NIC</text>
+
+  <rect x="96" y="330" width="1208" height="44" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="112" y="357" font-size="12" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">port  mac=…:be:ef:01  ip=(none)</text>
+  <text x="706" y="357" font-size="12" fill="#4a5568"><tspan font-family="ui-monospace, Menlo, monospace">och-cp1</tspan>'s NIC — CoreDHCP will address it</text>
+
+  <rect x="96" y="392" width="1208" height="44" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="112" y="419" font-size="12" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">port  mac=…:be:ef:02  ip=(none)</text>
+  <text x="706" y="419" font-size="12" fill="#4a5568"><tspan font-family="ui-monospace, Menlo, monospace">och-w1</tspan>'s NIC</text>
+
+  <text x="16" y="458" font-size="10.5" fill="#6b7280">A port can exist before any instance uses it. That is how the MACs are pinned, and why §5.4 creates the ports and §9 only plugs them in.</text>
+</svg>

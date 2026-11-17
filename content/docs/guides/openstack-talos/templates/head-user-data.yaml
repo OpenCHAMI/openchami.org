@@ -1,0 +1,45 @@
+#cloud-config
+# head-user-data.yaml — cloud-init config for the OpenCHAMI head instance (§6.3).
+#
+# Pass to Nova with:
+#   openstack server create … --user-data head-user-data.yaml --config-drive true
+#
+# Replace <YOUR_SSH_PUBLIC_KEY> with the contents of ~/.ssh/och_ed25519.pub, or
+# generate this file with the heredoc in §6.3 which substitutes it for you.
+#
+# Deliberately absent, compared with a hand-built seed ISO:
+#   - meta-data      → Nova generates it from the instance name and ID
+#   - network-config → Nova generates it from the Neutron ports. Because
+#                      och-prov-subnet has DHCP disabled (§5.2), Nova describes
+#                      the provisioning port as a STATIC address carrying the
+#                      port's fixed IP (172.16.0.254), and cloud-init applies it.
+
+users:
+  - name: rocky
+    groups: wheel
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - <YOUR_SSH_PUBLIC_KEY>
+
+# SELinux permissive, not disabled. The quadlets in §7 hit enough labelling
+# friction that enforcing gets in the way during bring-up, but permissive still
+# LOGS what would have been denied — which is exactly the information needed to
+# harden this properly for production.
+write_files:
+  - path: /etc/selinux/config
+    content: |
+      SELINUX=permissive
+      SELINUXTYPE=targeted
+
+package_update: true
+packages:
+  - podman          # the container engine the OpenCHAMI quadlets run on
+  - jq              # every checkpoint in §§7-11 pipes through it
+  - git             # §14 (FluxCD)
+  - tmux            # long-running image pulls survive a dropped SSH session
+  - bind-utils      # dig/nslookup, for debugging CoreDNS in §7
+  - nftables        # §7.12 NAT, if firewalld is not in use
+
+runcmd:
+  - setenforce 0 || true

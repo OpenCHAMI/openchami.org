@@ -1,0 +1,54 @@
+minimumLimaVersion: 2.0.0
+
+base:
+- template:_images/ubuntu-24.04
+
+mounts: []
+
+cpus: 5
+memory: 4GiB
+disk: 50GiB
+
+containerd:
+  system: false
+  user: false
+
+provision:
+- mode: system
+  script: |
+    #!/bin/bash
+    set -euo pipefail
+    apt-get --assume-yes update
+    apt-get --assume-yes dist-upgrade
+    apt-get install --assume-yes --no-install-recommends \
+      bash-completion \
+      build-essential \
+      ca-certificates \
+      curl \
+      git \
+      jq \
+      language-pack-en \
+      locales \
+      less \
+      python3-venv \
+      openssl \
+      man-db \
+      make \
+      reuse \
+      tmux \
+      vim \
+      yq \
+      unzip \
+      zip
+
+- mode: user
+  script: |
+    #!/bin/bash
+    set -euo pipefail
+    python3 -m venv --upgrade-deps --prompt openstack "${HOME}/os-venv"
+    ${HOME}/os-venv/bin/python3 -m pip install --no-cache-dir \
+      python-cinderclient \
+      python-ironicclient \
+      python-keystoneclient \
+      python-manilaclient \
+      python-openstackclient

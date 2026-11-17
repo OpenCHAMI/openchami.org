@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 1010" width="1320" height="1010" role="img"
+     aria-labelledby="tfn dfn"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title id="tfn">The complete network map — laptop to Talos node</title>
+  <desc id="dfn">Every hop from the macOS laptop, through the Lima devbox VM and the VPN tunnel, into the
+    OpenStack project ochami-lab: the shared external network, och-router, the routed och-ext network,
+    the och-head instance with its two Neutron ports and the OpenCHAMI services it runs, the silent och-prov
+    provisioning network with its IP allocation bands, and the three Talos node instances, each with a
+    single provisioning port pinned by MAC address.</desc>
+
+  <defs>
+    <marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7b8794"/>
+    </marker>
+    <marker id="fv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c08a2e"/>
+    </marker>
+  </defs>
+
+  <rect width="1320" height="1010" fill="#ffffff"/>
+
+  <text x="16" y="28" font-size="17" font-weight="600" fill="#1b1f24">The complete network map — your laptop to a Talos node</text>
+  <text x="16" y="48" font-size="12" fill="#6b7280">Measured 2 Aug 2026. Green = routed and filtered. Amber = the silent provisioning wire, no DHCP, no router, no port security.</text>
+
+  <!-- ============================ LEFT: the laptop ============================ -->
+  <rect x="16" y="64" width="280" height="930" rx="10" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="32" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#6b7280">YOUR LAPTOP — macOS</text>
+
+  <rect x="32" y="100" width="248" height="128" rx="8" fill="#ffffff" stroke="#b9c2cc"/>
+  <text x="48" y="124" font-size="13" font-weight="600" fill="#1b1f24">openstack-devbox</text>
+  <text x="48" y="142" font-size="11" fill="#6b7280">Lima VM · Linux · Appendix A</text>
+  <text x="48" y="166" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">eth0  192.168.5.15/24</text>
+  <text x="48" y="182" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">gw    192.168.5.2</text>
+  <text x="48" y="205" font-size="11" fill="#6b7280">openstack CLI · ssh · tofu</text>
+  <text x="48" y="220" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">prompt: devbox$</text>
+
+  <line x1="156" y1="228" x2="156" y2="256" stroke="#7b8794" stroke-width="1.4" marker-end="url(#fa)"/>
+  <text x="166" y="247" font-size="10" fill="#6b7280">macOS routes + NATs</text>
+
+  <rect x="32" y="260" width="248" height="106" rx="8" fill="#fff8ec" stroke="#e0b96a"/>
+  <text x="48" y="284" font-size="13" font-weight="600" fill="#1b1f24">utun10 — VPN</text>
+  <text x="48" y="302" font-size="11" fill="#6b7280">split tunnel</text>
+  <text x="48" y="326" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">inet 198.51.100.49</text>
+  <text x="48" y="342" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">mtu  1411</text>
+  <text x="48" y="358" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#a16207">192.0.2.0/24 goes this way</text>
+
+  <rect x="32" y="384" width="248" height="140" rx="8" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="48" y="407" font-size="11.5" font-weight="600" fill="#1b1f24">The head sees 198.51.100.49</text>
+  <text x="48" y="428" font-size="10.5" fill="#4a5568">192.168.5.15 is private to the</text>
+  <text x="48" y="443" font-size="10.5" fill="#4a5568">VM and never leaves it.</text>
+  <text x="48" y="464" font-size="10.5" fill="#4a5568">86.x.y.z (ifconfig.me) is</text>
+  <text x="48" y="479" font-size="10.5" fill="#4a5568">the ISP line and carries no</text>
+  <text x="48" y="494" font-size="10.5" fill="#4a5568">10.3.x.y traffic at all.</text>
+  <text x="48" y="514" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#b45309">och-sg-head → 198.51.100.49/32</text>
+
+  <rect x="32" y="542" width="248" height="168" rx="8" fill="#ffffff" stroke="#b9c2cc"/>
+  <text x="48" y="565" font-size="11.5" font-weight="600" fill="#1b1f24">Reaching cluster APIs</text>
+  <text x="48" y="586" font-size="10.5" fill="#4a5568">172.16.0.0/24 has no router, so</text>
+  <text x="48" y="601" font-size="10.5" fill="#4a5568">the devbox cannot reach a node</text>
+  <text x="48" y="616" font-size="10.5" fill="#4a5568">directly — ever. Tunnel through</text>
+  <text x="48" y="631" font-size="10.5" fill="#4a5568">the head instead (§5.5):</text>
+  <text x="48" y="654" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">ssh -L 6443:172.16.0.1:6443 \</text>
+  <text x="48" y="669" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">    -L 8000:172.16.0.1:8000 \</text>
+  <text x="48" y="684" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">    rocky@192.0.2.185</text>
+  <text x="48" y="701" font-size="10" fill="#6b7280">6443 k8s · 50000 talos · 8000 vLLM</text>
+
+  <rect x="32" y="728" width="248" height="120" rx="8" fill="#f0f7f3" stroke="#8ec6a4"/>
+  <text x="48" y="751" font-size="11.5" font-weight="600" fill="#1b1f24">Two identities, never mixed</text>
+  <text x="48" y="772" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#3f6b52">OS_CLOUD=ochami-lab</text>
+  <text x="48" y="787" font-size="10.5" fill="#4a5568">member app credential — all</text>
+  <text x="48" y="802" font-size="10.5" fill="#4a5568">tutorial steps and all IaC</text>
+  <text x="48" y="822" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#a16207">OS_CLOUD=ochami-lab-admin</text>
+  <text x="48" y="837" font-size="10.5" fill="#4a5568">password — flavors, §3.5 only</text>
+
+  <!-- ============================ the tunnel ============================ -->
+  <line x1="298" y1="313" x2="356" y2="313" stroke="#c08a2e" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#fv)"/>
+  <text x="327" y="301" font-size="10" font-weight="600" text-anchor="middle" fill="#a16207">VPN</text>
+
+  <!-- ============================ RIGHT: OpenStack ============================ -->
+  <rect x="360" y="64" width="944" height="930" rx="10" fill="#f5f8fc" stroke="#c3d3e5"/>
+  <text x="376" y="88" font-size="11" font-weight="700" letter-spacing="0.08em" fill="#4a6d96">OPENSTACK — PROJECT ochami-lab</text>
+
+  <!-- external network -->
+  <rect x="376" y="100" width="912" height="58" rx="8" fill="#eaf1f8" stroke="#9fbdda"/>
+  <text x="392" y="124" font-size="13" font-weight="600" fill="#1b1f24">external</text>
+  <text x="392" y="143" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">192.0.2.0/24 · RFC1918 — only via the VPN · shared: attach, never modify</text>
+  <rect x="1046" y="112" width="226" height="34" rx="6" fill="#ffffff" stroke="#9fbdda"/>
+  <text x="1058" y="134" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">floating IP 192.0.2.185</text>
+
+  <line x1="560" y1="158" x2="560" y2="182" stroke="#7b8794" stroke-width="1.4" marker-end="url(#fa)"/>
+
+  <!-- router -->
+  <rect x="376" y="184" width="912" height="50" rx="8" fill="#ffffff" stroke="#b9c2cc"/>
+  <text x="392" y="206" font-size="12.5" font-weight="600" fill="#1b1f24">och-router</text>
+  <text x="480" y="206" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">DNAT 192.0.2.185 ⇄ 192.168.200.x     ·     SNAT 192.168.200.0/24 → internet</text>
+  <text x="392" y="224" font-size="10" fill="#6b7280">gateway on external; one interface on och-ext-subnet. och-prov is deliberately not attached.</text>
+
+  <line x1="560" y1="234" x2="560" y2="258" stroke="#7b8794" stroke-width="1.4" marker-end="url(#fa)"/>
+
+  <!-- och-ext -->
+  <rect x="376" y="260" width="912" height="54" rx="8" fill="#e9f6ee" stroke="#8ec6a4"/>
+  <text x="392" y="284" font-size="13" font-weight="600" fill="#1b1f24">och-ext</text>
+  <text x="392" y="303" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#3f6b52">192.168.200.0/24 · DHCP ON · gateway .1 · DNS 1.1.1.1, 8.8.8.8 · routed</text>
+
+  <!-- connectors into and out of the head -->
+  <path d="M430,314 V447 H466" fill="none" stroke="#8ec6a4" stroke-width="1.8" marker-end="url(#fa)"/>
+  <path d="M466,559 H430 V602" fill="none" stroke="#c08a2e" stroke-width="1.8" marker-end="url(#fa)"/>
+
+  <!-- the head instance -->
+  <rect x="470" y="348" width="560" height="238" rx="10" fill="#ffffff" stroke="#4a5568" stroke-width="1.6"/>
+  <text x="486" y="375" font-size="15" font-weight="600" fill="#1b1f24">och-head</text>
+  <text x="566" y="375" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">Rocky 9 · ACTIVE</text>
+  <text x="486" y="395" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">flavor ochami-lab-head — 4 vCPU · 16 GB RAM · 60 GB root</text>
+  <text x="486" y="411" font-size="10.5" fill="#6b7280">cloud-init via config drive</text>
+
+  <rect x="486" y="422" width="528" height="48" rx="6" fill="#e9f6ee" stroke="#8ec6a4"/>
+  <text x="498" y="441" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-head-ext</text>
+  <text x="596" y="441" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:c0:fe:01 · 192.168.200.x (DHCP) · NIC 1</text>
+  <text x="498" y="460" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#3f6b52">port security ON · och-sg-head → tcp/22 + icmp from 198.51.100.49/32</text>
+
+  <rect x="486" y="476" width="528" height="52" rx="6" fill="#eef4fb" stroke="#b7cde4"/>
+  <text x="498" y="494" font-size="10" font-weight="600" fill="#4a6d96">OPENCHAMI CONTROL PLANE (§7)</text>
+  <text x="498" y="509" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">SMD · BSS · CoreSMD · cloud-init-server · haproxy · step-ca · postgres</text>
+  <text x="498" y="522" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">Versity S3 :7070 · OCI registry :5000 · CoreDHCP · CoreDNS · NAT (§7.12)</text>
+
+  <rect x="486" y="534" width="528" height="46" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="498" y="552" font-size="11" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-head-prov</text>
+  <text x="604" y="552" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:ff · 172.16.0.254 static · NIC 2</text>
+  <text x="498" y="570" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#a16207">port security DISABLED · no security group — DHCP + NAT need it (§5.3)</text>
+
+  <!-- side note -->
+  <rect x="1046" y="348" width="242" height="238" rx="8" fill="#f7f8fa" stroke="#d5dae0"/>
+  <text x="1058" y="370" font-size="11" font-weight="600" fill="#1b1f24">The SSH path, in full</text>
+  <text x="1058" y="391" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">devbox → 192.0.2.185:22</text>
+  <text x="1058" y="406" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ Lima NAT → macOS</text>
+  <text x="1058" y="421" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ utun10  198.51.100.49</text>
+  <text x="1058" y="436" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ och-router DNAT</text>
+  <text x="1058" y="451" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">  ↳ och-head-ext</text>
+  <text x="1058" y="474" font-size="10" fill="#4a5568">The head's own sshd log is</text>
+  <text x="1058" y="489" font-size="10" fill="#4a5568">the only authority on the</text>
+  <text x="1058" y="504" font-size="10" fill="#4a5568">source address:</text>
+  <text x="1058" y="524" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#b45309">Accepted … from 198.51.100.49</text>
+  <text x="1058" y="551" font-size="10" fill="#4a5568">Egress for nodes reverses it:</text>
+  <text x="1058" y="566" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">node → head masquerade</text>
+  <text x="1058" y="579" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">     → och-router SNAT → net</text>
+
+  <!-- och-prov -->
+  <rect x="376" y="602" width="912" height="80" rx="8" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="392" y="626" font-size="13" font-weight="600" fill="#1b1f24">och-prov</text>
+  <text x="392" y="645" font-size="10.5" font-family="ui-monospace, Menlo, monospace" fill="#a16207">172.16.0.0/24 · NO DHCP · NO router · gateway none — the silent wire (§5.2)</text>
+  <text x="392" y="668" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">.1–.199 Neutron pool, our node ports  ·  .200–.250 CoreDHCP bootloop, unknown MACs  ·  .251–.253 unused  ·  .254 head</text>
+
+  <line x1="595" y1="682" x2="595" y2="722" stroke="#c08a2e" stroke-width="1.6" marker-end="url(#fa)"/>
+  <line x1="865" y1="682" x2="865" y2="722" stroke="#c08a2e" stroke-width="1.6" marker-end="url(#fa)"/>
+  <line x1="1135" y1="682" x2="1135" y2="722" stroke="#c08a2e" stroke-width="1.6" marker-end="url(#fa)"/>
+
+  <!-- node instances -->
+  <rect x="470" y="724" width="250" height="152" rx="10" fill="#ffffff" stroke="#4a5568" stroke-width="1.4"/>
+  <text x="484" y="748" font-size="13.5" font-weight="600" fill="#1b1f24">och-cp1</text>
+  <text x="556" y="748" font-size="9.5" fill="#6b7280">k8s control plane</text>
+  <text x="484" y="766" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">ochami-lab-cp</text>
+  <text x="484" y="779" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">4 vCPU · 16 GB · 30 GB</text>
+  <rect x="484" y="788" width="222" height="44" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="494" y="805" font-size="9.5" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-node1-prov</text>
+  <text x="494" y="820" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:01 · .1</text>
+  <text x="484" y="850" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">xname x1000c0s0b0n0</text>
+  <text x="484" y="864" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">nid 1 · Talos, no SSH</text>
+
+  <rect x="740" y="724" width="250" height="152" rx="10" fill="#ffffff" stroke="#4a5568" stroke-width="1.4"/>
+  <text x="754" y="748" font-size="13.5" font-weight="600" fill="#1b1f24">och-w1</text>
+  <text x="820" y="748" font-size="9.5" fill="#6b7280">k8s worker — vLLM</text>
+  <text x="754" y="766" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">ochami-lab-worker</text>
+  <text x="754" y="779" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">8 vCPU · 64 GB · 30 GB</text>
+  <rect x="754" y="788" width="222" height="44" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="764" y="805" font-size="9.5" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-node2-prov</text>
+  <text x="764" y="820" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:02 · .2</text>
+  <text x="754" y="850" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">xname x1000c0s0b1n0</text>
+  <text x="754" y="864" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">nid 2 · Talos, no SSH</text>
+
+  <rect x="1010" y="724" width="250" height="152" rx="10" fill="#ffffff" stroke="#4a5568" stroke-width="1.4"/>
+  <text x="1024" y="748" font-size="13.5" font-weight="600" fill="#1b1f24">och-w2</text>
+  <text x="1090" y="748" font-size="9.5" fill="#6b7280">k8s worker — vLLM</text>
+  <text x="1024" y="766" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#4a5568">ochami-lab-worker</text>
+  <text x="1024" y="779" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">8 vCPU · 64 GB · 30 GB</text>
+  <rect x="1024" y="788" width="222" height="44" rx="6" fill="#fdf3e3" stroke="#e0b96a"/>
+  <text x="1034" y="805" font-size="9.5" font-weight="600" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">och-node3-prov</text>
+  <text x="1034" y="820" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#1b1f24">52:54:00:be:ef:03 · .3</text>
+  <text x="1024" y="850" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">xname x1000c0s0b2n0</text>
+  <text x="1024" y="864" font-size="9.5" font-family="ui-monospace, Menlo, monospace" fill="#6b7280">nid 3 · Talos, no SSH</text>
+
+  <!-- footer note -->
+  <rect x="376" y="894" width="912" height="84" rx="8" fill="#ffffff" stroke="#b9c2cc"/>
+  <text x="392" y="916" font-size="11" font-weight="600" fill="#1b1f24">What the nodes deliberately do not have (§9)</text>
+  <text x="392" y="936" font-size="10.5" fill="#4a5568">One port each, on och-prov only. No floating IP, no security group, no SSH key, no cloud-init user-data. Everything they know arrives over the wire above.</text>
+  <text x="392" y="957" font-size="10" font-family="ui-monospace, Menlo, monospace" fill="#a16207">boot chain:  iPXE → CoreDHCP 172.16.0.254:67 → TFTP → BSS → kernel + initramfs from S3 :7070 → Talos → k8s</text>
+  <text x="392" y="971" font-size="10" fill="#6b7280">The MAC addresses above must match, exactly, in three places: the Neutron port (§5.4), nodes.yaml in SMD (§8), and the BSS payloads (§11).</text>
+</svg>
